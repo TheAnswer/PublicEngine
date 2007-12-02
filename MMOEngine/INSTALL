@@ -2,6 +2,8 @@ Pre-requisites
 -----------------
 
   these are the recommended ways to obtain them
+  
+  note: under CYGWIN you have to run all these under one of the cygwin shells
 
   1. Mysql 5.0 or higher installed
      
@@ -10,6 +12,12 @@ Pre-requisites
         and
 	
         ./configure && make install
+
+		note: on configure && make install if you want to run mysql server under windows
+			  you still have to install the client connector library. to do so use the following
+			  instead: 
+
+        	./configure --without-server && make install
 
   2. Lua 5.1 or higher installed
 
