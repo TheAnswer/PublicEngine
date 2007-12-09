@@ -55,6 +55,11 @@ class RWLockable : public ORBObjectStub {
 public:
 	RWLockable();
 	RWLockable(ORBObjectServant* obj);
+	RWLockable(RWLockable& ref);
+
+	RWLockable* clone();
+
+	virtual ~RWLockable();
 
 	void wlock(bool doLock = true);
 

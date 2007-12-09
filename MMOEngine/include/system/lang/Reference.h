@@ -17,7 +17,7 @@ namespace sys {
 	protected:
 		O* _object;
 	
-		int* _references;
+		sys::uint32* _references;
 	
 	public:
 		Reference() {
@@ -32,7 +32,7 @@ namespace sys {
 		}
 	
 		Reference(O* obj) {
-			initializeReference(obj, false);
+			initializeReference(obj);
 		}
 	
 		~Reference() {
@@ -50,10 +50,10 @@ namespace sys {
 		}
 	
 	protected:
-		inline void initializeReference(O* obj, bool desposable = true) {
+		inline void initializeReference(O* obj) {
 			_object = obj;
 	
-			_references = new int();
+			_references = new sys::uint32();
 			*_references = 1;
 		}
 	
@@ -63,13 +63,15 @@ namespace sys {
 			_references = ref._references;
 		}
 	
-		inline volatile void increaseReference() {
+		inline void increaseReference() {
 			Atomic::incrementInt(_references);
 		}
 	
-		inline volatile void decreaseReference() {
-			if (!Atomic::decrementInt(_references))
+		inline void decreaseReference() {
+			if (!Atomic::decrementInt(_references)) {
+				cout << "reference counted destroyed\n";
 				delete _object;
+			}
 		}
 	
 	};

@@ -16,6 +16,7 @@ namespace sys {
   namespace thread {
 
   	class Atomic {
+  	public:
   		void static inline incrementInt(uint32* value) {
 			#ifdef PLATFORM_UNIX
   				atomic_add_int(value, 1);

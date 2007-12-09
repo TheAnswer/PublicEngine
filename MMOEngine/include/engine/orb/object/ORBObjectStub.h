@@ -11,7 +11,7 @@ Distribution of this file for usage outside of Core3 is prohibited.
 namespace engine {
   namespace ORB {
 
-	class ORBObjectStub : public ORBObject {
+	class ORBObjectStub : public ORBObject, public Reference<ORBObjectServant> {
 	protected:
 		ORBObjectServant* _impl;
 		
@@ -22,8 +22,12 @@ namespace engine {
 	public:
 		ORBObjectStub(ORBObjectServant* obj);
 		
-		~ORBObjectStub();
-	
+		ORBObjectStub(ORBObjectStub& ref);
+
+		virtual ~ORBObjectStub();
+
+		virtual ORBObjectStub* clone();
+
 		// deployment methods
 		bool undeploy();
 		
