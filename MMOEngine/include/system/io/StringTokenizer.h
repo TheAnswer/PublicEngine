@@ -24,7 +24,9 @@ namespace sys {
 		int getIntToken();
 		long getLongToken();
 		float getFloatToken();
+		
 		void getStringToken(string& token);
+		void getStringToken(stringstream& token);
 	
 		void finalToken(string& s);
 		void setDelimeter(const string& del);
@@ -33,6 +35,7 @@ namespace sys {
 	
 	private:
 		void nextToken(string& s);
+		void nextToken(stringstream& s);
 		
 	};
 
