@@ -49,6 +49,14 @@ namespace sys {
 			return _object;
 		}
 	
+		inline void acquire() {
+			increaseReference();
+		}
+		
+		inline void release() {
+			decreaseReference();
+		}
+		
 	protected:
 		inline void initializeReference(O* obj) {
 			_object = obj;

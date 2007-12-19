@@ -8,6 +8,8 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "../platform.h"
 
+#include "../lang/types.h"
+
 #include "../lang/ArrayIndexOutOfBoundsException.h"
 
 namespace sys {
@@ -54,13 +56,13 @@ namespace sys {
 
 		Vector<E>& operator=(Vector<E>& vector);
 	
-		void setSize(int newSize, bool copyContent = true);
+		void setSize(int newSize, bool doCopyContent = true);
 	
 	protected:
 		void init(int initsize, int incr);
 		
-		void ensureCapacity(int minCapacity, bool copyContent = true);
-	
+		void ensureCapacity(int minCapacity, bool doCopyContent = true);
+
 	    void insertElementAt(const E& obj, int index);
 	
 	public:
@@ -68,7 +70,7 @@ namespace sys {
 			return elementCount;
 		}
 	
-	    int capacity() {
+	    inline int capacity() {
 			return elementCapacity;
 	    }
 	    
@@ -86,7 +88,7 @@ namespace sys {
 		capacityIncrement = incr;
 	}
 		
-	template<class E> void Vector<E>::ensureCapacity(int minCapacity, bool copyContent) {
+	template<class E> void Vector<E>::ensureCapacity(int minCapacity, bool doCopyContent) {
 		int oldCapacity = elementCapacity;
 			
 		if (minCapacity > oldCapacity) {
@@ -101,16 +103,21 @@ namespace sys {
 		    	
 	    	elementData = new E[elementCapacity = newCapacity];
 		    	
-	    	if (copyContent)
-	    		memcpy(elementData, oldData, elementCount * sizeof(E));
+	    	if (doCopyContent) {
+	    		if (TypeInfo<E>::needConstructor) {
+	    			for (int i = 0; i < elementCount; ++i)
+	    				elementData[i] = oldData[i];
+	    		} else
+	    			memcpy(elementData, oldData, elementCount * sizeof(E));
+	    	}
 				
 			delete [] oldData;
 		}
 	}
 		
-	template<class E> void Vector<E>::setSize(int newSize, bool copyContent) {
+	template<class E> void Vector<E>::setSize(int newSize, bool doCopyContent) {
 		if (newSize > elementCount)
-	    	ensureCapacity(newSize, copyContent);
+	    	ensureCapacity(newSize, doCopyContent);
 				
 		elementCount = newSize;
 	}
@@ -121,9 +128,15 @@ namespace sys {
 		}
 		
 		ensureCapacity(elementCount + 1);
-		E* indexOffset = elementData + index;
-		memmove(indexOffset + 1, indexOffset, (elementCount - index) * sizeof(E));
-	
+		
+		if (TypeInfo<E>::needConstructor) {
+			for (int i = elementCount - 1; i >= index ; --i)
+				elementData[i + 1] = elementData[i];
+		} else {
+			E* indexOffset = elementData + index;
+			memmove(indexOffset + 1, indexOffset, (elementCount - index) * sizeof(E));
+		}
+		
 		elementData[index] = obj;
 		elementCount++;
 	}
@@ -164,8 +177,13 @@ namespace sys {
 	
 		int numMoved = elementCount - index - 1;
 		if (numMoved > 0) {
-			E* indexOffset = elementData + index;
-		    memcpy(indexOffset, indexOffset + 1, numMoved * sizeof(E));
+			if (TypeInfo<E>::needConstructor) {
+				for (int i = 0; i < numMoved; ++i)
+					elementData[i] = elementData[i + 1];
+			} else {
+				E* indexOffset = elementData + index;
+				memcpy(indexOffset, indexOffset + 1, numMoved * sizeof(E));
+			}
 		}
 			
 		--elementCount;
@@ -195,7 +213,11 @@ namespace sys {
 
 		vector.elementCount = elementCount;
 
-		memcpy(vector.elementData, elementData, elementCount * sizeof(E));
+		if (TypeInfo<E>::needConstructor) {
+			for (int i = 0; i < elementCount; ++i)
+				vector.elementData[i] = elementData[i];
+		} else
+			memcpy(vector.elementData, elementData, elementCount * sizeof(E));
 	}
 
 	template<class E> Vector<E>& Vector<E>::operator=(Vector<E>& vector) {

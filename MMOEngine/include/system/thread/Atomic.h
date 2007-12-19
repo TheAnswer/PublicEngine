@@ -18,9 +18,9 @@ namespace sys {
   	class Atomic {
   	public:
   		void static inline incrementInt(uint32* value) {
-			#ifdef PLATFORM_UNIX
+			#ifdef PLATFORM_FREEBSD
   				atomic_add_int(value, 1);
-			#elif defined PLATFORM_CYGWIN
+			#elif defined (PLATFORM_CYGWIN) || defined(PLATFORM_LINUX)
   				//TODO: find appropriate method
   				++(*value);
 			#else
@@ -29,10 +29,10 @@ namespace sys {
   		}
 
   		bool static inline decrementInt(uint32* value) {
-			#ifdef PLATFORM_UNIX
+			#ifdef PLATFORM_FREEBSD
   				atomic_subtract_int(value, 1);
   				return *value;
-			#elif defined PLATFORM_CYGWIN
+			#elif defined (PLATFORM_CYGWIN) || defined(PLATFORM_LINUX)
   				//TODO: find appropriate method
   				return --(*value);
 			#else

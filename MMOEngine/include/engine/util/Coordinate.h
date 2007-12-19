@@ -11,9 +11,9 @@ namespace engine {
 
 	class Coordinate : public ORBObject {
 	protected:
-		float positionX;
-		float positionZ;
-		float positionY;
+		float positionX, positionZ, positionY;
+		
+		float previousPositionX, previousPositionZ, previousPositionY;
 	
 	public:
 		Coordinate() : ORBObject() {
@@ -23,9 +23,21 @@ namespace engine {
 			positionX = x;
 			positionZ = z;
 			positionY = y;
+
+			updatePreviousPosition();
 		}	
 
+		inline void initializePosition(float x, float z, float y) {
+			positionX = x;
+			positionZ = z;
+			positionY = y;
+
+			updatePreviousPosition();
+		} 
+
 		void randomizePosition(float radius) {
+			updatePreviousPosition();
+
 			float angle = (45 + System::random(200)) / 3.14;
 			float distance = radius + System::random((int) radius);
 			
@@ -33,13 +45,21 @@ namespace engine {
 			positionY += sin(angle) * distance; 
 		}
 
-		// setters and getters
 		inline void setPosition(float x, float z, float y) {
+			updatePreviousPosition();
+			
 			positionX = x;
 			positionZ = z;
 			positionY = y;
 		} 
-	
+
+		inline void updatePreviousPosition() {
+			previousPositionX = positionX;
+			previousPositionZ = positionZ;
+			previousPositionY = positionY;
+		} 
+
+		// getters
 		inline float getPositionX() {
 			return positionX;
 		}
@@ -51,6 +71,19 @@ namespace engine {
 		inline float getPositionY() {
 			return positionY;
 		}
+
+		inline float getPreviousPositionX() {
+			return previousPositionX;
+		}
+	
+		inline float getPreviousPositionZ() {
+			return previousPositionZ;
+		}
+	
+		inline float getPreviousPositionY() {
+			return previousPositionY;
+		}
+
 	};
 
   } // namespace util

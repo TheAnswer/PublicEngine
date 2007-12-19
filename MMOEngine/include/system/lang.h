@@ -8,6 +8,8 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "platform.h"
 
+#include "lang/types.h"
+
 #include "lang/Reference.h"
 #include "lang/Object.h"
 #include "lang/unicode.h"

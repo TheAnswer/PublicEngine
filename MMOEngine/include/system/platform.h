@@ -14,6 +14,7 @@ Distribution of this file for usage outside of Core3 is prohibited.
 	#define PLATFORM_FREEBSD
 	#define PLATFORM_UNIX
 #else
+	#define PLATFORM_LINUX
 	#define PLATFORM_UNIX
 #endif
 

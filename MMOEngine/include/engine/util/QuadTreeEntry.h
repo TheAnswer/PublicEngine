@@ -55,6 +55,13 @@ namespace engine {
 		inline void removeInRangeObject(QuadTreeEntry* obj) {
 			if (closeobjects.drop(obj))
 				notifyDissapear(obj);
+			/*else {
+				QuadTreeEntry* obj2 = NULL;
+				obj2->getPositionX();
+
+				cout << hex << "[0x" << obj->objectID << "] was not found in close objects for [0x" 
+					 << objectID << dec << "]\n";
+			}*/
 		}
 	
 		inline void removeInRangeObject(int index) {
