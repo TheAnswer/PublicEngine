@@ -71,6 +71,10 @@ namespace engine {
 		inline void setLoggingName(const string& s) {
 			name = s;
 		}
+
+		inline string& getLoggingName() {
+			return name;
+		}
 	};
 
   } // namespace log
