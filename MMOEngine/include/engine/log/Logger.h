@@ -59,7 +59,8 @@ namespace engine {
 		static void printTime(bool getFull = true);
 		
 		static uint64 getElapsedTime();
-		
+
+		// setters		
 		inline void setLogging(bool doLog) {
 			Logger::doLog = doLog;
 		}
@@ -71,10 +72,12 @@ namespace engine {
 		inline void setLoggingName(const string& s) {
 			name = s;
 		}
-
+		
+		// getters
 		inline string& getLoggingName() {
 			return name;
 		}
+		 
 	};
 
   } // namespace log

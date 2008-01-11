@@ -15,7 +15,9 @@ namespace engine {
 	protected:
 		SocketAddress addr;
 		Socket* socket;
-		
+
+		bool hasError, disconnected;
+
 		int packetLossChance;
 		
 	public:
@@ -37,10 +39,28 @@ namespace engine {
 			
 			packetLossChance = 0;
 		}
+
+		virtual ~ServiceClient() {
+		}
 		
+		bool isAvailable() {
+			if (socket == NULL)
+				return false;
+			
+			return !(hasError || disconnected);			
+		}
+
+		inline bool isDisconnected() {
+			return disconnected;
+		}
+
 		// setters
 		inline void setAddress(const string& host, int port) {
 			addr = SocketAddress(host, port);
+		}
+
+		inline void setError() {
+			hasError = true;
 		}
 
 		inline void setPacketLoss(int ratio) {
@@ -48,6 +68,10 @@ namespace engine {
 		}
 
 		// getters
+		inline uint64 getNetworkID() {
+			return addr.getNetworkID();
+		}
+		
 		inline SocketAddress& getAddress()
 		{
 			return addr;

@@ -38,7 +38,7 @@ namespace sys {
 		~Reference() {
 			decreaseReference();
 		}
-	
+
 		void operator=(const Reference<O>& ref) {
 			ref.increaseReference();
 	
@@ -77,7 +77,7 @@ namespace sys {
 	
 		inline void decreaseReference() {
 			if (!Atomic::decrementInt(_references)) {
-				cout << "reference counted destroyed\n";
+				//cout << "[Reference] destroying object\n";
 				delete _object;
 			}
 		}

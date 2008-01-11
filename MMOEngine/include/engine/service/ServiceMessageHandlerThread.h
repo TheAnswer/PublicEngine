@@ -30,6 +30,8 @@ namespace engine {
 		~ServiceMessageHandlerThread();
 	
 		virtual ServiceClient* createConnection(Socket* sock, SocketAddress& addr) = 0;
+		
+		virtual bool deleteConnection(ServiceClient* client);
 
 		// message functions
 		inline void addMessage(Message* msg) {

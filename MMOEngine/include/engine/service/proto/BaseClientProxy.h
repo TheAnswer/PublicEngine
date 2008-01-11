@@ -17,7 +17,10 @@ namespace engine {
 	class BaseClientProxy : public BaseClient {
 	public:
 		BaseClientProxy(Socket* sock, SocketAddress& addr);
-		
+
+		virtual ~BaseClientProxy() {
+		}
+
 		void init(DatagramServiceThread* serv);
 		
 		void run() {

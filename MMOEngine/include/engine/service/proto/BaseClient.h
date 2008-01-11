@@ -56,7 +56,8 @@ namespace engine {
 	
 		Condition connectionEstablishedCondition;
 
-		bool hasError, disconnected, clientDisconnected;
+		bool clientDisconnected;
+		
 		int acknowledgedServerSequence, realServerSequence;
 		int resentPackets;
 	
@@ -67,7 +68,7 @@ namespace engine {
 		BaseClient(const string& addr, int port);
 		BaseClient(Socket* sock, SocketAddress& addr);
 		
-		~BaseClient();
+		virtual ~BaseClient();
 	
 		void init(ScheduleManager* sched);
 		
@@ -106,17 +107,6 @@ namespace engine {
 		virtual void disconnect(bool doLock);
 	
 		void reportStats(bool doLog = false);
-	
-		bool isAvailable() {
-			if (socket == NULL)
-				return false;
-			
-			return !(hasError || disconnected);			
-		}
-
-		inline bool isDisconnected() {
-			return disconnected;
-		}
 		
 	private:
 		void close();
@@ -133,10 +123,6 @@ namespace engine {
 	
 	public:
 		// setters
-		inline void setError() {
-			hasError = true;
-		}
-	
 		inline void setClientDisconnected() {
 			clientDisconnected = true;
 		}

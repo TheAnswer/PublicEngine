@@ -21,7 +21,7 @@ Distribution of this file for usage outside of Core3 is prohibited.
 namespace engine {
   namespace db {
 
-	class MySqlDatabase : public Database, public Mutex, public Logger {
+	class MySqlDatabase : public Database, public Logger {
 		MYSQL mysql;
 		string host;
 		
