@@ -168,6 +168,8 @@ namespace sys {
 				newMap[index] = e;
 	    	}
 		}
+		
+		tableLength = newCapacity;
 			
 		free(oldMap);
 	}
