@@ -45,6 +45,10 @@ namespace sys {
 			trace = NULL;
 		}
 
+		~ReadWriteLock() {
+			pthread_rwlock_destroy(&rwlock);
+		}
+		
 		void setLockName(const string& s) {
 			lockName = s;
 		}

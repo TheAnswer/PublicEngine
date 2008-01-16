@@ -14,7 +14,7 @@ public:
 	}
 	
 	bool activate() {
-		delete client;
+		//client->finalize();
 		client = NULL;
 		
 		return true;

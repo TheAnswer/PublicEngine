@@ -15,6 +15,8 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "BaseClient.h"
 
+#include "BaseMessage.h"
+
 namespace engine {
   namespace service {
     namespace proto {

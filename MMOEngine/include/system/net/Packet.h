@@ -37,6 +37,9 @@ namespace sys {
 			end = offset = elementData;
 		}
 	
+		virtual ~Packet() {
+		}
+		
 		void create(char *buf[], int len);
 	
 		Packet* clone(int startoffs = 0);

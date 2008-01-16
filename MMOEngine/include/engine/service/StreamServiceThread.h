@@ -22,7 +22,7 @@ namespace engine {
 		virtual void stop();
 		
 		void acceptConnections();
-		
+
 	};
 
   } // namespace service

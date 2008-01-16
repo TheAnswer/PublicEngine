@@ -54,6 +54,10 @@ namespace sys {
 			trace = NULL;
 		}
 
+		~Mutex() {
+			pthread_mutex_destroy(&mutex);
+		}
+
 		void setMutexLogging(bool dolog) {
 			doLog = dolog;
 		}

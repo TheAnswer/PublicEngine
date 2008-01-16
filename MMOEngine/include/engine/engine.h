@@ -26,7 +26,6 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #include "service/StreamServiceThread.h"
 
 #include "service/Message.h"
-#include "service/StandaloneMessage.h"
 
 #include "service/proxy/StreamProxyClient.h"
 #include "service/proxy/StreamProxyServiceClient.h"
@@ -40,6 +39,8 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #include "service/proto/BaseClientProxy.h"
 #include "service/proto/BasePacket.h"
 #include "service/proto/BasePacketHandler.h"
+#include "service/proto/BaseMessage.h"
+#include "service/proto/StandaloneBaseMessage.h"
 
 #include "service/proto/packets/PingMessage.h"
 #include "service/proto/packets/NetStatusResponseMessage.h"

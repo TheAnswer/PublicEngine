@@ -6,13 +6,13 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #ifndef BASEPACKET_H_
 #define BASEPACKET_H_
 
-#include "../../../system/lang.h"
+#include "../Message.h"
 
 namespace engine {
   namespace service {
     namespace proto {
 
-	class BasePacket : public Packet {
+	class BasePacket : public Message {
 	protected:
 		sys::uint32 sequence;
 		bool doSeq;
@@ -29,6 +29,9 @@ namespace engine {
 		BasePacket(int size);	
 		BasePacket(Packet* pack, int seq);
 	
+		virtual ~BasePacket() {
+		}
+		
 		void close();
 
 		BasePacket* clone(int startoffs = 0);

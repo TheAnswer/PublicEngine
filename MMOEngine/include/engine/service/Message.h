@@ -8,7 +8,6 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "../../system/lang.h"
 
-#include "proto/BasePacket.h"
 #include "ServiceClient.h"
 
 #include "../orb/object/ORBObject.h"
@@ -16,44 +15,27 @@ Distribution of this file for usage outside of Core3 is prohibited.
 namespace engine {
   namespace service {
 
-	class Message : public BasePacket, public ORBObject {
+	class Message : public Packet, public ORBObject {
+	protected:
 		ServiceClient* client;
 	
-		uint64 timestamp;
+		uint64 timestampMili;
 		
 	public:
-		Message() : BasePacket(), ORBObject() {
-			insertShort(0x0900);
-			insertShort(0x0000);
+		Message() : Packet(), ORBObject() {
+			client = NULL;
 		}
 	
-		Message(int size) : BasePacket(size), ORBObject() {
-			insertShort(0x0900);
-			insertShort(0x0000);
+		Message(int size) : Packet(size), ORBObject() {
+			client = NULL;
 		}
 	
-		Message(Packet* pack, int start) : BasePacket(pack->size() - start), ORBObject() {
-			if (start < 0)
-				throw new PacketIndexOutOfBoundsException(pack, start);
-	
-			insertStream(pack->getBuffer() + start, pack->size() - start);
-			reset();
+		virtual ~Message() {
 		}
-	
-		Message(Packet* pack, int startoffs, int endoffs) : BasePacket(endoffs - startoffs), ORBObject() {
-			if (startoffs < 0)
-				throw new PacketIndexOutOfBoundsException(pack, startoffs);
-	
-			if (endoffs > pack->size())
-				throw new PacketIndexOutOfBoundsException(pack, endoffs);
-			
-			insertStream(pack->getBuffer() + startoffs, endoffs - startoffs);
-			reset();
-		}
-	
+		
 		int compareTo(Message* m) {
-			uint64 t1 = timestamp;
-			uint64 t2 = m->getTimeStamp();
+			uint64 t1 = timestampMili;
+			uint64 t2 = m->timestampMili;
 			
 			if (t1 < t2)
 				return 1;
@@ -67,10 +49,6 @@ namespace engine {
 			Message* pack = new Message();
 			copy(pack, startoffs);
 			
-			pack->doSeq = doSeq;
-			pack->doEncr = doEncr;
-			pack->doComp = doComp;
-			pack->doCRCTest = doCRCTest;
 			return pack;
 		}
 	
@@ -79,12 +57,12 @@ namespace engine {
 			client = c;
 		}
 	
-		inline void setTimeStamp(uint64 ts) {
-			timestamp = ts;
+		inline void setTimeStampMili(uint64 ts) {
+			timestampMili = ts;
 		}
 	
-		inline uint64 getTimeStamp() {
-			return timestamp;
+		inline uint64 getTimeStampMili() {
+			return timestampMili;
 		}
 	
 		inline ServiceClient* getClient() {

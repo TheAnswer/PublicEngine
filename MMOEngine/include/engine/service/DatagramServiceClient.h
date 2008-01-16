@@ -13,7 +13,8 @@ Distribution of this file for usage outside of Core3 is prohibited.
 namespace engine {
   namespace service {
 
-	class DatagramServiceClient : public ServiceClient, public Thread {
+	class DatagramServiceClient : public ServiceClient, public Thread
+			, public Reference<DatagramServiceClient> {
 	protected:
 		bool doRun;
 
@@ -24,6 +25,10 @@ namespace engine {
 		virtual ~DatagramServiceClient() {
 		}
 		
+		void finalize() {
+			release();
+		}
+		
 		void recieveMessages();
 
 		// socket methods
@@ -32,6 +37,14 @@ namespace engine {
 		bool read(Packet* pack);
 
 		virtual void handleMessage(Packet* message) {
+		}
+		
+		virtual void acquire() {
+			Reference<DatagramServiceClient>::acquire();
+		}
+
+		virtual void release() {
+			Reference<DatagramServiceClient>::release();
 		}
 
 	};

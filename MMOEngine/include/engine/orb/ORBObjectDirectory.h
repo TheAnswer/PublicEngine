@@ -24,7 +24,7 @@ namespace engine {
 	
 		ORBObject* get(sys::uint64 objid);
 		
-		void remove(sys::uint64 objid);
+		ORBObjectAdapter* remove(sys::uint64 objid);
 	
 		ORBObjectAdapter* getAdapter(uint64 objid);
 	};

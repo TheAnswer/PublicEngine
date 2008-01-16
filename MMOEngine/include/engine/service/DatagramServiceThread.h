@@ -21,6 +21,8 @@ namespace engine {
 	
 		virtual void stop();
 
+		virtual bool deleteConnection(ServiceClient* client);
+
 		// message methods
 		void receiveMessages();
 
