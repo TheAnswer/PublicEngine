@@ -22,7 +22,7 @@ namespace engine {
 		}
 
 		bool send(Packet* pack) {
-			if (packetLossChance != 0 && System::random(100) < packetLossChance)
+			if (packetLossChance != 0 && System::random(100) < (uint32) packetLossChance)
 				return false;
 			
 			socket->sendTo(pack, &addr);
@@ -31,7 +31,7 @@ namespace engine {
 		}
 
 		bool read(Packet* pack) {
-			if (packetLossChance != 0 && System::random(100) < packetLossChance)
+			if (packetLossChance != 0 && System::random(100) < (uint32) packetLossChance)
 				return false;
 
 			SocketAddress addr;

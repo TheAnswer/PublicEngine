@@ -30,8 +30,10 @@ namespace engine {
 			insertInt(0x72E3);
 		}
 	
-		static sys::uint16 parse(Packet* pack) {
-		}
+		/*static uint16 parse(Packet* pack) {
+			return 0;
+		}*/
+		
 	};
 
     } // namespace proto

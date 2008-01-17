@@ -58,7 +58,7 @@ namespace sys {
 		HashTable(int initialCapacity);
 	    HashTable(int initialCapacity, float loadFactor);
 	
-		~HashTable();
+		virtual ~HashTable();
 	    
 	    V& put(const K& key, const V& value);
 	        

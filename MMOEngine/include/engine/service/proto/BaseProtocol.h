@@ -30,6 +30,9 @@ namespace engine {
 	
 	public:
 		BaseProtocol();
+		
+		virtual ~BaseProtocol() {
+		}
 	
 		virtual void prepareSend(BasePacket* pack);
 	

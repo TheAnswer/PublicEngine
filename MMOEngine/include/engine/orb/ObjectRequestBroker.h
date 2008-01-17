@@ -51,7 +51,7 @@ namespace engine {
 	private:
 		ObjectRequestBroker();
 	
-		~ObjectRequestBroker();
+		virtual ~ObjectRequestBroker();
 
 	public:
 		static ObjectRequestBroker* initialize(const string& addr, int port = 44433);

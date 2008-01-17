@@ -8,6 +8,8 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "system/lang/Exception.h"
 
+#include "../../log/Logger.h"
+
 namespace engine {
   namespace ORB {
 
@@ -15,6 +17,12 @@ namespace engine {
 	public:
 		ObjectNotDeployedException(ORBObjectStub* stub) : Exception() {
 			message = "\'" + stub->_getORBName() + "\' is not deployed";
+			
+			cout << message << "\n";
+			Logger::closeGlobalFileLogger();
+
+			stub = NULL;
+			stub->_getORBName();
 		}
 		
 	};

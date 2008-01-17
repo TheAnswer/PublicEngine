@@ -27,7 +27,7 @@ namespace engine {
 		ServiceThread(const string& s);
 		ServiceThread(const string& s, ScheduleManager* sched);
 		
-		~ServiceThread();
+		virtual ~ServiceThread();
 		
 		virtual void init();
 

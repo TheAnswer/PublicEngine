@@ -38,6 +38,9 @@ namespace engine {
 			keepEvent = false;
 		}
 	
+		virtual ~Event() {
+		}	
+	
 		int compareTo(AdvancedBinaryHeapNode* node) {
 			Event* e = (Event*) node;
 			

@@ -16,6 +16,12 @@ namespace engine {
 
 	class Database {
 	public:
+		Database() {
+		}
+		
+		virtual ~Database() {
+		}
+	
 		virtual void connect(const string& dbname, const string& user, const string& passw, int port) = 0;
 	
 		virtual void close() = 0;

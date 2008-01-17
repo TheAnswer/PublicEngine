@@ -24,6 +24,9 @@ namespace sys {
 	public:
 		AdvancedBinaryHeapNode(AdvancedBinaryHeapNode* parent = NULL, AdvancedBinaryHeapNode* lnode = NULL, 
 				AdvancedBinaryHeapNode* rnode = NULL, int np = 0);
+				
+		virtual ~AdvancedBinaryHeapNode() {
+		}
 	
 		virtual int compareTo(AdvancedBinaryHeapNode* node) = 0;
 	

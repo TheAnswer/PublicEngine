@@ -27,6 +27,9 @@ namespace engine {
 			stub = NULL;
 		}
 		
+		virtual ~ORBObjectAdapter() {
+		}
+		
 		virtual Packet* invokeMethod(sys::uint32 methid, ORBMethodInvocation* inv) = 0;
 		
 		inline void setStub(ORBObjectStub* stb) {

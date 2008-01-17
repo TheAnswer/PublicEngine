@@ -41,11 +41,7 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #include <math.h>
 #include <string.h>
 
-#ifndef PLATFORM_WIN
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 #include <sstream>
 #include <cstdlib>

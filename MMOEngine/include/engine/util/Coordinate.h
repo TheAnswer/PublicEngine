@@ -27,6 +27,9 @@ namespace engine {
 			updatePreviousPosition();
 		}	
 
+		virtual ~Coordinate() {
+		}
+
 		inline void initializePosition(float x, float z, float y) {
 			positionX = x;
 			positionZ = z;

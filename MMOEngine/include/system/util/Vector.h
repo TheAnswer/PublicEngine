@@ -35,7 +35,7 @@ namespace sys {
 			init(initsize, incr);
 		}
 	
-		~Vector() {
+		virtual ~Vector() {
 			delete [] elementData;
 		}
 	

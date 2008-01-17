@@ -19,6 +19,12 @@ namespace engine {
 		string className;
 		
 	public:
+		ORBClassHelper() {
+		}
+		
+		virtual ~ORBClassHelper() {
+		}	
+	
 		virtual ORBObject* instantiateObject() = 0;
 	
 		virtual ORBObjectAdapter* createAdapter(ORBObjectServant* obj) = 0;
