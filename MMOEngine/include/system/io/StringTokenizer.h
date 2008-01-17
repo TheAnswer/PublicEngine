@@ -22,7 +22,7 @@ namespace sys {
 		StringTokenizer(const string& s);
 	
 		int getIntToken();
-		long getLongToken();
+		uint64 getLongToken();
 		float getFloatToken();
 		
 		void getStringToken(string& token);
