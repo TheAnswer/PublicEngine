@@ -14,7 +14,7 @@ public:
 	}
 	
 	bool activate() {
-		//client->finalize();
+		client->finalize();
 		client = NULL;
 		
 		return true;

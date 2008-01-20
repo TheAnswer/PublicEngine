@@ -36,7 +36,6 @@ namespace sys {
 		}
 	
 		~Reference() {
-			decreaseReference();
 		}
 
 		void operator=(const Reference<O>& ref) {

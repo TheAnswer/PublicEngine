@@ -6,6 +6,10 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #ifndef OBJECTNOTDEPLOYEDEXCEPTION_H_
 #define OBJECTNOTDEPLOYEDEXCEPTION_H_
 
+#ifndef PLATFORM_CYGWIN
+#include <signal.h>
+#endif
+
 #include "system/lang/Exception.h"
 
 #include "../../log/Logger.h"
@@ -21,8 +25,9 @@ namespace engine {
 			cout << message << "\n";
 			Logger::closeGlobalFileLogger();
 
-			stub = NULL;
-			stub->_getORBName();
+			#ifndef PLATFORM_CYGWIN
+				raise(SIGSEGV);
+			#endif
 		}
 		
 	};
