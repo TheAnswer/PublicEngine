@@ -38,6 +38,14 @@ namespace sys {
 			else
 				return 0;
 		}
+		
+		K& getKey() {
+			return key;
+		}
+		
+		V& getValue() {
+			return value;
+		}
 	
 		friend class VectorMap<K,V>;
 	};
