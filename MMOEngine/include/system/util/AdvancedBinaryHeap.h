@@ -44,7 +44,7 @@ namespace sys {
 		AdvancedBinaryHeap();
 		AdvancedBinaryHeap(const AdvancedBinaryHeap& heap);
 		
-		~AdvancedBinaryHeap();
+		virtual ~AdvancedBinaryHeap();
 	
 		void add(AdvancedBinaryHeapNode* node);
 		

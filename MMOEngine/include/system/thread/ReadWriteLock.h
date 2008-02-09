@@ -45,7 +45,7 @@ namespace sys {
 			trace = NULL;
 		}
 
-		~ReadWriteLock() {
+		virtual ~ReadWriteLock() {
 			pthread_rwlock_destroy(&rwlock);
 		}
 		

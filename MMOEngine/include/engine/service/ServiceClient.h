@@ -42,6 +42,15 @@ namespace engine {
 
 		virtual ~ServiceClient() {
 		}
+
+		void close() {
+			if (socket != NULL) 	{
+				socket->close();
+				
+				delete socket;
+				socket = NULL;
+			}			
+		}
 		
 		bool isAvailable() {
 			if (socket == NULL)

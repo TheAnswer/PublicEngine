@@ -25,11 +25,13 @@ namespace engine {
 		virtual ~ORBClassHelper() {
 		}	
 	
+		virtual void finalizeHelper() = 0;
+		
 		virtual ORBObject* instantiateObject() = 0;
 	
 		virtual ORBObjectAdapter* createAdapter(ORBObjectServant* obj) = 0;
 		
-		const string& getClassName() {
+		inline const string& getClassName() {
 			return className;
 		}
 	};

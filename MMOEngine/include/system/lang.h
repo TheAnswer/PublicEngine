@@ -15,12 +15,16 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #include "lang/unicode.h"
 
 #include "lang/Exception.h"
-#include "lang/ArrayIndexOutOfBoundsException.h"
 #include "lang/System.h"
 #include "lang/Long.h"
 #include "lang/String.h"
 #include "lang/Time.h"
+#include "lang/ArrayIndexOutOfBoundsException.h"
+#include "lang/NumberFormatException.h"
 
+#include "io/Stream.h"
+#include "io/ObjectInputStream.h"
+#include "io/ObjectOutputStream.h"
 #include "io/StringTokenizer.h"
 
 #include "util/LinkedList.h"
@@ -39,6 +43,8 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #include "thread/ReadWriteLock.h"
 #include "thread/Condition.h"
 
+#include "net/InetAddress.h"
+#include "net/NetworkInterface.h"
 #include "net/PacketIndexOutOfBoundsException.h"
 #include "net/Packet.h"
 #include "net/SocketException.h"

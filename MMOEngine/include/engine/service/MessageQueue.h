@@ -26,6 +26,8 @@ namespace engine {
 	public:
 		MessageQueue();
 		
+		virtual ~MessageQueue();
+		
 		void push(Message* msg);
 			
 		Message* pop();

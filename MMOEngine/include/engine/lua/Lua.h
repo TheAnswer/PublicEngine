@@ -24,9 +24,7 @@ namespace engine {
 	public:
 		Lua();
 		
-		~Lua() {
-			deinit();
-		}
+		virtual ~Lua();
 		
 		void init();
 		
@@ -43,6 +41,7 @@ namespace engine {
 		// getters
 		
 		// globals
+		bool getGlobalBoolean(const string& name);
 		string getGlobalString(const string& name);
 		sys::uint32 getGlobalInt(const string& name);
 		uint64 getGlobalLong(const string& name);

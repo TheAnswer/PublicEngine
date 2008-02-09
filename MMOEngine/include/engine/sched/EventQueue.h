@@ -27,6 +27,8 @@ namespace engine {
 	public:
 		EventQueue();
 		
+		~EventQueue();
+		
 		void add(Event* e, uint64 time);
 		void add(Event* e, Time& time);
 		

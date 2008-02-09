@@ -23,12 +23,14 @@ namespace sys {
 		Exception() {
 		}
 	
-		Exception(string msg) {
+		Exception(const string& msg) {
 			message = msg;
 		}
 	
+		virtual ~Exception() {
+		}
+		
 		void printStackTrace() {
-			cout << message << "\n";
 			trace.print();
 		}
 
@@ -40,6 +42,7 @@ namespace sys {
 	 	inline string& getMessage() {
 			return message;
 		}
+	 	
 	};
 
   } // namespace lang

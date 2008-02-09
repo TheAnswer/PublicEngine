@@ -36,6 +36,10 @@ namespace sys {
 		}
 	
 		~Reference() {
+			if (_references != NULL) {
+				delete _references;
+				_references = NULL;
+			}
 		}
 
 		void operator=(const Reference<O>& ref) {

@@ -25,6 +25,9 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #pragma warning (disable : 4267)
 #pragma warning (disable : 4996)
 #pragma warning (disable : 4800)
+#pragma warning (disable : 4548)
+
+#define WIN32_LEAN_AND_MEAN
 #endif
 
 #ifndef PLATFORM_WIN

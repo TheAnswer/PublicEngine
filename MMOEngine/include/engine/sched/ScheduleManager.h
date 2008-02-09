@@ -7,7 +7,10 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #define SCHEDULEMANAGER_H_
 
 #include "../../system/lang.h"
+
 #include "../log/Logger.h"
+
+#include "../util/Singleton.h"
 
 #include "Event.h"
 #include "EventQueue.h"
@@ -15,14 +18,13 @@ Distribution of this file for usage outside of Core3 is prohibited.
 namespace engine {
   namespace sched {
 
-	class ScheduleManager : public Thread, public Mutex, public Logger {
+	class ScheduleManager : public Singleton<ScheduleManager>,  public Thread, public Mutex, public Logger {
 		EventQueue events;
 		
 		bool doRun;
 	
-		static ScheduleManager* instance;
-	
 	public:
+		ScheduleManager();
 		ScheduleManager(const string& s);
 	
 		virtual ~ScheduleManager();
@@ -56,14 +58,8 @@ namespace engine {
 		inline void printEvents() {
 			events.printQueue();
 		}
-		
-		static ScheduleManager* getInstance() {
-			if (instance == NULL)
-				instance = new ScheduleManager("Scheduler");
-			
-			return instance;
-		}
-		
+	
+		friend class SingletonWrapper<ScheduleManager>;
 	};
 
   } // namespace sched

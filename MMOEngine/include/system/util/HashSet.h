@@ -20,8 +20,12 @@ namespace sys {
 		HashSet() : HashTable<E, Object*>() {
 			PRESENT = new Object();
 		}
-	
-		~HashSet() {
+
+		HashSet(int initcap) : HashTable<E, Object*>(initcap) {
+			PRESENT = new Object();
+		}
+		
+		virtual ~HashSet() {
 			delete PRESENT;
 		}
 		

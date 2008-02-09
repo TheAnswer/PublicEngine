@@ -19,7 +19,7 @@ class StreamProxyService : public StreamServiceThread
 
 public:
 	StreamProxyService();
-
+	
 	void init();
 
 	void run();
@@ -38,6 +38,14 @@ public:
 
 	string& getAddress();
 
+	const string& getForwardingAddress() {
+		return forwardAddress;
+	}
+	
+	int getForwardingPort() {
+		return forwardPort;
+	}
+	
 };
 
 #endif /*STREAMPROXYSERVICE_H_*/

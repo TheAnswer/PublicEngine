@@ -13,7 +13,9 @@ Distribution of this file for usage outside of Core3 is prohibited.
 namespace engine {
   namespace service {
 
-	class ServiceClientMap : public HashTable<uint64, ServiceClient*> {
+	class ServiceClientMap : public HashTable<uint64, ServiceClient*>, 
+			public HashTableIterator<uint64, ServiceClient*> {
+				
 		int maxConnections;
 	
 		int hash(const uint64& key) {
@@ -21,7 +23,8 @@ namespace engine {
 		}
 	
 	public:
-		ServiceClientMap(int maxconn) : HashTable<uint64, ServiceClient*>((int) (maxconn * 1.25f)) {
+		ServiceClientMap(int maxconn) : HashTable<uint64, ServiceClient*>((int) (maxconn * 1.25f)),
+				HashTableIterator<uint64, ServiceClient*>(this) {
 			maxConnections = maxconn;
 	
 			setNullValue(NULL);

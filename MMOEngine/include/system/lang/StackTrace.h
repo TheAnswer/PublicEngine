@@ -18,7 +18,6 @@ namespace sys {
   namespace lang {
 		
 	class StackTrace {
-		void* array[25];
 		char** symbols;
 	
 		int count;

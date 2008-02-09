@@ -65,4 +65,32 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "util/QuadTree.h"
 
+namespace engine {
+
+	class Engine {
+	public:
+		static void initialize() {
+			Socket::initialize();
+		}
+
+		static void initialize(const char* globallogfile) {
+			Socket::initialize();
+
+			Logger::setGlobalFileLogger(globallogfile);
+		}
+
+		static void finalize() {
+			MySqlDatabase::finalizeLibrary();
+
+			NetworkInterface::finalize();
+			
+			Logger::closeGlobalFileLogger();
+		}
+		
+	};
+	
+} // namespace engine
+
+using namespace engine;
+
 #endif /*ENGINE_H_*/

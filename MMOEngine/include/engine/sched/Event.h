@@ -39,7 +39,7 @@ namespace engine {
 		}
 	
 		virtual ~Event() {
-		}	
+		}
 	
 		int compareTo(AdvancedBinaryHeapNode* node) {
 			Event* e = (Event*) node;

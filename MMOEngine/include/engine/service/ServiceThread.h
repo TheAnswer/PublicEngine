@@ -20,6 +20,7 @@ namespace engine {
 	class ServiceThread : public Thread, public Mutex, public Logger {
 	protected:
 		ScheduleManager* scheduler;
+		bool usingOwnScheduler;
 		
 		bool doRun, serviceReady;
 	
@@ -35,7 +36,7 @@ namespace engine {
 	
 		virtual void run() = 0;
 	
-		virtual void stop();
+		virtual void stop(bool doJoin = true);
 		
 		// event methods
 		inline void addEvent(Event* e, uint64 time = 0) {

@@ -18,6 +18,10 @@ namespace engine {
 		DatagramServiceClientProxy(Socket* sock, SocketAddress& addr) : ServiceClient(sock, addr) {
 		}
 
+		virtual ~DatagramServiceClientProxy() {
+			socket = NULL;
+		}
+		
 		void run() {
 		}
 

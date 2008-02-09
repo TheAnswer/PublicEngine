@@ -6,9 +6,9 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #ifndef MYSQLDATABASE_H_
 #define MYSQLDATABASE_H_
 
-#include <mysql.h>
-
 #include "../../system/lang.h"
+
+#include <mysql.h>
 
 #include "../log/Logger.h"
 
@@ -26,6 +26,7 @@ namespace engine {
 		string host;
 		
 	public:
+		MySqlDatabase(const string& s);
 		MySqlDatabase(const string& s, const string& host);
 		
 		~MySqlDatabase();
@@ -49,7 +50,10 @@ namespace engine {
 	    void error();
 	    void error(const char* query);
 
-		static void escapeString(string& s);	
+		static void escapeString(string& s);
+		
+		static void finalizeLibrary();
+		
 	};
 
   } // namespace db

@@ -22,6 +22,7 @@ namespace sys {
 		StringTokenizer(const string& s);
 	
 		int getIntToken();
+		uint32 getHexIntToken();
 		uint64 getLongToken();
 		float getFloatToken();
 		
@@ -29,10 +30,15 @@ namespace sys {
 		void getStringToken(stringstream& token);
 	
 		void finalToken(string& s);
-		void setDelimeter(const string& del);
-	
+
+		void shiftTokens(int count);
+		
 		bool hasMoreTokens();
-	
+
+		inline void setDelimeter(const string& del) {
+			delimeter = del;
+		}
+
 	private:
 		void nextToken(string& s);
 		void nextToken(stringstream& s);

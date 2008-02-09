@@ -19,8 +19,19 @@ namespace engine {
 		}
 	
 	public:
-		ORBClassHelperMap() : HashTable<string, ORBClassHelper*>(100) {
+		ORBClassHelperMap() : HashTable<string, ORBClassHelper*>(1000) {
 			setNullValue(NULL);
+		}
+		
+		~ORBClassHelperMap() {
+			HashTableIterator<string, ORBClassHelper*> iter(this);
+			
+			while (iter.hasNext()) {
+				string& helpername = iter.getNextKey();
+				ORBClassHelper* helper = remove(helpername);
+				
+				helper->finalizeHelper();
+			}
 		}
 		
 	};

@@ -70,6 +70,8 @@ namespace sys {
 		bool contains(const K& key);
 	
 		bool drop(const K& key);
+		
+		void removeAll();
 
 		inline void setNullValue(V val) {
 			nullValue = val;
@@ -105,14 +107,14 @@ namespace sys {
 	
 	template<class K, class V> int VectorMap<K, V>::find(const K& key) {
 		VectorMapEntry<K, V> e(key);
-	 	VectorMapEntry<K, V>* eptr = &e;	 
-	 	
+		VectorMapEntry<K, V>* eptr = &e;
+		
 	 	return SortedVector<VectorMapEntry<K, V>*>::find(eptr);
 	}
 	
 	template<class K, class V> bool VectorMap<K, V>::contains(const K& key) {
-		VectorMapEntry<K, V> e(key);
-	 	VectorMapEntry<K, V>* eptr = &e;	 
+		VectorMapEntry<K, V> e(key); 
+	 	VectorMapEntry<K, V>* eptr = &e;
 	 	
 	 	int idx = SortedVector<VectorMapEntry<K, V>*>::find(eptr);
 	 	
@@ -123,10 +125,21 @@ namespace sys {
 	}
 
 	template<class K, class V> bool VectorMap<K, V>::drop(const K& key) {
-		VectorMapEntry<K, V> e(key);
-	 	VectorMapEntry<K, V>* eptr = &e;
-	 	
-	 	return SortedVector<VectorMapEntry<K, V>*>::drop(eptr);
+		int pos = find(key);
+		if (pos == -1)
+			return false;
+		
+		VectorMapEntry<K, V>* entry = SortedVector<VectorMapEntry<K, V>*>::remove(pos);
+		delete entry;
+		
+	 	return true;
+	}
+
+	template<class K, class V> void VectorMap<K, V>::removeAll() {
+		for (int i = SortedVector<VectorMapEntry<K, V>*>::size() - 1; i >= 0; --i) {
+			VectorMapEntry<K, V>* entry = SortedVector<VectorMapEntry<K, V>*>::remove(i);
+			delete entry;
+		}
 	}
 
 	template<class K, class V> int VectorMap<K, V>::compare(VectorMapEntry<K, V>*& e1, VectorMapEntry<K, V>*& e2) {

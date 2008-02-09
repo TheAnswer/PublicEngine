@@ -27,7 +27,11 @@ namespace sys {
 			//cond = PTHREAD_COND_INITIALIZER;
 			pthread_cond_init(&cond, NULL);
 		}
-	
+
+		virtual ~Condition() {
+			pthread_cond_destroy(&cond);
+		}
+		
 		inline void init() {
 			pthread_cond_init(&cond, NULL);
 		}

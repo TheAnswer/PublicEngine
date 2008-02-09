@@ -17,8 +17,16 @@ class DatagramProxyClient : public DatagramServiceClientProxy, public Logger
 public:
 	DatagramProxyClient(DatagramProxyService* serv, Socket* sock, SocketAddress& addr);
 
+	~DatagramProxyClient();
+	
 	void forwardMessage(Packet* message);
 
+	void closeClients();
+	
+	inline bool isAvailable() {
+		return proxyServiceClient != NULL;
+	}
+	
 	// setters
 	inline void setProxyServiceClient(DatagramProxyServiceClient* pclient)
 	{

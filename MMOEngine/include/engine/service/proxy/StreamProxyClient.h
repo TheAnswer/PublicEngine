@@ -17,11 +17,16 @@ class StreamProxyClient : public StreamServiceClientProxy, public Logger
 public:
 	StreamProxyClient(StreamProxyService* serv, Socket* sock, SocketAddress& addr);
 
+	virtual ~StreamProxyClient() {
+	}
+
 	void run();
 
 	void stop();
 
 	void handleMessage(Packet* message);
+
+	bool handleError(Exception& e);
 
 	void forwardMessage(Packet* message);
 

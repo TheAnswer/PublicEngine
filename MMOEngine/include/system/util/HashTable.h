@@ -67,7 +67,9 @@ namespace sys {
 	    bool containsKey(const K& key);
 	
 	    V remove(const K& key);
-	
+
+	    void removeAll();
+	    
 	protected:
 	    void init(int initialCapacity, float loadFactor);
 	        
@@ -105,6 +107,8 @@ namespace sys {
 		K& getNextKey();
 		
 		void getNextKeyAndValue(K& key, V& value);
+
+		V& next();
 		
 		bool hasNext();
 		
@@ -127,6 +131,8 @@ namespace sys {
 	}
 	
 	template<class K, class V> HashTable<K,V>::~HashTable() {
+		removeAll();
+		
 		free(table);
 	}
 	
@@ -240,6 +246,9 @@ namespace sys {
 				count--;
 				V oldValue = e->value;
 				e->value = nullValue;
+				
+				delete e;
+				
 				return oldValue;
 	    	}
 		}
@@ -247,6 +256,24 @@ namespace sys {
 		return nullValue;
 	}
 
+	template<class K, class V> void HashTable<K,V>::removeAll() {
+		if (count == 0)
+			return;
+		
+		for (int i = 0; i < tableLength; ++i) {
+			for (Entry<K,V>* e = table[i]; e != NULL;) {
+				Entry<K,V>* next = e->next;
+				
+				delete e;
+				e = next;
+			}
+
+			table[i] = NULL;
+		}
+		
+		count = 0;
+	}
+	
 	template<class K, class V> HashTableIterator<K,V>::HashTableIterator(HashTable<K,V>* Table) {
 		htable = Table;
 		
@@ -289,6 +316,10 @@ namespace sys {
 		
 		e = e->next;
 		position++;
+	}
+
+	template<class K, class V> V& HashTableIterator<K,V>::next() {
+		return getNextValue();
 	}
 	
 	template<class K, class V> bool HashTableIterator<K,V>::hasNext() {

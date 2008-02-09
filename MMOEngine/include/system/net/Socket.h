@@ -37,6 +37,8 @@ namespace sys {
 		
 		void connect(SocketAddress* bindpoint);
 	
+		bool recieve(Packet* pack);
+
 		bool recieveFrom(Packet* pack, SocketAddress* addr);
 	
 		bool read(Packet* pack);

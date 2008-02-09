@@ -22,9 +22,15 @@ namespace engine {
 		StreamServiceClient(Socket* sock, SocketAddress& addr);
 		StreamServiceClient(const string& host, int port);
 
+		virtual ~StreamServiceClient();
+		
 		void connect();
 		
 		virtual void run() {
+		}
+
+		virtual void stop() {
+			doRun = false;
 		}
 
 		// message methods
@@ -39,7 +45,9 @@ namespace engine {
 		bool send(Packet* pack);
 	
 		bool read(Packet* pack);
-		
+
+		bool recieve(Packet* pack);
+
 		void disconnect();
 
 	};

@@ -24,7 +24,8 @@ namespace sys {
 		static uint32 hashCode(const char* str, int len);
 		
 		static uint64 toUnsignedLong(const char* str);
-	
+		static uint32 toHexInt(const char* str);
+		
 	};
 
   } // namespace lang

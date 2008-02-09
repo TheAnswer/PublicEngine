@@ -15,32 +15,38 @@ Distribution of this file for usage outside of Core3 is prohibited.
 namespace sys {
   namespace thread {
 
-  	class Atomic {
-  	public:
-  		void static inline incrementInt(uint32* value) {
+	class Atomic {
+	public:
+		static inline void incrementInt(uint32* value) {
 			#ifdef PLATFORM_FREEBSD
-  				atomic_add_int(value, 1);
-			#elif defined (PLATFORM_CYGWIN) || defined(PLATFORM_LINUX)
-  				//TODO: find appropriate method
-  				++(*value);
+				atomic_add_int(value, 1);
+			#elif defined PLATFORM_LINUX
+				//TODO: find appropriate method
+				++(*value);
+			#elif defined PLATFORM_CYGWIN
+				//TODO: find appropriate method
+				++(*value);
 			#else
-  				InterlockedIncrement((long*) value);
+				InterlockedIncrement((long*)value);
 			#endif
-  		}
+		}
 
-  		bool static inline decrementInt(uint32* value) {
+		static inline bool decrementInt(uint32* value) {
 			#ifdef PLATFORM_FREEBSD
-  				atomic_subtract_int(value, 1);
-  				return *value;
-			#elif defined (PLATFORM_CYGWIN) || defined(PLATFORM_LINUX)
-  				//TODO: find appropriate method
-  				return --(*value);
+				atomic_subtract_int(value, 1);
+				return *value;
+			#elif defined PLATFORM_LINUX
+				//TODO: find appropriate method
+				return --(*value);
+			#elif defined PLATFORM_CYGWIN
+				//TODO: find appropriate method
+				return --(*value);
 			#else
-  				return InterlockedDecrement((long*) value);
+				return InterlockedDecrement((long*) value);
 			#endif
-  		}
+		}
 
-  	};
+	};
 
   } // namespace thread
 } //namespace sys

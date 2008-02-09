@@ -13,11 +13,11 @@ namespace sys {
 
 	class Packet;
 	
-	class PacketIndexOutOfBoundsException : public sys::lang::Exception {
+	class PacketIndexOutOfBoundsException : public Exception {
 		Packet* packet;
 		
 	public:
-		PacketIndexOutOfBoundsException(Packet* pack, int index) : sys::lang::Exception() {
+		PacketIndexOutOfBoundsException(Packet* pack, int index) : Exception() {
 			packet = pack;
 			
 			stringstream sstr;

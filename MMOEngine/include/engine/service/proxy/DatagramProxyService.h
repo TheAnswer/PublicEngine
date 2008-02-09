@@ -10,8 +10,6 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 class DatagramProxyService : public DatagramServiceThread
 {
-	DatagramProxyServiceClient* proxyServiceClient;
-
 	string forwardAddress;
 	int forwardPort;
 

@@ -17,19 +17,21 @@ class StreamProxyServiceClient : public StreamServiceClient, public Logger
 public:
 	StreamProxyServiceClient(StreamProxyService* serv, string& host, int port);
 
+	virtual ~StreamProxyServiceClient() {
+	}
+
 	void run();
 
 	void stop();
 
 	void handleMessage(Packet* message);
 
+	bool handleError(Exception& e);
+
 	void forwardMessage(Packet* message);
 
 	// setters
-	inline void setProxyClient(StreamProxyClient* pclient)
-	{
-		proxyClient = pclient;
-	}
+	void setProxyClient(StreamProxyClient* pclient);
 
 };
 

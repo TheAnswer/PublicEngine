@@ -8,6 +8,8 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "../../system/lang.h"
 
+#include "../util/Singleton.h"
+
 #include "../service/StreamServiceThread.h"
 
 #include "ORBObjectDirectory.h"
@@ -36,7 +38,7 @@ Distribution of this file for usage outside of Core3 is prohibited.
 namespace engine {
   namespace ORB {
 
-	class ObjectRequestBroker : public StreamServiceThread {
+	class ObjectRequestBroker : public StreamServiceThread, public Singleton<ObjectRequestBroker> {
 		static ObjectRequestBroker* impl;
 	
 		string address;
@@ -59,6 +61,8 @@ namespace engine {
 		void init();
 	
 		void run();
+		
+		void shutdown();
 	
 		ORBClient* createConnection(Socket* sock, SocketAddress& addr);
 		
@@ -76,8 +80,6 @@ namespace engine {
 		ORBObjectAdapter* getObjectAdapter(const string& name);
 		ORBObjectAdapter* getObjectAdapter(uint64 oid);
 		
-		static ObjectRequestBroker* instance();
-		
 		inline bool hasRootDirectory() {
 			return namingDirectoryInterface->isRootDirectory();
 		}
@@ -88,6 +90,8 @@ namespace engine {
 		
 		friend class ORBNamingDirectoryService;
 			
+		friend class SingletonWrapper<ObjectRequestBroker>;
+		
 	};
 
   } // namespace ORB

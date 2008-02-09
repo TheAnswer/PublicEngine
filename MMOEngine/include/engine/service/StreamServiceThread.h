@@ -21,7 +21,7 @@ namespace engine {
 		
 		virtual void stop();
 		
-		void acceptConnections();
+		void acceptConnections(int limit = 15);
 
 	};
 

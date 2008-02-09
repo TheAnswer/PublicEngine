@@ -24,10 +24,11 @@ namespace sys {
 		string ipaddress;
 		string hostname;
 
-		static InetAddress* localHost;
-
 	public:
 		InetAddress(const string& address);
+		
+		~InetAddress() {
+		}
 		
 		// setters
 		inline void setHostName(const string& host) {
@@ -42,8 +43,6 @@ namespace sys {
 		inline const string& getHostName() {
 			return hostname;
 		}
-
-		static InetAddress* getLocalHost();
 
 	};
 

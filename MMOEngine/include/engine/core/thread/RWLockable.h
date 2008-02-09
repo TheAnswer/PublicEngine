@@ -92,18 +92,17 @@ protected:
 	string _param0_setLockName__string_;
 };
 
-class RWLockableHelper : public ORBClassHelper {
-	static ORBClassHelper* instance;
-
+class RWLockableHelper : public ORBClassHelper, public Singleton<RWLockableHelper> {
 public:
 	RWLockableHelper();
 
-	static ORBClassHelper* getInstance();
+	void finalizeHelper();
 
 	ORBObject* instantiateObject();
 
 	ORBObjectAdapter* createAdapter(ORBObjectServant* obj);
 
+	friend class SingletonWrapper<RWLockableHelper>;
 };
 
 class RWLockableServant : public ORBObjectServant {

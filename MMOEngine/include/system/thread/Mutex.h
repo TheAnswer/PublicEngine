@@ -31,11 +31,10 @@ namespace sys {
 	
 	public:
 		Mutex() {
-			//mutex = PTHREAD_MUTEX_INITIALIZER;
 			pthread_mutex_init(&mutex, NULL);
 				
 			doLog = true;
-			lockName = "Mutex";
+			lockName = "";
 	
 			lockCount = 0;
 			
@@ -43,7 +42,6 @@ namespace sys {
 		}
 	
 		Mutex(const string& s) {
-			//mutex = PTHREAD_MUTEX_INITIALIZER;
 			pthread_mutex_init(&mutex, NULL);
 				
 			doLog = true;
@@ -54,7 +52,7 @@ namespace sys {
 			trace = NULL;
 		}
 
-		~Mutex() {
+		virtual ~Mutex() {
 			pthread_mutex_destroy(&mutex);
 		}
 
