@@ -53,8 +53,9 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #include "orb/ObjectRequestBroker.h"
 #include "orb/ORBClient.h"
 
-#include "core/thread/RWLockable.h"
-#include "core/thread/RWLockableImplementation.h"
+#include "core/ManagedReference.h"
+#include "core/ManagedObject.h"
+#include "core/ManagedObjectImplementation.h"
 
 #ifndef PLATFORM_WIN
 #include "db/Database.h"

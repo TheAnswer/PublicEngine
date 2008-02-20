@@ -16,7 +16,7 @@ namespace engine {
 	class ORBObjectAdapter;
 	class ORBObjectStub;
 	
-	class ORBObject {
+	class ORBObject : public Object {
 	protected:
 		string _orbClassName;
 		string _orbName;
@@ -27,6 +27,8 @@ namespace engine {
 			
 	public:
 		ORBObject();
+		
+		virtual ~ORBObject();
 	
 		// setters
 		inline void _setORBClassName(const string& n) {

@@ -6,6 +6,8 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #ifndef EVENT_H_
 #define EVENT_H_
 
+#include <signal.h>
+
 namespace engine {
   namespace sched {
 
@@ -39,6 +41,10 @@ namespace engine {
 		}
 	
 		virtual ~Event() {
+			if (enQueued) {
+				cout << "ERROR: scheduled event deleted\n";
+				raise(SIGSEGV);
+			}
 		}
 	
 		int compareTo(AdvancedBinaryHeapNode* node) {

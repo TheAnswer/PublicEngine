@@ -18,7 +18,8 @@ namespace sys {
 	class Socket {
 	protected:
 		int sock;
-	
+		
+		uint64 timeout;
 		struct timeval tv;
 	
 	public:
@@ -56,7 +57,11 @@ namespace sys {
 		// setters
 		void setBlocking(bool b);
 		
-		void setTimeOut(uint64 timeout);
+		void updateTimeOut();
+		
+		inline void setTimeOut(uint64 time) {
+			timeout = time;
+		}
 
 #ifdef PLATFORM_WIN
 	private:

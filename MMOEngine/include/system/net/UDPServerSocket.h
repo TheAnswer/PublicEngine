@@ -21,7 +21,7 @@ namespace sys {
 	
 			bindTo(addr);
 			
-			setTimeOut(10);
+			setTimeOut(10000);
 		}
 		
 	};

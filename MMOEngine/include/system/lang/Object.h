@@ -6,30 +6,32 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #ifndef OBJECT_H_
 #define OBJECT_H_
 
+#include "ref/ReferenceCounter.h"
+
 namespace sys {
   namespace lang {
 
-	class Object {
-		int references;
-		
+	class Object : public ReferenceCounter {
 	public:
-		Object() {
-			references = 1;
+		Object() : ReferenceCounter() {
+			initializeCount();
 		}
 		
-		inline void acquireObject() {
-			++references;
+		virtual ~Object() {
+		}
+
+		virtual void finalize() {
+			release();
 		}
 		
-		inline void releaseObject() {
-			if (--references == 0)
+		inline void acquire() {
+			increaseCount();
+		}
+		
+		inline void release() {
+			if (decreaseCount())
 				delete this;
 		}
-		
-		inline int getReferences() {
-			return references;
-		}
-		
 	};
 
   } // namespace lang

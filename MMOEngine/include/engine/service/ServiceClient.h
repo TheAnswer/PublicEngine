@@ -11,7 +11,7 @@ Distribution of this file for usage outside of Core3 is prohibited.
 namespace engine {
   namespace service {
 
-	class ServiceClient {
+	class ServiceClient : public Object {
 	protected:
 		SocketAddress addr;
 		Socket* socket;
@@ -21,47 +21,25 @@ namespace engine {
 		int packetLossChance;
 		
 	public:
-		ServiceClient(Socket* sock) {
-			socket = sock;
-	
-			packetLossChance = 0;
-		}
-	
-		ServiceClient(Socket* sock, SocketAddress& addr) {
-			socket = sock;
-			ServiceClient::addr = addr;
-	
-			packetLossChance = 0;
-		}
-	
-		ServiceClient(const string& host, int port) {
-			setAddress(host, port);
-			
-			packetLossChance = 0;
-		}
+		ServiceClient(Socket* sock);
+		ServiceClient(Socket* sock, SocketAddress& addr);
+		ServiceClient(const string& host, int port);
 
-		virtual ~ServiceClient() {
-		}
+		virtual ~ServiceClient();
 
-		void close() {
-			if (socket != NULL) 	{
-				socket->close();
-				
-				delete socket;
-				socket = NULL;
-			}			
-		}
+		void close();
 		
-		bool isAvailable() {
-			if (socket == NULL)
-				return false;
-			
-			return !(hasError || disconnected);			
-		}
+		bool isAvailable();
 
 		inline bool isDisconnected() {
 			return disconnected;
 		}
+
+		virtual void finalize();
+		
+		virtual void acquire();
+		
+		virtual void release();
 
 		// setters
 		inline void setAddress(const string& host, int port) {

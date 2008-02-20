@@ -10,14 +10,16 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "lang/types.h"
 
-#include "lang/Reference.h"
 #include "lang/Object.h"
-#include "lang/unicode.h"
 
-#include "lang/Exception.h"
-#include "lang/System.h"
+#include "lang/ref/Reference.h"
+#include "lang/ref/ReferenceSlot.h"
+
+#include "lang/unicode.h"
 #include "lang/Long.h"
 #include "lang/String.h"
+#include "lang/Exception.h"
+#include "lang/System.h"
 #include "lang/Time.h"
 #include "lang/ArrayIndexOutOfBoundsException.h"
 #include "lang/NumberFormatException.h"

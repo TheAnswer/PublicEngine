@@ -15,21 +15,21 @@ public:
 	void wlock(bool doLock = true) {
 		ReadWriteLock::wlock(doLock);
 	}
-
+	
 	void wlock(RWLockable* lock) {
 		if (_this == lock) {
 			cout << "ERROR: cross wlocking itself [" << lockName << "]\n";
-			
+				
 			StackTrace::printStackTrace();
 			return;
 		}
-		
+			
 	    while (!tryWLock()) {
        		lock->unlock();
        		lock->wlock();
    		}
 	}
-
+	
 };
 
 #endif /*RWLOCKABLEIMPLEMENTATION_H_*/

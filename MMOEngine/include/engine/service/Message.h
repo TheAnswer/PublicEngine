@@ -17,7 +17,7 @@ namespace engine {
 
 	class Message : public Packet, public ORBObject {
 	protected:
-		ServiceClient* client;
+		ReferenceSlot<ServiceClient> client;
 	
 		uint64 timestampMili;
 		

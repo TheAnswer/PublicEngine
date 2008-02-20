@@ -15,35 +15,16 @@ namespace engine {
 
 	class DatagramServiceClientProxy : public ServiceClient {
 	public:
-		DatagramServiceClientProxy(Socket* sock, SocketAddress& addr) : ServiceClient(sock, addr) {
-		}
+		DatagramServiceClientProxy(Socket* sock, SocketAddress& addr);
 
-		virtual ~DatagramServiceClientProxy() {
-			socket = NULL;
-		}
+		virtual ~DatagramServiceClientProxy();
 		
-		void run() {
-		}
+		void run();
 
-		bool send(Packet* pack) {
-			if (packetLossChance != 0 && System::random(100) < (uint32) packetLossChance)
-				return false;
-			
-			socket->sendTo(pack, &addr);
-			
-			return true;
-		}
+		bool send(Packet* pack);
 
-		bool read(Packet* pack) {
-			if (packetLossChance != 0 && System::random(100) < (uint32) packetLossChance)
-				return false;
-
-			SocketAddress addr;
-			socket->recieveFrom(pack, &addr);
-
-			return true;
-		}
-
+		bool read(Packet* pack);
+		
 	};
 
   } // namespace service

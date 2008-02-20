@@ -48,8 +48,6 @@ namespace engine {
 		}
 
 		virtual ~BaseMessage() {
-			if (client != NULL)
-				((DatagramServiceClient*) client)->release();
 		}
 		
 		BaseMessage* clone(int startoffs = 0) {
@@ -61,12 +59,6 @@ namespace engine {
 			pack->doComp = doComp;
 			pack->doCRCTest = doCRCTest;
 			return pack;
-		}
-
-		void setClient(ServiceClient* c) {
-			Message::setClient(c);
-
-			((DatagramServiceClient*) client)->acquire();
 		}
 
 	};
