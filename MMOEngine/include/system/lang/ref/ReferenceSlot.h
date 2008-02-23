@@ -21,11 +21,11 @@ namespace sys {
 		}
 
 		ReferenceSlot(const ReferenceSlot& refslot) {
-			setObject(refslot.object);
+			initializeObject(refslot.object);
 		}
 
 		ReferenceSlot(O* obj) {
-			setObject(obj);
+			initializeObject(obj);
 		}
 
 		virtual ~ReferenceSlot() {
@@ -37,9 +37,7 @@ namespace sys {
 		}
 
 		void operator=(O* obj) {
-			releaseObject();
-
-			setObject(obj);
+			updateObject(obj);
 		}
 
 		O* operator->() {
@@ -55,12 +53,25 @@ namespace sys {
 		}
 		
 	protected:
+		inline void updateObject(O* obj) {
+			if (obj == object)
+				return;
+			
+			releaseObject();
+
+			setObject(obj);
+		}
+
 		inline void setObject(O* obj) {
-			if (obj != object)
-				object = obj;
-			else
+			if (obj == object)
 				return;
 
+			initializeObject(obj);
+		}
+	
+		inline void initializeObject(O* obj) {
+			object = obj;
+			
 			acquireObject();
 		}
 

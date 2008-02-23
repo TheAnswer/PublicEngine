@@ -63,8 +63,9 @@ namespace sys {
 		}
 
 		inline void decreaseReference() {
-			if (!decreaseCount())
+			if (!decreaseCount()) {
 				delete _object;
+			}
 		}
 
 	};

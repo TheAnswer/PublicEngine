@@ -26,9 +26,7 @@ public:
 	}
 
 	void operator=(O* obj) {
-		ReferenceSlot<O>::releaseObject();
-
-		ReferenceSlot<O>::setObject(obj);
+		ReferenceSlot<O>::updateObject(obj);
 	}
 
 };

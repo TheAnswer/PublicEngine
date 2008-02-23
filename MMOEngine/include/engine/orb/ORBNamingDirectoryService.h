@@ -30,6 +30,7 @@ namespace engine {
 		ORBNamingDirectoryService(ObjectRequestBroker* broker);
 		ORBNamingDirectoryService(ObjectRequestBroker* broker, const string& address);
 	
+		void deploy(ORBObjectStub* stub);
 		void deploy(const string& name, ORBObjectStub* stub);
 	
 		ORBObject* lookUp(const string& name);

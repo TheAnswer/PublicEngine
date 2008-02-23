@@ -26,6 +26,7 @@ namespace engine {
 		
 		virtual ~ORBObjectServant();
 
+		ORBObject* deploy();
 		ORBObject* deploy(const char* name);
 		ORBObject* deploy(const string& name);
 		ORBObject* deploy(const string& name, sys::uint64 nid);

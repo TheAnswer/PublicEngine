@@ -6,6 +6,8 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #ifndef REFERENCECOUNTER_H_
 #define REFERENCECOUNTER_H_
 
+#include <signal.h>
+
 #include "../../platform.h"
 
 #include "../../thread/Atomic.h"
@@ -38,8 +40,11 @@ namespace sys {
 
 		inline void finalizeCount() {
 			if (_references != NULL) {
-				if (getReferenceCount() > 1)
+				if (getReferenceCount() > 1) {
 					cout << "WARNING - reference count was not zero on delete\n";
+					
+					raise(SIGSEGV);
+				}
 
 				delete _references;
 				_references = NULL;
@@ -51,6 +56,12 @@ namespace sys {
 		}
 
 		inline bool decreaseCount() {
+			if (getReferenceCount() < 1) {
+				cout << "WARNING - reference count getting under zero\n";
+				
+				raise(SIGSEGV);
+			}
+			
 			return !Atomic::decrementInt(_references);
 		}
 

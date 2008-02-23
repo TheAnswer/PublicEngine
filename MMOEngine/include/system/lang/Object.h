@@ -32,6 +32,7 @@ namespace sys {
 			if (decreaseCount())
 				delete this;
 		}
+		
 	};
 
   } // namespace lang

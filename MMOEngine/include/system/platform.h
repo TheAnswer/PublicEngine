@@ -67,7 +67,7 @@ namespace sys {
 	#define MIN(a, b) (a < b ? a : b)
 
 	//#define LOG_LOCKS
-	#define TRACE_LOCKS
+	//#define TRACE_LOCKS
 
 	namespace lang {
 	} // namespace net

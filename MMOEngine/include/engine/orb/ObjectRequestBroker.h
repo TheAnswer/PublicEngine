@@ -69,6 +69,7 @@ namespace engine {
 		void registerClass(const string& name, ORBClassHelper* helper);
 	
 		// deployment methods
+		ORBObject* deploy(ORBObjectServant* obj);
 		ORBObject* deploy(const string& name, ORBObjectServant* obj);
 		
 		ORBObject* lookUp(const string& name);
