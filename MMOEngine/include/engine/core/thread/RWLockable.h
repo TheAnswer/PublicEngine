@@ -51,6 +51,10 @@ which carries forward this exception.
 
 #include "engine/orb/ObjectRequestBroker.h"
 
+namespace engine {
+namespace core {
+namespace thread {
+
 class RWLockable : public ORBObjectStub {
 public:
 	RWLockable();
@@ -117,5 +121,11 @@ public:
 	ORBObjectStub* _getStub();
 
 };
+
+} // namespace thread
+} // namespace core
+} // namespace engine
+
+using namespace engine::core::thread;
 
 #endif /*RWLOCKABLE_H_*/

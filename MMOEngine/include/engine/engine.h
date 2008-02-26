@@ -57,6 +57,10 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #include "core/ManagedObject.h"
 #include "core/ManagedObjectImplementation.h"
 
+//#include "core/util/ManagedVector.h"
+//#include "core/util/ManagedVectorImplementation.h"
+#include "core/util/ManagedSortedVector.h"
+
 #ifndef PLATFORM_WIN
 #include "db/Database.h"
 #include "db/MySqlDatabase.h"

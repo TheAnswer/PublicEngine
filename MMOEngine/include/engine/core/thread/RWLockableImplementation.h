@@ -10,26 +10,36 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "RWLockable.h" 
 
-class RWLockableImplementation : public ReadWriteLock, public RWLockableServant {
-public:
-	void wlock(bool doLock = true) {
-		ReadWriteLock::wlock(doLock);
-	}
-	
-	void wlock(RWLockable* lock) {
-		if (_this == lock) {
-			cout << "ERROR: cross wlocking itself [" << lockName << "]\n";
-				
-			StackTrace::printStackTrace();
-			return;
+namespace engine {
+  namespace core {
+  	namespace thread {
+
+	class RWLockableImplementation : public ReadWriteLock, public RWLockableServant {
+	public:
+		void wlock(bool doLock = true) {
+			ReadWriteLock::wlock(doLock);
 		}
-			
-	    while (!tryWLock()) {
-       		lock->unlock();
-       		lock->wlock();
-   		}
-	}
-	
-};
+		
+		void wlock(RWLockable* lock) {
+			if (_this == lock) {
+				cout << "ERROR: cross wlocking itself [" << lockName << "]\n";
+					
+				StackTrace::printStackTrace();
+				return;
+			}
+				
+		    while (!tryWLock()) {
+	       		lock->unlock();
+	       		lock->wlock();
+	   		}
+		}
+		
+	};
+
+    } // namespace thread
+  } // namespace core
+} // namespace engine
+
+using namespace engine::core::thread;
 
 #endif /*RWLOCKABLEIMPLEMENTATION_H_*/

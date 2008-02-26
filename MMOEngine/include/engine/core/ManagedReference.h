@@ -10,25 +10,33 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "ManagedObject.h"
 
-template<class O> class ManagedReference : public ReferenceSlot<O> {
-public:
-	ManagedReference() : ReferenceSlot<O>() {
-	}
+namespace engine {
+  namespace core {
+
+	template<class O> class ManagedReference : public ReferenceSlot<O> {
+	public:
+		ManagedReference() : ReferenceSlot<O>() {
+		}
+		
+		ManagedReference(const ManagedReference& ref) : ReferenceSlot<O>(ref) {
+		}
+		
+		ManagedReference(O* obj) : ReferenceSlot<O>(obj) {
+		}
 	
-	ManagedReference(const ManagedReference& ref) : ReferenceSlot<O>(ref) {
-	}
+		void operator=(const ManagedReference& ref) {
+			ReferenceSlot<O>::setObject(ref.object);
+		}
 	
-	ManagedReference(O* obj) : ReferenceSlot<O>(obj) {
-	}
+		void operator=(O* obj) {
+			ReferenceSlot<O>::updateObject(obj);
+		}
+	
+	};
 
-	void operator=(const ManagedReference& ref) {
-		ReferenceSlot<O>::setObject(ref.object);
-	}
+  } // namespace core
+} // namespace engine
 
-	void operator=(O* obj) {
-		ReferenceSlot<O>::updateObject(obj);
-	}
-
-};
-
+using namespace engine::core;
+	
 #endif /*MANAGEDREFERENCE_H_*/

@@ -10,16 +10,24 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "ManagedObject.h"
 
-class ManagedObjectImplementation : public ManagedObjectServant {
-public:
-	void lock(bool doLock = true) {
-		wlock(doLock);
-	}
+namespace engine {
+  namespace core {
 
-	void lock(ManagedObject* obj) {
-		wlock(obj);
-	}
+	class ManagedObjectImplementation : public ManagedObjectServant {
+	public:
+		void lock(bool doLock = true) {
+			wlock(doLock);
+		}
+
+		void lock(ManagedObject* obj) {
+			wlock(obj);
+		}
 	
-};
+	};
+
+  } // namespace core
+} // namespace engine
+
+using namespace engine::core;
 
 #endif /*MANAGEDOBJECTIMPLEMENTATION_H_*/
