@@ -14,11 +14,19 @@ Distribution of this file for usage outside of Core3 is prohibited.
 	extern "C" void cygwin_stackdump(void);
 #endif
 
+#ifdef TRACE_REFERENCING
+	#define LINE_TRACING
+#endif
+
 namespace sys {
   namespace lang {
 		
 	class StackTrace {
+	#ifdef LINE_TRACING
+		uint32* symbols;
+	#else
 		char** symbols;
+	#endif
 	
 		int count;
 	
@@ -28,6 +36,8 @@ namespace sys {
 		~StackTrace();
 		
 		void print();
+	
+		void getStackTrace(string& trace);
 	
 		static void printStackTrace();	
 		

@@ -23,11 +23,12 @@ namespace engine {
 			message = "\'" + stub->_getORBName() + "\' is not deployed";
 			
 			cout << message << "\n";
+			
+			stub->printReferenceTrace();
+			
 			Logger::closeGlobalFileLogger();
 
-			#ifndef PLATFORM_CYGWIN
-				raise(SIGSEGV);
-			#endif
+			raise(SIGSEGV);
 		}
 		
 	};

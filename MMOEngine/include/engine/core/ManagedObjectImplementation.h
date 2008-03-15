@@ -22,7 +22,7 @@ namespace engine {
 		void lock(ManagedObject* obj) {
 			wlock(obj);
 		}
-	
+		
 	};
 
   } // namespace core

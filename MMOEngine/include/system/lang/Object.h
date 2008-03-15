@@ -12,25 +12,53 @@ namespace sys {
   namespace lang {
 
 	class Object : public ReferenceCounter {
+		bool finalized;
+		
 	public:
 		Object() : ReferenceCounter() {
 			initializeCount();
+			
+			finalized = false;
 		}
 		
 		virtual ~Object() {
 		}
 
 		virtual void finalize() {
+			if (finalized)
+				return;
+			
+			finalized = true;
+			
 			release();
 		}
-		
+
+		void revoke() {
+			if (!finalized)
+				return;
+			
+			finalized = false;
+			
+			acquire();
+		}
+
+	protected:
 		inline void acquire() {
 			increaseCount();
 		}
 		
 		inline void release() {
 			if (decreaseCount())
+				destroy();
+		}
+		
+		virtual bool destroy() {
+			if (finalized) {
 				delete this;
+				
+				return true;
+			} else
+				return false;
 		}
 		
 	};

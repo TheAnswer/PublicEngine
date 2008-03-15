@@ -19,6 +19,12 @@ namespace engine {
 		
 		ORBClassHelper* _classHelper;
 		
+	#ifdef TRACE_REFERENCING
+		Vector<StackTrace*> traces;
+		
+		StackTrace* finalizedTrace;
+	#endif
+				
 	public:
 		ORBObjectStub(ORBObjectServant* obj);
 		
@@ -30,6 +36,15 @@ namespace engine {
 
 		// deployment methods
 		bool undeploy();
+
+		// reference counting methods
+		virtual void finalize();
+
+		virtual void acquire();
+	
+		virtual void release();
+			
+		void printReferenceTrace();
 		
 		// setters
 		inline void _setClassHelper(ORBClassHelper* helper) {
