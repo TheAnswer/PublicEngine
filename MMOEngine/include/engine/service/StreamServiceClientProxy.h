@@ -12,8 +12,6 @@ namespace engine {
   namespace service {
 
 	class StreamServiceClientProxy : public StreamServiceClient {
-		Socket* socket;
-
 	public:
 		StreamServiceClientProxy(Socket* sock) : StreamServiceClient(sock) {
 			doRun = true;
@@ -21,6 +19,9 @@ namespace engine {
 
 		StreamServiceClientProxy(Socket* sock, SocketAddress& addr) : StreamServiceClient(sock, addr) {
 			doRun = true;
+		}
+
+		virtual ~StreamServiceClientProxy() {
 		}
 
 	};

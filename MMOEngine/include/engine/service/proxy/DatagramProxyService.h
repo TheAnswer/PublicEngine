@@ -8,8 +8,7 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "engine/engine.h"
 
-class DatagramProxyService : public DatagramServiceThread
-{
+class DatagramProxyService : public DatagramServiceThread {
 	string forwardAddress;
 	int forwardPort;
 

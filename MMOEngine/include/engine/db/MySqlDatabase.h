@@ -29,7 +29,7 @@ namespace engine {
 		MySqlDatabase(const string& s);
 		MySqlDatabase(const string& s, const string& host);
 		
-		~MySqlDatabase();
+		virtual ~MySqlDatabase();
 		
 		void connect(const string& dbname, const string& user, const string& passw, int port);
 		

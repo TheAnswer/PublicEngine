@@ -56,7 +56,11 @@ namespace sys {
 
 		// setters
 		void setBlocking(bool b);
-		
+
+		void setLingering(int time);
+
+		void disableLingering();
+
 		void updateTimeOut();
 		
 		inline void setTimeOut(uint64 time) {

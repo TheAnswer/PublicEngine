@@ -6,7 +6,7 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #ifndef INVOKEMETHODMESSAGE_H_
 #define INVOKEMETHODMESSAGE_H_
 
-#include "../../../system/lang.h"
+#include "system/lang.h"
 
 namespace engine {
   namespace ORB {

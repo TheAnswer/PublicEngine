@@ -27,7 +27,7 @@ namespace engine {
 	public:
 		ServiceMessageHandlerThread(const string& s);
 		
-		~ServiceMessageHandlerThread();
+		virtual ~ServiceMessageHandlerThread();
 	
 		virtual ServiceClient* createConnection(Socket* sock, SocketAddress& addr) = 0;
 		

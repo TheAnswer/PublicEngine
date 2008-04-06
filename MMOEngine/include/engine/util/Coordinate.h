@@ -9,17 +9,17 @@ Distribution of this file for usage outside of Core3 is prohibited.
 namespace engine {
   namespace util {
 
-	class Coordinate : public ORBObject {
+	class Coordinate : public DistributedObject {
 	protected:
 		float positionX, positionZ, positionY;
 		
 		float previousPositionX, previousPositionZ, previousPositionY;
 	
 	public:
-		Coordinate() : ORBObject() {
+		Coordinate() : DistributedObject() {
 		}	
 	
-		Coordinate(float x, float z, float y) : ORBObject() {
+		Coordinate(float x, float z, float y) : DistributedObject() {
 			positionX = x;
 			positionZ = z;
 			positionY = y;

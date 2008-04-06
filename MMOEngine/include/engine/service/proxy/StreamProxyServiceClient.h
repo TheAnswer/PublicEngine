@@ -22,8 +22,6 @@ public:
 
 	void run();
 
-	void stop();
-
 	void handleMessage(Packet* message);
 
 	bool handleError(Exception& e);

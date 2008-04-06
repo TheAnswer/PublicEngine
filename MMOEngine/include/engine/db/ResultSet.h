@@ -27,7 +27,7 @@ namespace engine {
 			result = res;
 		}
 		
-		~ResultSet() {
+		virtual ~ResultSet() {
 			mysql_free_result(result);
 		}
 		
@@ -63,11 +63,11 @@ namespace engine {
 			return row[index];
 		}
 		
-		int getLastAffectedRow() {
+		uint64 getLastAffectedRow() {
 			return mysql_insert_id(mysql);
 		}
 		
-		inline int size() {
+		inline uint64 size() {
 			return mysql_num_rows(result);
 		}
 	};

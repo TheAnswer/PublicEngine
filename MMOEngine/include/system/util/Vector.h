@@ -235,12 +235,12 @@ namespace sys {
            if (newCapacity < minCapacity)
                newCapacity = minCapacity;
 
-           elementData = (E*) malloc((elementCapacity = newCapacity) * sizeof(E));
-
-           if (copyContent)
-               memcpy(elementData, oldData, elementCount * sizeof(E));
-
-           free(oldData);
+           if (copyContent) {
+        	   elementData = (E*) realloc(elementData, (elementCapacity = newCapacity) * sizeof(E));
+           } else {
+               elementData = (E*) malloc((elementCapacity = newCapacity) * sizeof(E));
+               free(oldData);
+           }
        }
    }
 

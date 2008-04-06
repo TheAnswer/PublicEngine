@@ -6,9 +6,6 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #ifndef LOGGER_H_
 #define LOGGER_H_
 
-#include <iostream>
-#include <fstream>
-
 #include "../../system/lang.h"
 
 namespace engine {

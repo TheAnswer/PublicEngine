@@ -9,7 +9,10 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #include "../platform.h"
 
 #include <pthread.h>
+
 #include <signal.h>
+
+#include "../lang/Runnable.h"
 
 namespace sys {
   namespace thread {
@@ -17,108 +20,54 @@ namespace sys {
 	/*! 
 	 * thread wrapper class. the inheriting classes must implement a run() method that have to contain the code to be executed
 	 */
-	class Thread {
+	class Thread : public Runnable {
 		pthread_t thread;
+
 		pthread_attr_t attributes;
 		
-		static void* execute_thread(void* th) {
-			Thread* impl = (Thread*) th;
-			impl->run();
-	
-			if (impl->isDetached())
-				delete impl;
-			
-			return NULL;
-		}
-	
+		static pthread_once_t initThread;
+		static pthread_key_t threadDataKey;
+
+	private:
+		static void initializeThreading();
+
+		static void* executeThread(void* th);
+
 	public:
 		//! allocates a new Thread
-		Thread() { 
-			pthread_attr_init(&attributes);
-		}
-	
-		virtual ~Thread() {
-		}
+		Thread();
 
-		//! this method is called when the thread starts
-		virtual void run() = 0;
+		virtual ~Thread();
 
 		//! causes this thread to begin execution
-		void start() {
-			pthread_create(&thread, &attributes, execute_thread, this);
-		}
+		void start();
 	
-		void kill(int signal = SIGINT) {
-			pthread_kill(thread, signal);
-		}
-		
 		//! causes this thread to be cancelled
-		void cancel() {
-			pthread_cancel(thread);
-		}
-	
+		void cancel();
+
+		//! causes this thread to be killed
+		void kill(int signal = SIGINT);
+		
 		//! causes the calling thread to be waiting until this thread finishes
-		void join() {
-			if (isDetached())
-				setJoinable();
-			
-			pthread_join(thread, NULL);
-		}
+		void join();
+	
+		void detach();
 
-		void detach() {
-			pthread_detach(thread);
-		}
+		static void sleep(uint64 millis);
 
-		static void sleepMili(uint64 time) {
-			#ifndef PLATFORM_WIN
-				struct timespec tm, trem;
-	
-				tm.tv_sec  = time / 1000;
-				tm.tv_nsec = (time % 1000) * 1000000;
-	
-				nanosleep(&tm, &trem);
-			#endif
-		}
-	
-		static void sleepMikro(uint64 time) {
-			#ifndef PLATFORM_WIN
-				struct timespec tm, trem;
-	
-				//tm.tv_sec  = time / 1000000;
-				//tm.tv_nsec = (time % 1000000) * 1000;
-	
-				tm.tv_sec  = 0;
-				tm.tv_nsec = 10;
-	
-				nanosleep(&tm, &trem);
-			#endif
-		}
+		static void sleep(uint64 millis, uint64 nanos);
+
+		bool isDetached();
+
+		static Thread* getCurrentThread();
+
+		static uint32 getCurrentThreadID();
 
 		// setters
-		inline void setDetached() {
-			pthread_attr_setdetachstate(&attributes, PTHREAD_CREATE_DETACHED);
-		}
+		void setDetached();
 
-		inline void setJoinable() {
-			pthread_attr_setdetachstate(&attributes, PTHREAD_CREATE_JOINABLE);
-		}
+		void setJoinable();
 
-		// getters
-		inline bool isDetached() {
-			int state;
-			pthread_attr_getdetachstate(&attributes, &state);
-
-			return state == PTHREAD_CREATE_DETACHED;
-		}
-
-		inline uint32 getCurrentThreadID() {
-			#ifndef PLATFORM_WIN
-				return 0;
-			#else
-				return GetCurrentThreadId();
-			#endif
-		}
-	
 	};
 
   } // namespace thread

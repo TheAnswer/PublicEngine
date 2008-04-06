@@ -15,7 +15,7 @@ namespace engine {
 	public:
 		DatagramServiceThread(const string& s);
 		
-		~DatagramServiceThread();
+		virtual ~DatagramServiceThread();
 		
 		void start(int p, int mconn = 10);
 	

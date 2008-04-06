@@ -15,13 +15,15 @@ namespace engine {
 	public:
 		StreamServiceThread(const string& s);
 		
-		~StreamServiceThread();
+		virtual ~StreamServiceThread();
 		
 		void start(int p, int mconn = 10);
 		
 		virtual void stop();
 		
 		void acceptConnections(int limit = 15);
+
+		bool closeConnection(ServiceClient* client);
 
 	};
 

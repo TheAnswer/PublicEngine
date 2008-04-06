@@ -20,125 +20,39 @@ namespace sys {
 		char *end, *offset;
 		
 	public:
-		Stream() : Vector<char>() {
-			end = offset = elementData;
-		}
-	
-		Stream(int initsize) : Vector<char>(initsize) {
-			end = offset = elementData;
-		}
-
-		Stream(int initsize, int capincr) : Vector<char>(initsize, capincr) {
-			end = offset = elementData;
-		}
-
-		Stream(char *buf[], int len) : Vector<char>(len) {
-			offset = elementData;
-			end = elementData + len;
-
-			memcpy(elementData, buf, len);
-		}
-	
-		virtual ~Stream() {
-			end = offset = NULL;
-		}
-
-		Stream* clone(int startoffs = 0) {
-			int newSize = size() - startoffs;
-			Stream* stream = new Stream(newSize);
-
-			stream->writeStream(elementData + startoffs, newSize);
-	
-			return stream;		
-		}
-	
-		void copy(Stream* stream, int startoffs = 0) {
-			int newSize = size() - startoffs;
-	
-			stream->reset();
-			stream->writeStream(elementData + startoffs, newSize);
-		}
-	
-		void setSize(int len, bool copyContent = true) {
-			char* oldElementData = elementData;
-			Vector<char>::setSize(len, copyContent);
-			
-			if (oldElementData != elementData)
-				offset = (offset - oldElementData) + elementData;
-			
-			end = elementData + len;
-		}
-	
-		void extendSize(int len, bool copyContent = true) {
-			if ((offset += len) > end) {
-				char* oldElementData = elementData;
-				Vector<char>::setSize(offset - elementData);
+		Stream();	
+		Stream(int initsize);
+		Stream(int initsize, int capincr);
+		Stream(char *buf[], int len);
 		
-				if (oldElementData != elementData)
-					offset = (offset - oldElementData) + elementData;
-		
-				end = offset;
-			}
-		}
-	
-		inline void setOffset(int offs) {
-			if ((offset = elementData + offs) > end)
-				throw StreamIndexOutOfBoundsException(this, offs);
-		}
-	
-		inline void shiftOffset(int offs) {
-			if ((offset += offs) > end)
-				throw StreamIndexOutOfBoundsException(this, offset - elementData);
-		}
-	
-		void clear() {
-			Vector<char>::setSize(0);
-			 
-			end = offset = elementData;
-		}
-	
-		void reset() {
-			offset = elementData;
-		}
-	
-		void removeLastBytes(int len) {
-			int newSize = size() - len;
-			if (newSize < 0)
-				throw StreamIndexOutOfBoundsException(this, newSize);
+		virtual ~Stream();
 
-			setSize(newSize);
-		}
+		Stream* clone(int startoffs = 0);
+		
+		void copy(Stream* stream, int startoffs = 0);
+		
+		void setSize(int len, bool copyContent = true);
+		
+		void extendSize(int len, bool copyContent = true);
+		
+		void setOffset(int offs);
+	
+		void shiftOffset(int offs);
+	
+		void clear();
+	
+		void reset();
+	
+		void removeLastBytes(int len);
 
 		// stream manipulation methods
-		void writeStream(const char *buf, int len) {
-			extendSize(len);
+		void writeStream(const char *buf, int len);
+		void writeStream(Stream* stream);
+		void writeStream(Stream* stream, int len);
 
-			memcpy(offset - len, buf, len);
-		}
-
-		void writeStream(Stream* stream) {
-			writeStream(stream->getBuffer(), stream->size());
-		}
-
-		void writeStream(Stream* stream, int len) {
-			if (len > stream->size())
-				throw StreamIndexOutOfBoundsException(stream, len);
-
-			writeStream(stream->getBuffer(), len);
-		}
-
-		inline void readStream(char *buf, int len) {
-			shiftOffset(len);
-
-			memcpy(buf, offset - len, len);
-		}
-
-		inline void readStream(Stream* stream, int len) {
-			stream->setSize(len);
-
-			readStream(stream->getBuffer(), stream->size());
-		}
-
+		void readStream(char *buf, int len);
+		void readStream(Stream* stream, int len);
+		
 		// getters
 		inline int getOffset() {
 			return offset - elementData;

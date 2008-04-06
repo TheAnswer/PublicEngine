@@ -25,13 +25,12 @@ namespace engine {
 		virtual ~StreamServiceClient();
 		
 		void connect();
-		
-		virtual void run() {
-		}
 
-		virtual void stop() {
-			doRun = false;
-		}
+		void start();
+		
+		void run();
+
+		void stop();
 
 		// message methods
 		void receiveMessages();

@@ -8,8 +8,7 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "engine/engine.h"
 
-class DatagramProxyServiceClient : public DatagramServiceClient, public Thread, public Logger 
-{
+class DatagramProxyServiceClient : public DatagramServiceClient, public Thread, public Logger {
 	bool doRun;
 
 	class DatagramProxyService* service;
@@ -18,6 +17,8 @@ class DatagramProxyServiceClient : public DatagramServiceClient, public Thread, 
 
 public:
 	DatagramProxyServiceClient(DatagramProxyService* serv, string& host, int port);
+	
+	virtual ~DatagramProxyServiceClient();
 
 	void run();
 

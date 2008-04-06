@@ -8,16 +8,17 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "engine/engine.h"
 
-class DatagramProxyClient : public DatagramServiceClientProxy, public Logger 
-{
+class DatagramProxyServiceClient;
+
+class DatagramProxyClient : public DatagramServiceClientProxy, public Logger {
 	class DatagramProxyService* service;
 
-	class DatagramProxyServiceClient* proxyServiceClient;
-
+	ReferenceSlot<DatagramProxyServiceClient> proxyServiceClient;
+	
 public:
 	DatagramProxyClient(DatagramProxyService* serv, Socket* sock, SocketAddress& addr);
 
-	~DatagramProxyClient();
+	virtual ~DatagramProxyClient();
 	
 	void forwardMessage(Packet* message);
 
@@ -28,8 +29,7 @@ public:
 	}
 	
 	// setters
-	inline void setProxyServiceClient(DatagramProxyServiceClient* pclient)
-	{
+	inline void setProxyServiceClient(DatagramProxyServiceClient* pclient) {
 		proxyServiceClient = pclient;
 	}
 

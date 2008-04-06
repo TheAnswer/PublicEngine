@@ -19,7 +19,7 @@ namespace engine {
 	public:
 		ServiceProcessThread(const string& s);
 	
-		~ServiceProcessThread();
+		virtual ~ServiceProcessThread();
 	
 		void start(ServiceMessageHandlerThread* serv);
 	

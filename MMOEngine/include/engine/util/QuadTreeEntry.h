@@ -6,7 +6,7 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #ifndef QUADTREEENTRY_H_
 #define QUADTREEENTRY_H_
 
-#include "../orb/object/ORBObject.h"
+#include "engine/orb/object/DistributedObject.h"
 
 #include "Coordinate.h"
 
@@ -16,7 +16,7 @@ namespace engine {
 	class QuadTree;
 	class QuadTreeNode;
 	
-	class QuadTreeEntry : public Coordinate/*, public ReadWriteLock*/ {
+	class QuadTreeEntry : public Coordinate {
 	protected:
 		QuadTreeNode* node;
 		bool bounding;
@@ -30,7 +30,7 @@ namespace engine {
 		float radius;
 	
 	public:
-		QuadTreeEntry(QuadTreeNode* n = NULL) : Coordinate()/*, ReadWriteLock("")*/ {
+		QuadTreeEntry(QuadTreeNode* n = NULL) : Coordinate() {
 			node = n;
 			bounding = false;
 			

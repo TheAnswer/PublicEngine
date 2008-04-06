@@ -12,15 +12,15 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "system/lang/Exception.h"
 
-#include "../../log/Logger.h"
+#include "engine/log/Logger.h"
 
 namespace engine {
   namespace ORB {
 
 	class ObjectNotDeployedException : public sys::lang::Exception {
 	public:
-		ObjectNotDeployedException(ORBObjectStub* stub) : Exception() {
-			message = "\'" + stub->_getORBName() + "\' is not deployed";
+		ObjectNotDeployedException(DistributedObjectStub* stub) : Exception() {
+			message = "\'" + stub->_getName() + "\' is not deployed";
 			
 			cout << message << "\n";
 			

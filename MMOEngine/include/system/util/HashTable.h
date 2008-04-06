@@ -100,6 +100,7 @@ namespace sys {
 		int eIndex;
 			
 	public:
+		HashTableIterator();
 		HashTableIterator(HashTable<K,V>* Table);
 		
 		V& getNextValue();
@@ -115,7 +116,10 @@ namespace sys {
 		void resetIterator();
 		
 		void toConsole();
-		
+
+		inline void setTable(HashTable<K,V>* table) {
+			htable = table;
+		}
 	};
 	
 	template<class K, class V> HashTable<K,V>::HashTable(int initialCapacity, float loadFactor) {
@@ -273,7 +277,16 @@ namespace sys {
 		
 		count = 0;
 	}
-	
+
+	template<class K, class V> HashTableIterator<K,V>::HashTableIterator() {
+		htable = NULL;
+		
+		position = 0;
+		eIndex = -1;
+		
+		e = NULL;
+	}
+
 	template<class K, class V> HashTableIterator<K,V>::HashTableIterator(HashTable<K,V>* Table) {
 		htable = Table;
 		

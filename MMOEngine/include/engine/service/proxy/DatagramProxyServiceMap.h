@@ -22,7 +22,8 @@ namespace engine {
 	
 	public:
 		DatagramProxyServiceMap(int initsize) : HashTable<string, DatagramProxyService*>((int) (initsize * 1.25f)), 
-				HashTableIterator<string, DatagramProxyService*>(this) {
+				HashTableIterator<string, DatagramProxyService*>() {
+			setTable(this);
 			setNullValue(NULL);
 		}
 

@@ -6,27 +6,27 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #ifndef MESSAGE_H_
 #define MESSAGE_H_
 
-#include "../../system/lang.h"
+#include "system/lang.h"
 
 #include "ServiceClient.h"
 
-#include "../orb/object/ORBObject.h"
+#include "engine/orb/object/DistributedObject.h"
 
 namespace engine {
   namespace service {
 
-	class Message : public Packet, public ORBObject {
+	class Message : public Packet, public DistributedObject {
 	protected:
 		ReferenceSlot<ServiceClient> client;
 	
 		uint64 timestampMili;
 		
 	public:
-		Message() : Packet(), ORBObject() {
+		Message() : Packet(), DistributedObject() {
 			client = NULL;
 		}
 	
-		Message(int size) : Packet(size), ORBObject() {
+		Message(int size) : Packet(size), DistributedObject() {
 			client = NULL;
 		}
 	

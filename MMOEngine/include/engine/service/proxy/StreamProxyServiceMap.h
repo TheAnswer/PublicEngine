@@ -22,7 +22,8 @@ namespace engine {
 	
 	public:
 		StreamProxyServiceMap(int initsize) : HashTable<string, StreamProxyService*>((int) (initsize * 1.25f)),
-				HashTableIterator<string, StreamProxyService*>(this) {
+				HashTableIterator<string, StreamProxyService*>() {
+			setTable(this);
 			setNullValue(NULL);
 		}
 		

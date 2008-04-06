@@ -6,8 +6,6 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #ifndef MANAGEDOBJECTIMPLEMENTATION_H_
 #define MANAGEDOBJECTIMPLEMENTATION_H_
 
-#include "thread/RWLockable.h"
-
 #include "ManagedObject.h"
 
 namespace engine {
@@ -15,14 +13,15 @@ namespace engine {
 
 	class ManagedObjectImplementation : public ManagedObjectServant {
 	public:
-		void lock(bool doLock = true) {
-			wlock(doLock);
-		}
+		void lock(bool doLock = true);
+		void lock(ManagedObject* obj);
 
-		void lock(ManagedObject* obj) {
-			wlock(obj);
-		}
-		
+		void wlock(bool doLock = true);
+		void wlock(ManagedObject* obj);
+
+		void unlock(bool doLock = true);
+
+		void setLockName(const string& name);
 	};
 
   } // namespace core

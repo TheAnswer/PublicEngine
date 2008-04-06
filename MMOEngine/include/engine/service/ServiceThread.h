@@ -34,8 +34,8 @@ namespace engine {
 
 		void start(bool waitForStartup = true);
 	
-		virtual void run() = 0;
-	
+		virtual void run();
+		
 		virtual void stop(bool doJoin = true);
 		
 		// event methods

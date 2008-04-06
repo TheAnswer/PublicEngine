@@ -6,20 +6,20 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #ifndef LOOKUPOBJECTRESPONSEMESSAGE_H_
 #define LOOKUPOBJECTRESPONSEMESSAGE_H_
 
-#include "../../../system/lang.h"
+#include "system/lang.h"
 
-#include "../object/ORBObject.h"
+#include "../object/DistributedObject.h"
 
 namespace engine {
   namespace ORB {
 
 	class LookUpObjectResponseMessage : public Packet {
 	public:	
-		LookUpObjectResponseMessage(ORBObject* obj) : Packet(40) {
+		LookUpObjectResponseMessage(DistributedObject* obj) : Packet(40) {
 			if (obj != NULL) {
 				insertByte(1);
-				insertAscii(obj->_getORBClassName());
-				insertLong(obj->_getORBObjectID());
+				insertAscii(obj->_getClassName());
+				insertLong(obj->_getObjectID());
 			} else
 				insertByte(0);
 		}
