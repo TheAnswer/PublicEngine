@@ -3,21 +3,21 @@ Copyright (C) 2007 <SWGEmu>. All rights reserved.
 Distribution of this file for usage outside of Core3 is prohibited.
 */
 
-#ifndef ORBOBJECTSTUB_H_
-#define ORBOBJECTSTUB_H_
+#ifndef DISTRIBUTEDOBJECTSTUB_H_
+#define DISTRIBUTEDOBJECTSTUB_H_
 
-#include "ORBObjectServant.h"
+#include "DistributedObjectServant.h"
 
 namespace engine {
   namespace ORB {
 
-	class ORBObjectStub : public ORBObject {
+	class DistributedObjectStub : public DistributedObject {
 	protected:
-		ORBObjectServant* _impl;
+		DistributedObjectServant* _impl;
 		
 		bool deployed;
 		
-		ORBClassHelper* _classHelper;
+		DistributedObjectClassHelper* _classHelper;
 		
 	#ifdef TRACE_REFERENCING
 		Vector<StackTrace*> traces;
@@ -26,13 +26,13 @@ namespace engine {
 	#endif
 				
 	public:
-		ORBObjectStub(ORBObjectServant* obj);
+		DistributedObjectStub(DistributedObjectServant* obj);
 		
-		ORBObjectStub(ORBObjectStub& ref);
+		DistributedObjectStub(DistributedObjectStub& ref);
 
-		virtual ~ORBObjectStub();
+		virtual ~DistributedObjectStub();
 
-		virtual ORBObjectStub* clone();
+		virtual DistributedObjectStub* clone();
 
 		// deployment methods
 		bool undeploy();
@@ -47,7 +47,7 @@ namespace engine {
 		void printReferenceTrace();
 		
 		// setters
-		inline void _setClassHelper(ORBClassHelper* helper) {
+		inline void _setClassHelper(DistributedObjectClassHelper* helper) {
 			_classHelper = helper;
 		}
 	
@@ -56,11 +56,11 @@ namespace engine {
 			return deployed;
 		}
 		
-		inline ORBObjectServant* _getImplementation() {
+		inline DistributedObjectServant* _getImplementation() {
 			return _impl;
 		}
 		
-		inline ORBClassHelper* _getClassHelper() {
+		inline DistributedObjectClassHelper* _getClassHelper() {
 			return _classHelper;
 		}	
 	};
@@ -70,4 +70,4 @@ namespace engine {
 
 using namespace engine::ORB;
 
-#endif /*ORBOBJECTSTUB_H_*/
+#endif /*DISTRIBUTEDOBJECTSTUB_H_*/

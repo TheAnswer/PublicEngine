@@ -53,8 +53,10 @@ namespace sys {
 		}
 
 		inline bool decreaseCount() {
-			if (getReferenceCount() < 1)
+			if (getReferenceCount() < 1) {
 				cout << "WARNING - reference count getting under zero\n";
+				raise(SIGSEGV);
+			}
 			
 			return !Atomic::decrementInt(_references);
 		}

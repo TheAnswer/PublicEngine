@@ -3,29 +3,29 @@ Copyright (C) 2007 <SWGEmu>. All rights reserved.
 Distribution of this file for usage outside of Core3 is prohibited.
 */
 
-#ifndef ORBMETHODINVOCATION_H_
-#define ORBMETHODINVOCATION_H_
+#ifndef DISTRIBUTEDMETHOD_H_
+#define DISTRIBUTEDMETHOD_H_
 
-#include "../../../system/lang.h"
+#include "system/lang.h"
 
 namespace engine {
   namespace ORB {
 
-	class ObjectRequestBroker;
-	class ORBObject;
+	class DistributedObjectBroker;
+	class DistributedObject;
 	
-	class ORBMethodInvocation {
-		ORBObject* object;
+	class DistributedMethod {
+		DistributedObject* object;
 		
 		sys::uint32 methodID;
 		sys::uint32 invocationID;
 		
-		ObjectRequestBroker* orb;
+		DistributedObjectBroker* orb;
 		Packet* invmsg;
 		
 	public:
-		ORBMethodInvocation(ORBObject* obj, sys::uint32 methid);
-		ORBMethodInvocation(ObjectRequestBroker* broker, Packet* pack);
+		DistributedMethod(DistributedObject* obj, sys::uint32 methid);
+		DistributedMethod(DistributedObjectBroker* broker, Packet* pack);
 		
 		// exeuctor methods
 		void executeWithVoidReturn();
@@ -46,7 +46,7 @@ namespace engine {
 		void executeWithAsciiReturn(string& value);
 		void executeWithUnicodeReturn(unicode& value);
 		
-		ORBObject* executeWithObjectReturn();
+		DistributedObject* executeWithObjectReturn();
 		
 		// parameter insertion methods
 		void addBooleanParameter(bool val);
@@ -65,7 +65,7 @@ namespace engine {
 		void addAsciiParameter(const string& ascii);
 		void addUnicodeParameter(unicode& str);
 
-		void addObjectParameter(ORBObject* obj);
+		void addObjectParameter(DistributedObject* obj);
 	
 		// parameter reader methods
 		bool getBooleanParameter();
@@ -84,10 +84,10 @@ namespace engine {
 		string& getAsciiParameter(string& ascii);
 		unicode& getUnicodeParameter(unicode& str);
 		
-		ORBObject* getObjectParameter();
+		DistributedObject* getObjectParameter();
 	
 	private:
-		void execute();
+		void execute(Packet* response);
 		
 	};
 
@@ -96,4 +96,4 @@ namespace engine {
 
 using namespace engine::ORB;
 
-#endif /*ORBMETHODINVOCATION_H_*/
+#endif /*DISTRIBUTEDMETHOD_H_*/

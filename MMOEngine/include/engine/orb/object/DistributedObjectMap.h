@@ -3,23 +3,23 @@ Copyright (C) 2007 <SWGEmu>. All rights reserved.
 Distribution of this file for usage outside of Core3 is prohibited.
 */
 
-#ifndef ORBOBJECTMAP_H_
-#define ORBOBJECTMAP_H_
+#ifndef DISTRIBUTEDOBJECTMAP_H_
+#define DISTRIBUTEDOBJECTMAP_H_
 
-#include "../../../system/lang.h"
+#include "system/lang.h"
 
 namespace engine {
   namespace ORB {
 
-	class ORBObjectAdapter;
+	class DistributedObjectAdapter;
 	
-	class ORBObjectMap : public HashTable<uint64, ORBObjectAdapter*> {
+	class DistributedObjectMap : public HashTable<uint64, DistributedObjectAdapter*> {
 		int hash(const uint64& key) {
 	        return Long::hashCode(key);
 		}
 	
 	public:
-		ORBObjectMap() : HashTable<uint64, ORBObjectAdapter*>(100) {
+		DistributedObjectMap() : HashTable<uint64, DistributedObjectAdapter*>(100) {
 			setNullValue(NULL);
 		}
 		
@@ -30,4 +30,4 @@ namespace engine {
 
 using namespace engine::ORB;
 
-#endif /*ORBOBJECTMAP_H_*/
+#endif /*DISTRIBUTEDOBJECTMAP_H_*/

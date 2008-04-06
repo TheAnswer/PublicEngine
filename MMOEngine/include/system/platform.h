@@ -13,6 +13,9 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #elif defined __FreeBSD__
 	#define PLATFORM_FREEBSD
 	#define PLATFORM_UNIX
+#elif defined (__SVR4) && defined (__sun)
+	#define PLATFORM_SOLARIS
+	#define PLATFORM_UNIX
 #else
 	#define PLATFORM_LINUX
 	#define PLATFORM_UNIX
@@ -30,6 +33,10 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #define WIN32_LEAN_AND_MEAN
 #endif
 
+#ifdef PLATFORM_SOLARIS
+#define BSD_COMP
+#endif
+
 #ifndef PLATFORM_WIN
 #include <unistd.h>
 #include <sys/time.h> 
@@ -44,11 +51,15 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #include <math.h>
 #include <string.h>
 
-#include <iostream>
-
 #include <sstream>
+#include <iostream>
+#include <fstream>
 #include <cstdlib>
 #include <cctype>
+
+#ifdef PLATFORM_SOLARIS
+#include <strings.h>
+#endif
 
 using namespace std;
 
