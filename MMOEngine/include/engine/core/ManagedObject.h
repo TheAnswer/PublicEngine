@@ -74,6 +74,8 @@ protected:
 };
 
 class ManagedObjectHelper : public DistributedObjectClassHelper, public Singleton<ManagedObjectHelper> {
+	static ManagedObjectHelper* staticInitializer;
+
 public:
 	ManagedObjectHelper();
 

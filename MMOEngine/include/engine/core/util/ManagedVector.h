@@ -36,6 +36,8 @@ public:
 };
 
 class ManagedVectorHelper : public DistributedObjectClassHelper, public Singleton<ManagedVectorHelper> {
+	static ManagedVectorHelper* staticInitializer;
+
 public:
 	ManagedVectorHelper();
 
