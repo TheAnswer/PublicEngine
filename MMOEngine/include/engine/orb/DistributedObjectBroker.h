@@ -30,10 +30,11 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "object/DistributedMethod.h"
 
-#include "object/ObjectNotDeployedException.h"
-
 #include "packets/DeployObjectMessage.h"
 #include "packets/MethodReturnMessage.h"
+
+#include "object/ObjectNotDeployedException.h"
+#include "object/ObjectNotLocalException.h"
 
 namespace engine {
   namespace ORB {
@@ -69,8 +70,8 @@ namespace engine {
 		void registerClass(const string& name, DistributedObjectClassHelper* helper);
 	
 		// deployment methods
-		DistributedObject* deploy(DistributedObjectServant* obj);
-		DistributedObject* deploy(const string& name, DistributedObjectServant* obj);
+		void deploy(DistributedObjectStub* obj);
+		void deploy(const string& name, DistributedObjectStub* obj);
 		
 		DistributedObject* lookUp(const string& name);
 		DistributedObject* lookUp(uint64 objid);
@@ -96,7 +97,6 @@ namespace engine {
 		friend class NamingDirectoryService;
 			
 		friend class SingletonWrapper<DistributedObjectBroker>;
-		
 	};
 
   } // namespace ORB

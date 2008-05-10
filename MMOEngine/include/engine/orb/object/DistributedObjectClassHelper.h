@@ -12,7 +12,7 @@ Distribution of this file for usage outside of Core3 is prohibited.
 namespace engine {
   namespace ORB {
 
-	class DistributedObjectServant;
+	class DistributedObjectStub;
 	
 	class DistributedObjectClassHelper {
 	protected:
@@ -29,7 +29,7 @@ namespace engine {
 		
 		virtual DistributedObject* instantiateObject() = 0;
 	
-		virtual DistributedObjectAdapter* createAdapter(DistributedObjectServant* obj) = 0;
+		virtual DistributedObjectAdapter* createAdapter(DistributedObjectStub* obj) = 0;
 		
 		inline const string& getClassName() {
 			return className;

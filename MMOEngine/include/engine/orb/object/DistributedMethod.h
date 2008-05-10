@@ -63,7 +63,7 @@ namespace engine {
 		void addFloatParameter(float val);
 
 		void addAsciiParameter(const string& ascii);
-		void addUnicodeParameter(unicode& str);
+		void addUnicodeParameter(const unicode& str);
 
 		void addObjectParameter(DistributedObject* obj);
 	

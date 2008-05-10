@@ -50,12 +50,12 @@ namespace sys {
 	
 		void clear();
 		
-		const char* u_str();
+		const char* u_str() const;
 	
-		string c_str();
-		void c_str(string& ascii);
+		string c_str() const;
+		void c_str(string& ascii) const;
 	
-		inline int size() {
+		inline int size() const {
 			return count;
 		}
 	

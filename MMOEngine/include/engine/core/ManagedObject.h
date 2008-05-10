@@ -11,16 +11,7 @@ namespace engine {
 namespace core {
 
 class ManagedObject : public DistributedObjectStub {
-protected:
-	ManagedObject();
-	ManagedObject(DistributedObjectServant* obj);
-	ManagedObject(ManagedObject& ref);
-
-	virtual ~ManagedObject();
-
 public:
-	ManagedObject* clone();
-
 	void lock(bool doLock = true);
 
 	void lock(ManagedObject* obj);
@@ -34,6 +25,10 @@ public:
 	void setLockName(const string& name);
 
 protected:
+	ManagedObject(DummyConstructorParameter* param);
+
+	virtual ~ManagedObject();
+
 	void _lock(bool doLock);
 
 	void _lock(ManagedObject* obj);
@@ -83,7 +78,7 @@ public:
 
 	DistributedObject* instantiateObject();
 
-	DistributedObjectAdapter* createAdapter(DistributedObjectServant* obj);
+	DistributedObjectAdapter* createAdapter(DistributedObjectStub* obj);
 
 	friend class SingletonWrapper<ManagedObjectHelper>;
 };

@@ -12,15 +12,11 @@ namespace core {
 namespace util {
 
 class ManagedVector : public DistributedObjectStub {
+public:
 protected:
-	ManagedVector();
-	ManagedVector(DistributedObjectServant* obj);
-	ManagedVector(ManagedVector& ref);
+	ManagedVector(DummyConstructorParameter* param);
 
 	virtual ~ManagedVector();
-
-public:
-	ManagedVector* clone();
 
 	friend class ManagedVectorHelper;
 };
@@ -45,7 +41,7 @@ public:
 
 	DistributedObject* instantiateObject();
 
-	DistributedObjectAdapter* createAdapter(DistributedObjectServant* obj);
+	DistributedObjectAdapter* createAdapter(DistributedObjectStub* obj);
 
 	friend class SingletonWrapper<ManagedVectorHelper>;
 };

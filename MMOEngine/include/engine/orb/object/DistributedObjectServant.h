@@ -26,21 +26,18 @@ namespace engine {
 		
 		virtual ~DistributedObjectServant();
 
-		DistributedObject* deploy();
-		DistributedObject* deploy(const char* name);
-		DistributedObject* deploy(const string& name);
-		DistributedObject* deploy(const string& name, sys::uint64 nid);
+		void setDeployingName(const string& name);
 
-		// setters
 		virtual void _setStub(DistributedObjectStub* stub) = 0;
+
+		virtual DistributedObjectStub* _getStub() = 0;
 		
+		// setters
 		inline void _setClassHelper(DistributedObjectClassHelper* helper) {
 			_classHelper = helper;
 		}
 
 		// getters
-		virtual DistributedObjectStub* _getStub() = 0;
-
 		inline DistributedObjectClassHelper* _getClassHelper() {
 			return _classHelper;
 		}	

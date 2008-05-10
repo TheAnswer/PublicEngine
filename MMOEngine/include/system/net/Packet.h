@@ -129,7 +129,7 @@ namespace sys {
 			writeStream(ascii.c_str(), len);
 		}
 
-		void insertUnicode(unicode& str) {
+		void insertUnicode(const unicode& str) {
 			int len = str.size();
 			writeInt(len);
 
