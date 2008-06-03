@@ -77,6 +77,7 @@ namespace engine {
 		DistributedObject* lookUp(uint64 objid);
 		
 		DistributedObjectStub* undeploy(const string& name);
+		void undeploy(DistributedObjectStub* obj, bool doLock = true);
 
 		DistributedObjectAdapter* getObjectAdapter(const string& name);
 		DistributedObjectAdapter* getObjectAdapter(uint64 oid);

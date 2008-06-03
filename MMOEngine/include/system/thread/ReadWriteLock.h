@@ -121,7 +121,7 @@ namespace sys {
 				#endif
 	
 				Time start;
-				start.addMiliTime(2000);
+				start.addMiliTime(50000);
 				
 		    	while (pthread_rwlock_timedwrlock(&rwlock, start.getTimeSpec())) {
 		    		cout << "(" << Time::currentNanoTime() << " nsec) WARNING" << "[" << lockName << "] unable to access wlock #" << cnt << " at\n";

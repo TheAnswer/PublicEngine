@@ -31,6 +31,7 @@ namespace sys {
 		}
 		
 		void printStackTrace() {
+			cout << message << "\n";
 			trace.print();
 		}
 

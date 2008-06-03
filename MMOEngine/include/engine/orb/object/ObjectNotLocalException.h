@@ -16,7 +16,6 @@ namespace engine {
 		ObjectNotLocalException(DistributedObjectStub* stub) : Exception() {
 			message = "\'" + stub->_getName() + "\' is not implemented locally";
 		}
-		
 	};
 
   } // namespace ORB

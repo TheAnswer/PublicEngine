@@ -59,7 +59,7 @@ namespace engine {
 		inline void _setClassHelper(DistributedObjectClassHelper* helper) {
 			_classHelper = helper;
 		}
-	
+		
 		// getters
 		inline bool isDeplyoed() {
 			return deployed;

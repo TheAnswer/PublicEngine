@@ -133,7 +133,8 @@ namespace engine {
 		void operator<<(int64 number);
 		void operator<<(uint64 number);
 		void operator<<(bool boolean);
-		void operator<<(const string& str);
+		void operator<<(string& str);
+		void operator<<(const char* str);
 		
 		inline lua_State* getLuaState() {
 			return L;
