@@ -8,6 +8,8 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "../platform.h"
 
+#include "../io/PrintStream.h"
+
 #include "mersenne/MersenneTwister.h"
 
 typedef time_t utime;
@@ -23,6 +25,8 @@ namespace sys {
 		static MTRand mtrand;
 	
 	public:
+		static PrintStream* out;
+		
 		static inline time_t getTime() {
 			return (utime)time(0);
 		}

@@ -35,6 +35,8 @@ namespace engine {
 		char executeWithSignedCharReturn();
 		unsigned char executeWithUnsignedCharReturn();
 
+		byte executeWithByteReturn();
+
 		int executeWithSignedIntReturn();
 		unsigned int executeWithUnsignedIntReturn();
 		
@@ -50,6 +52,8 @@ namespace engine {
 		
 		// parameter insertion methods
 		void addBooleanParameter(bool val);
+
+		void addByteParameter(byte val);
 
 		void addSignedCharParameter(char val);
 		void addUnsignedCharParameter(unsigned char val);
@@ -69,6 +73,8 @@ namespace engine {
 	
 		// parameter reader methods
 		bool getBooleanParameter();
+
+		byte getByteParameter();
 
 		int getSignedIntParameter();
 		unsigned int getUnsignedIntParameter();

@@ -73,6 +73,8 @@ namespace sys {
 	typedef signed int int32;
 	typedef signed short int16;
 	typedef signed char int8;
+	
+	typedef uint8 byte;
 
 	#define MAX(a, b) (a > b ? a : b)
 	#define MIN(a, b) (a < b ? a : b)

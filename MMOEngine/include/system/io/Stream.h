@@ -46,11 +46,11 @@ namespace sys {
 		void removeLastBytes(int len);
 
 		// stream manipulation methods
-		void writeStream(const char *buf, int len);
+		void writeStream(const char* buf, int len);
 		void writeStream(Stream* stream);
 		void writeStream(Stream* stream, int len);
 
-		void readStream(char *buf, int len);
+		void readStream(char* buf, int len);
 		void readStream(Stream* stream, int len);
 		
 		// getters

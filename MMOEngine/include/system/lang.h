@@ -21,6 +21,7 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #include "lang/Exception.h"
 #include "lang/System.h"
 #include "lang/Time.h"
+#include "lang/Math.h"
 #include "lang/OutOfMemoryError.h"
 #include "lang/ArrayIndexOutOfBoundsException.h"
 #include "lang/NumberFormatException.h"
