@@ -26,6 +26,8 @@ namespace sys {
 	
 		StackTrace* trace;
 		Time lockTime;
+		
+		bool doTrace;
 	
 	public:
 		ReadWriteLock() {
@@ -34,6 +36,7 @@ namespace sys {
 			lockCount = 0;
 			
 			trace = NULL;
+			doTrace = true;
 		}
 
 		ReadWriteLock(const string& s) {
@@ -43,16 +46,13 @@ namespace sys {
 			lockCount = 0;
 			
 			trace = NULL;
+			doTrace = true;
 		}
 
 		virtual ~ReadWriteLock() {
 			pthread_rwlock_destroy(&rwlock);
 		}
 		
-		void setLockName(const string& s) {
-			lockName = s;
-		}
-	
 		inline void rlock(bool doLock = true) {
 			if (!doLock)
 				return;
@@ -74,9 +74,12 @@ namespace sys {
 	
 	
 				Time start;
-				start.addMiliTime(50000);
+				start.addMiliTime(300000);
 				
 		    	while (pthread_rwlock_timedrdlock(&rwlock, start.getTimeSpec())) {
+		    		if (!doTrace)
+		    			continue;
+		    		
 		    		cout << "(" << Time::currentNanoTime() << " nsec) WARNING" << "[" << lockName << "] unable to access rlock #" << cnt << " at\n";
 					StackTrace::printStackTrace();
 		    		
@@ -121,9 +124,12 @@ namespace sys {
 				#endif
 	
 				Time start;
-				start.addMiliTime(50000);
+				start.addMiliTime(300000);
 				
 		    	while (pthread_rwlock_timedwrlock(&rwlock, start.getTimeSpec())) {
+		    		if (!doTrace)
+		    			continue;
+
 		    		cout << "(" << Time::currentNanoTime() << " nsec) WARNING" << "[" << lockName << "] unable to access wlock #" << cnt << " at\n";
 		    		StackTrace::printStackTrace();
 		    		
@@ -188,6 +194,15 @@ namespace sys {
 			
 			return pthread_rwlock_destroy(&rwlock) == 0;
 		}
+
+		// setters
+		inline void setLockName(const string& s) {
+			lockName = s;
+		}
+		
+		inline void setLockTracing(bool tracing) {
+			doTrace = tracing;
+		}	
 		
 		friend class Condition;
 	};

@@ -45,7 +45,7 @@ namespace engine {
 			float distance = radius + System::random((int) radius);
 			
 			positionX += cos(angle) * distance; 
-			positionY += sin(angle) * distance; 
+			positionY += sin(angle) * distance;
 		}
 
 		inline void setPosition(float x, float z, float y) {

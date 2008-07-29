@@ -22,12 +22,14 @@ namespace sys {
 	
 		bool doLog;
 		string lockName;
-			
+	
 		int lockCount;
 		int currentCount;
 	
 		StackTrace* trace;
 		Time lockTime;
+		
+		bool doTrace;
 	
 	public:
 		Mutex() {
@@ -39,6 +41,7 @@ namespace sys {
 			lockCount = 0;
 			
 			trace = NULL;
+			doTrace = true;
 		}
 	
 		Mutex(const string& s) {
@@ -50,18 +53,11 @@ namespace sys {
 			lockCount = 0;
 			
 			trace = NULL;
+			doTrace = true;
 		}
 
 		virtual ~Mutex() {
 			pthread_mutex_destroy(&mutex);
-		}
-
-		void setMutexLogging(bool dolog) {
-			doLog = dolog;
-		}
-	
-		void setLockName(const string& s) {
-			lockName = s;
 		}
 	
 		inline void lock(bool doLock = true) {
@@ -86,9 +82,12 @@ namespace sys {
 				#endif
 			
 				Time start;
-				start.addMiliTime(50000);
+				start.addMiliTime(300000);
 				
 		    	while (pthread_mutex_timedlock(&mutex, start.getTimeSpec())) {
+		    		if (!doTrace)
+		    			continue;
+		    		
 	 	  			cout << "(" << Time::currentNanoTime() << " nsec) WARNING" << "[" << lockName << "] unable to access lock #" << cnt << " at\n";
 					StackTrace::printStackTrace();
 	
@@ -178,6 +177,19 @@ namespace sys {
 				if (doLog)
 					cout << "(" << Time::currentNanoTime() << " nsec) [" << lockName << "] released lock #" << currentCount << "\n";
 			#endif
+		}
+
+		// setters
+		inline void setMutexLogging(bool dolog) {
+			doLog = dolog;
+		}
+	
+		inline void setLockName(const string& s) {
+			lockName = s;
+		}
+		
+		inline void setLockTracing(bool tracing) {
+			doTrace = tracing;
 		}
 	
 		friend class Condition;

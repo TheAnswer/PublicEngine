@@ -39,7 +39,7 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #ifndef PLATFORM_WIN
 #include <unistd.h>
-#include <sys/time.h> 
+#include <sys/time.h>
 #include <sys/types.h>
 #else
 #include <windows.h>
@@ -73,7 +73,7 @@ namespace sys {
 	typedef signed int int32;
 	typedef signed short int16;
 	typedef signed char int8;
-	
+
 	typedef uint8 byte;
 
 	#define MAX(a, b) (a > b ? a : b)
@@ -96,7 +96,7 @@ namespace sys {
 
 	namespace util {
 	} // namespace net
-	
+
 	namespace io {
 	} // namespace net
 
