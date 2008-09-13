@@ -25,14 +25,14 @@ namespace sys {
 	class Packet : public ObjectInputStream, public ObjectOutputStream {
 	public:
 		static const int RAW_MAX_SIZE = 1496;
-	
+
 	public:
 		Packet() : Stream(RAW_MAX_SIZE, RAW_MAX_SIZE), ObjectInputStream(), ObjectOutputStream() {
 		}
-	
+
 		Packet(int size) : Stream(size, RAW_MAX_SIZE), ObjectInputStream(), ObjectOutputStream() {
 		}
-	
+
 		virtual ~Packet() {
 		}
 
@@ -41,8 +41,8 @@ namespace sys {
 			Packet* p = new Packet(newSize);
 
 			p->writeStream(elementData + startoffs, newSize);
-	
-			return p;		
+
+			return p;
 		}
 
 		// inserting methods
@@ -173,6 +173,10 @@ namespace sys {
 			return readShort();
 		}
 
+		inline int16 parseSignedShort() {
+			return readSignedShort();
+		}
+
 		inline uint16 parseShort(int offs) {
 			return readShort(offs);
 		}
@@ -246,7 +250,7 @@ namespace sys {
 
 			char* elementOffset = elementData + offs + 2;
 			if (elementOffset > end)
-				throw StreamIndexOutOfBoundsException(this, offs + 2); 
+				throw StreamIndexOutOfBoundsException(this, offs + 2);
 
 			ascii.clear();
 			ascii.append(elementOffset - len, len);
@@ -265,7 +269,7 @@ namespace sys {
 
 			char* elementOffset = elementData + offs + 4;
 			if (elementOffset > end)
-				throw StreamIndexOutOfBoundsException(this, offs + 4); 
+				throw StreamIndexOutOfBoundsException(this, offs + 4);
 
 			str.clear();
 			str.append((wchar_t*) (elementOffset - len * 2), len);
@@ -282,19 +286,19 @@ namespace sys {
 		string toString() {
 			stringstream str;
 			str << "Packet [" << size() << "] " << uppercase << hex;
-			
+
 			for (int i = 0; i < size(); ++i) {
-				unsigned int byte = ((unsigned int )elementData[i]) & 0xFF; 
-				
+				unsigned int byte = ((unsigned int )elementData[i]) & 0xFF;
+
 				if ((byte & 0xF0) == 0)
 					str << "0" << byte  << " ";
 				else
 					str << byte  << " ";
 			}
-			
+
 			return str.str();
 		}
-		
+
 	};
 
   } // namespace net
