@@ -20,7 +20,9 @@ namespace sys {
 	class Atomic {
 	public:
 		static inline void incrementInt(uint32* value) {
-			#ifdef PLATFORM_FREEBSD
+			#if GCC_VERSION >= 40100
+				__sync_add_and_fetch(value, 1);
+			#elif PLATFORM_FREEBSD
 				atomic_add_int(value, 1);
 			#elif defined PLATFORM_LINUX
 				//TODO: find appropriate method
@@ -36,7 +38,9 @@ namespace sys {
 		}
 
 		static inline bool decrementInt(uint32* value) {
-			#ifdef PLATFORM_FREEBSD
+			#if GCC_VERSION >= 40100
+				return __sync_sub_and_fetch(value, 1);
+			#elif PLATFORM_FREEBSD
 				atomic_subtract_int(value, 1);
 				return *value;
 			#elif defined PLATFORM_LINUX

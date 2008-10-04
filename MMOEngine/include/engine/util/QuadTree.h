@@ -45,100 +45,100 @@ namespace engine {
 
 	class QuadTreeNode {
 		SortedVector<QuadTreeEntry*> objects;
-	
+
 		QuadTreeNode *parentNode;
 		QuadTreeNode *nwNode, *neNode, *swNode, *seNode;
-	
+
 		float minX, minY;
 		float maxX, maxY;
-	
+
 	public:
 		QuadTreeNode(float minx, float miny, float maxx, float maxy, QuadTreeNode *parent);
-			
+
 		~QuadTreeNode();
-			
+
 		// Add a object to this node
-		void addObject(QuadTreeEntry *obj); 
-	
-		QuadTreeEntry* getObject(int index) { 
+		void addObject(QuadTreeEntry *obj);
+
+		QuadTreeEntry* getObject(int index) {
 			return objects.get(index);
 		}
-	  	
+
 	  	// Remove a object by GUID
 	  	void removeObject(QuadTreeEntry *obj);
-	
+
 	  	void removeObject(int index) {
 			QuadTreeEntry* obj = objects.remove(index);
 	    	obj->node = NULL;
 	  	}
-	
+
 		// Approximative test if a circle with center in x,y and
 	    // given radius crosses this node.
 	    bool testInRange(float x, float y, float range);
-	   	
+
 	   	// Check if this node makes any sense to exist
 		void check();
-	
+
 	    bool validateNode() {
-	    	if (minX > maxX || minY > maxY || objects.size() > 1000)
+	    	if (minX > maxX || minY > maxY/* || objects.size() > 1000*/)
 	    		return false;
 	    	else
 	    		return true;
 	    }
-	
+
 	   	// Check if this node has any associated objects
-	   	inline bool isEmpty() { 
-	   		return objects.isEmpty(); 
+	   	inline bool isEmpty() {
+	   		return objects.isEmpty();
 	   	}
-	  	
+
 	  	// Check if this node has children nodes
 		inline bool hasSubNodes() {
-			return nwNode != NULL || neNode != NULL || swNode != NULL || seNode != NULL; 
+			return nwNode != NULL || neNode != NULL || swNode != NULL || seNode != NULL;
 		}
-	  	
+
 	  	// Test if the point is inside this node
-	    inline bool testInside(float x, float y) const { 
-	    	return x >= minX && x < maxX && y >= minY && y < maxY; 
+	    inline bool testInside(float x, float y) const {
+	    	return x >= minX && x < maxX && y >= minY && y < maxY;
 	    }
-	    
+
 		string toString();
-		
+
 		friend class QuadTree;
-		
+
 	};
-	
+
 	class QuadTree : public Mutex {
 		QuadTreeNode* root;
-	
+
 		static bool logTree;
-	
+
 	public:
 		QuadTree();
 		QuadTree(float minx, float miny, float maxx, float maxy);
-		
+
 		~QuadTree();
-	
+
 		/**
 		 * Clear all the objects from the quadtree and set it to have
 		 * given size.
 		 */
 		void setSize(float minx, float miny, float maxx, float maxy);
-	
+
 		/**
 		 * Insert a object into the quad tree.
 		 */
 		void insert(QuadTreeEntry *obj);
-	
+
 	 	/**
 		 * Remove the object from the quad tree.
 		 */
 		void remove(QuadTreeEntry *obj);
-	
+
 		/**
 		 * Remove all objects from the quad tree
 		 */
 		void removeAll();
-	
+
 		/**
 		 * Return a list of all objects found in the given range from the
 		 * given point matching a specific type.
@@ -159,9 +159,9 @@ namespace engine {
 		 *   will be considered matching.
 		 */
 		void inRange(QuadTreeEntry *obj, float range);
-	
+
 		int inRange(float x, float y, float range);
-		
+
 	 	/**
 		 * Update object's position in the quad tree.
 	 	 * Must be called after every time object changes position.
@@ -175,22 +175,22 @@ namespace engine {
 		 *   false if object has moved outside the topmost square.
 		 */
 		bool update(QuadTreeEntry *obj);
-	
+
 	private:
 		void _insert(QuadTreeNode *node, QuadTreeEntry *obj);
 		bool _update(QuadTreeNode *node, QuadTreeEntry *obj);
-	
+
 		void _inRange(QuadTreeNode *node, QuadTreeEntry *obj, float range);
 		int _inRange(QuadTreeNode *node, float x, float y, float range);
-	
+
 	public:
 		static void setLogging(bool doLog) {
 			logTree = doLog;
 		}
-	
+
 		inline static bool doLog() {
-			return logTree; 
-		} 
+			return logTree;
+		}
 	};
 
   } // namespace util

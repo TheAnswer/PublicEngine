@@ -13,18 +13,24 @@ namespace sys {
 
 	class Math {
 	public:
-		static const double PI = M_PI; 
-		
+		static const double PI = M_PI;
+
+		static float sqrt(float number);
+
+		static float rsqrt(float number);
+
+		static float fabs(float f);
+
 		static double acos(double arg) {
-			return ::acos(arg);	
+			return ::acos(arg);
 		}
 
 		static double sin(double arg) {
-			return ::sin(arg);	
+			return ::sin(arg);
 		}
 
 		static double cos(double arg) {
-			return ::cos(arg);	
+			return ::cos(arg);
 		}
 	};
 

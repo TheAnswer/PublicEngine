@@ -21,6 +21,10 @@ Distribution of this file for usage outside of Core3 is prohibited.
 	#define PLATFORM_UNIX
 #endif
 
+#define GCC_VERSION (__GNUC__ * 10000 \
+								+ __GNUC_MINOR__ * 100 \
+								+ __GNUC_PATCHLEVEL__)
+
 #ifdef PLATFORM_WIN
 #pragma warning (disable : 4018)
 #pragma warning (disable : 4800)

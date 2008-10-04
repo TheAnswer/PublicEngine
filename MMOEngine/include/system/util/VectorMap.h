@@ -59,6 +59,10 @@ namespace sys {
 	
 		VectorMap(int initsize, int incr) : SortedVector<VectorMapEntry<K, V>*>(initsize, incr) {
 		}
+		
+		~VectorMap() {
+			removeAll();
+		}
 	
 		int put(const K& key, const V& value);
 	
@@ -85,7 +89,12 @@ namespace sys {
 	template<class K, class V> int VectorMap<K, V>::put(const K& key, const V& value) {
 	 	VectorMapEntry<K, V>* e = new VectorMapEntry<K, V>(key, value);
 	 	
-	 	return SortedVector<VectorMapEntry<K, V>*>::put(e);
+	 	int res = SortedVector<VectorMapEntry<K, V>*>::put(e);
+	 	
+	 	if (res == -1)
+	 		delete e;
+	 		
+	 	return res;
 	}
 
 	template<class K, class V> V& VectorMap<K, V>::get(int index) {

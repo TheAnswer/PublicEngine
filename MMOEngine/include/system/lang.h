@@ -35,6 +35,7 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #include "io/FileWriter.h"
 #include "io/BufferedReader.h"
 #include "io/StringTokenizer.h"
+#include "io/UnicodeTokenizer.h"
 #include "io/FileNotFoundException.h"
 
 #include "util/LinkedList.h"

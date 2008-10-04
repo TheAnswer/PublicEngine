@@ -30,18 +30,18 @@ namespace engine {
 			MySqlDatabase::finalizeLibrary();
 
 			NetworkInterface::finalize();
-
+			
 			Logger::closeGlobalFileLogger();
 		}
 
 		static void outOfMemoryHandler() {
 			cout << "OutOfMemoryException\n";
-
+			
 			exit(1);
 		}
 
 	};
-
+	
   } // namespace core
 } // namespace engine
 
