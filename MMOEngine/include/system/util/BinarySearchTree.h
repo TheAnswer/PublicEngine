@@ -22,9 +22,9 @@ public:
 		leftNode = left;
 		rightNode = right;
 	}
-	
+
 	friend class BinarySearchTree<O>;
-	
+
 };
 
 template <class O> class BinarySearchTree {
@@ -38,10 +38,10 @@ public:
 	BinarySearchTree(const O& nullval) {
 		root = NULL;
 		count = 0;
-		
+
 		nullValue = nullval;
 	}
-	
+
 	BinarySearchTree(const BinarySearchTree& tree) {
 		root = NULL;
 		count = 0;
@@ -50,7 +50,7 @@ public:
 
 		*this = tree;
 	}
-	
+
 	~BinarySearchTree() {
 		removeAll();
 	}
@@ -59,14 +59,14 @@ public:
 		add(obj, root);
 	}
 
-	const bool contains(const O& obj) const {
+	bool contains(const O& obj) const {
 		return elementAt(find(obj, root));
 	}
 
 	const O& first() const {
 		return elementAt(findMin(root));
 	}
-	
+
 	const O& last() const {
 		return elementAt(findMax(root));
 	}
@@ -84,10 +84,10 @@ public:
 			removeAll();
 			root = clone(tree.root);
 		}
-		
+
 		return *this;
 	}
-	
+
 	bool isEmpty() const {
 		return root == NULL;
 	}
@@ -119,7 +119,7 @@ private:
 		else if (obj->compareTo(node->object) < 0)
 			add(obj, node->rightNode);
 	}
-	
+
 	void remove(const O& obj, BinaryNode<O>*& node) const {
 		if (node == NULL)
 			return;
@@ -134,29 +134,29 @@ private:
 		} else {
 			BinaryNode<O>* oldNode = node;
 			node = (node->leftNode != NULL) ? node->leftNode : node->rightNode;
-	
+
 			delete oldNode;
 		}
 	}
-	
+
 	BinaryNode<O>* findMin(BinaryNode<O>* node) const {
 		if (node == NULL)
 			return NULL;
 		else if (node->leftNode == NULL)
 			return node;
-		else			
+		else
 			return findMin(node->leftNode);
 	}
-	
+
 	BinaryNode<O>* findMax(BinaryNode<O>* node) const {
 		if (node != NULL) {
 			while (node->rightNode != NULL)
 				node = node->rightNode;
 		}
-		
+
 		return node;
 	}
-	
+
 	BinaryNode<O>* find(const O& obj, BinaryNode<O>* node) const {
 		if (node == NULL)
 			return NULL;
@@ -167,35 +167,35 @@ private:
 		else
 			return node;
 	}
-	
+
 	void removeAll(BinaryNode<O>*& node) const {
 		if (node != NULL) {
 			removeAll(node->leftNode);
 			removeAll(node->rightNode);
-			
+
 			delete node;
 		}
-		
+
 		node = NULL;
 	}
-	
+
 	void printTree(BinaryNode<O>* node) const {
 		if (node != NULL) {
 			printTree(node->leftNode);
-				
+
 			cout << node->object << endl;
-				
+
 			printTree(node->rightNode);
 		}
 	}
-	
+
 	BinaryNode<O>* clone(BinaryNode<O>* node) const {
 		if (node == NULL)
 			return NULL;
 		else
 			return new BinaryNode<O>(node->object, clone(node->leftNode), clone(node->rightNode));
 	}
-	
+
 };
 
 #endif /*BINARYSEARCHTREE_H_*/
