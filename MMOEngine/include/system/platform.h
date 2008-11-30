@@ -56,8 +56,10 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include <iostream>
 #include <fstream>
-#include <cstdlib>
 #include <cctype>
+#include <cstring>
+#include <cstdlib>
+#include <cstdio>
 
 #ifdef PLATFORM_SOLARIS
 #include <Strings.h>
