@@ -8,6 +8,8 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "../platform.h"
 
+#include "../lang/System.h"
+
 template <class O> class BinarySearchTree;
 
 template <class O> class BinaryNode {
@@ -59,7 +61,7 @@ public:
 		add(obj, root);
 	}
 
-	bool contains(const O& obj) const {
+	const bool contains(const O& obj) const {
 		return elementAt(find(obj, root));
 	}
 
@@ -98,7 +100,7 @@ public:
 
 	void printTree() const {
 		if (isEmpty())
-			cout << "Empty tree" << endl;
+			System::out << "Empty tree\n";
 		else
 			printTree(root);
 	}
@@ -183,7 +185,7 @@ private:
 		if (node != NULL) {
 			printTree(node->leftNode);
 
-			cout << node->object << endl;
+			System::out << node->object << "\n";
 
 			printTree(node->rightNode);
 		}

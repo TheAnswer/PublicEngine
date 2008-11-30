@@ -53,19 +53,17 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include <stdlib.h>
 #include <math.h>
-#include <string.h>
 
-#include <sstream>
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
 #include <cctype>
 
 #ifdef PLATFORM_SOLARIS
-#include <strings.h>
+#include <Strings.h>
 #endif
 
-using namespace std;
+//using namespace std;
 
 namespace sys {
 	typedef unsigned long long uint64;
@@ -108,7 +106,5 @@ namespace sys {
 } // namespace sys
 
 using namespace sys;
-
-#include "lang/unicode.h"
 
 #endif /*PLATFORM_H_*/
