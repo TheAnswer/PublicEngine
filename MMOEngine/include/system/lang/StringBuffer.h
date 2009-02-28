@@ -87,6 +87,26 @@ namespace sys {
 			return Vector<char>::size();
 		}
 
+		inline Vector<String> split(char ch) {
+			Vector<String> values;
+
+			String thisString = toString();
+			StringBuffer newString;
+			for(int i = 0; i < thisString.length(); ++i) {
+				char currentchar = thisString.charAt(i);
+				if(currentchar != ch) {
+					newString << currentchar;
+				} else {
+					values.add(newString.toString());
+					newString.deleteAll();
+				}
+			}
+			if(newString.length() != 0)
+				values.add(newString.toString());
+
+			return values;
+		}
+
 		StringBuffer& operator<< (char ch);
 		StringBuffer& operator<< (int val);
 		StringBuffer& operator<< (uint32 val);
