@@ -52,18 +52,16 @@ namespace sys {
 			_references = obj._references;
 		}
 
-	protected:
 		virtual ~Object() {
-			finalize();
-
 		#ifdef TRACE_REFERENCES
 			for (int i = 0; i < referenceHolders.size(); ++i)
 				delete referenceHolders.get(i);
 		#endif
-		}
-	public:
 
-		virtual void finalize() {
+			finalize();
+		}
+
+		void finalize() {
 		}
 
 		bool toString(String& str) {
