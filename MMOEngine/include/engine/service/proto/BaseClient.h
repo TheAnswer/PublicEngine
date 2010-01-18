@@ -38,15 +38,17 @@ namespace engine {
 
 	class BaseClientNetStatusCheckupEvent;
 	class BaseClientNetStatusRequestEvent;
+	class BaseClientEvent;
 
-	class BaseClient : public DatagramServiceClient, public BaseProtocol, public ReentrantTask, public Mutex {
+	class BaseClient : public DatagramServiceClient, public BaseProtocol, public Mutex {
 	protected:
 		DatagramServiceThread* service;
 
 		Vector<BasePacket*> sequenceBuffer;
-		BasePacketChekupEvent* checkupEvent;
-		BaseClientNetStatusCheckupEvent* netcheckupEvent;
-		BaseClientNetStatusRequestEvent* netRequestEvent;
+
+		Reference<BasePacketChekupEvent*> checkupEvent;
+		Reference<BaseClientNetStatusCheckupEvent*> netcheckupEvent;
+		Reference<BaseClientNetStatusRequestEvent*> netRequestEvent;
 
 		BaseMultiPacket* bufferedPacket;
 		BaseFragmentedPacket* fragmentedPacket;
@@ -58,6 +60,8 @@ namespace engine {
 		String ip;
 
 		Condition connectionEstablishedCondition;
+
+		Reference<BaseClientEvent*> reentrantTask;
 
 		bool clientDisconnected;
 

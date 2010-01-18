@@ -9,6 +9,8 @@
 
 #include "engine/core/ManagedReference.h"
 
+#include "engine/core/ManagedWeakReference.h"
+
 namespace engine {
 namespace core {
 
@@ -33,6 +35,10 @@ namespace core {
 class ManagedObject : public DistributedObjectStub {
 public:
 	ManagedObject();
+
+	void acquireWeak(ManagedWeakReference<ManagedObject* >* ref);
+
+	void releaseWeak(ManagedWeakReference<ManagedObject* >* ref);
 
 	void lock(bool doLock = true);
 
@@ -68,12 +74,18 @@ public:
 
 	bool isPersistent();
 
-	void setPersistent();
+	int getPersistenceLevel();
+
+	void setPersistent(int level);
 
 protected:
 	ManagedObject(DummyConstructorParameter* param);
 
 	virtual ~ManagedObject();
+
+	void _acquireWeak(ManagedWeakReference<ManagedObject* >* ref);
+
+	void _releaseWeak(ManagedWeakReference<ManagedObject* >* ref);
 
 	void _lock(bool doLock = true);
 
@@ -96,13 +108,17 @@ protected:
 
 class ManagedObjectImplementation : public DistributedObjectServant, public Serializable {
 protected:
-	bool persistent;
+	int persistenceLevel;
 
 	ObjectUpdateToDatabaseTask* updateToDatabaseTask;
 
 public:
 	ManagedObjectImplementation();
 	ManagedObjectImplementation(DummyConstructorParameter* param);
+
+	void acquireWeak(ManagedWeakReference<ManagedObject* >* ref);
+
+	void releaseWeak(ManagedWeakReference<ManagedObject* >* ref);
 
 	void lock(bool doLock = true);
 
@@ -138,7 +154,9 @@ public:
 
 	bool isPersistent();
 
-	void setPersistent();
+	int getPersistenceLevel();
+
+	void setPersistent(int level);
 
 	ManagedObject* _this;
 
@@ -164,6 +182,10 @@ public:
 	ManagedObjectAdapter(ManagedObjectImplementation* impl);
 
 	Packet* invokeMethod(sys::uint32 methid, DistributedMethod* method);
+
+	void acquireWeak(ManagedWeakReference<ManagedObject* >* ref);
+
+	void releaseWeak(ManagedWeakReference<ManagedObject* >* ref);
 
 	void lock(bool doLock);
 
@@ -195,7 +217,9 @@ public:
 
 	bool isPersistent();
 
-	void setPersistent();
+	int getPersistenceLevel();
+
+	void setPersistent(int level);
 
 protected:
 	String _param0_setLockName__String_;

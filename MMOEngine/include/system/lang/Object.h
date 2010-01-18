@@ -8,14 +8,18 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "ref/ReferenceCounter.h"
 
+#include "ref/WeakReference.h"
+
 #include "Variable.h"
+
+#include "../thread/Mutex.h"
+
+#include "../util/Vector.h"
 
 #ifdef TRACE_REFERENCES
 #include "ref/Reference.h"
 
 #include "../util/VectorMap.h"
-
-#include "../thread/Mutex.h"
 #endif
 
 namespace sys {
@@ -33,10 +37,12 @@ namespace sys {
 	using namespace sys::io;
 
 	class Object : public ReferenceCounter, public Variable {
+		Mutex referenceMutex;
+
+		Vector<WeakReference<Object*>*> weakReferences;
+
 	#ifdef TRACE_REFERENCES
 		VectorMap<void*, StackTrace*> referenceHolders;
-
-		Mutex refHoldersMutex;
 	#endif
 
 	public:
@@ -80,39 +86,6 @@ namespace sys {
 			return false;
 		}
 
-
-	#ifdef TRACE_REFERENCES
-		void addHolder(void* obj) {
-			refHoldersMutex.lock();
-
-			StackTrace* trace = new StackTrace();
-			referenceHolders.put(obj, trace);
-
-			refHoldersMutex.unlock();
-		}
-
-		void removeHolder(void* obj) {
-			refHoldersMutex.lock();
-
-			StackTrace* trace = referenceHolders.get(obj);
-
-			if (trace != NULL) {
-				delete trace;
-				referenceHolders.drop(obj);
-			}
-
-			refHoldersMutex.unlock();
-		}
-
-		void printReferenceHolders() {
-			for (int i = 0; i < referenceHolders.size(); ++i) {
-				StackTrace* trace = referenceHolders.get(i);
-
-				trace->print();
-			}
-		}
-	#endif
-
 		inline void acquire() {
 			increaseCount();
 		}
@@ -122,11 +95,22 @@ namespace sys {
 				destroy();
 		}
 
-	protected:
-		virtual void destroy() {
-			delete this;
-		}
+		void acquireWeak(WeakReference<Object*>* ref);
 
+		void releaseWeak(WeakReference<Object*>* ref);
+
+	#ifdef TRACE_REFERENCES
+		void addHolder(void* obj);
+
+		void removeHolder(void* obj);
+
+		void printReferenceHolders();
+	#endif
+
+	protected:
+		virtual void destroy();
+
+		friend class WeakReference<Object*>;
 	};
 
   } // namespace lang
