@@ -6,6 +6,7 @@ Distribution of this file for usage outside of Core3 is prohibited.
 package engine.core;
 
 include system.thread.ReadWriteLock;
+
 include system.io.Serializable;
 include system.io.ObjectInputStream;
 include system.io.ObjectOutputStream;
@@ -13,15 +14,21 @@ include system.io.ObjectOutputStream;
 import engine.core.ObjectUpdateToDatabaseTask;
 
 class ManagedObject implements Serializable {
-	protected boolean persistent;
+	protected int persistenceLevel;
 	
 	protected transient ObjectUpdateToDatabaseTask updateToDatabaseTask;
 	
 	public ManagedObject() {
-		persistent = false;
+		persistenceLevel = 0;
 		
 		updateToDatabaseTask = null;
 	}
+
+	/*@nativeStub 
+	public native void acquireWeak(WeakReference<ManagedObject> ref);
+
+	@nativeStub 
+	public native void releaseWeak(WeakReference<ManagedObject> ref);*/
 
 	@nativeStub 
 	public native void lock(boolean doLock = true);
@@ -79,8 +86,19 @@ class ManagedObject implements Serializable {
 	}
 	
 	public boolean isPersistent() {
-		return persistent;
+		return persistenceLevel != 0;
 	}
 	
-	public native void setPersistent();
+	public int getPersistenceLevel() {
+		return persistenceLevel;
+	}
+	
+	/**
+	 * Sets the persistence level of the object
+	 * level 0 makes the object transient
+	 * level 1 makes the object persistent but its not auto updated
+	 * level 2 makes the object auto update every 5 minutes
+	 * level 3 makes the object update to database after each change (write unlock)
+	 */
+	public native void setPersistent(int level);
 }
