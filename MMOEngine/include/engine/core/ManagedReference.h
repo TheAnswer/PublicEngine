@@ -6,37 +6,46 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #ifndef MANAGEDREFERENCE_H_
 #define MANAGEDREFERENCE_H_
 
-#include "../../system/lang.h"
+#include "system/lang.h"
+
+#include "engine/stm/TransactionalMemoryManager.h"
 
 #include "ManagedObject.h"
 
-#include "../orb/DistributedObjectBroker.h"
+#include "engine/orb/DistributedObjectBroker.h"
 
 namespace engine {
   namespace core {
 
 	template<class O> class ManagedReference : public Reference<O> {
+
 	public:
 		ManagedReference() : Reference<O>() {
+		}
+
+		ManagedReference(ManagedReference& ref) : Reference<O>(ref) {
 		}
 
 		ManagedReference(const ManagedReference& ref) : Reference<O>(ref) {
 		}
 
-		ManagedReference(O obj) : Reference<O>(obj) {
+		ManagedReference(const O obj) : Reference<O>(obj) {
+		}
+
+		~ManagedReference() {
 		}
 
 		ManagedReference& operator=(const ManagedReference& ref) {
 			if (this == &ref)
 				return *this;
 
-			Reference<O>::updateObject(ref.object);
+			updateObject(ref);
 
 			return *this;
 		}
 
-		O operator=(O obj) {
-			Reference<O>::updateObject(obj);
+		O operator=(const O obj) {
+			updateObject(obj);
 
 			return obj;
 		}
@@ -62,10 +71,12 @@ namespace engine {
 		bool parseFromString(const String& str, int version = 0) {
 			DistributedObject* obj = DistributedObjectBroker::instance()->lookUp(UnsignedLong::valueOf(str));
 
-			Reference<O>::updateObject((O) obj);
-
-			if (obj == NULL)
+			if (obj == NULL) {
+				updateObject(NULL);
 				return false;
+			}
+
+			updateObject((O) obj);
 
 			return true;
 		}
@@ -84,16 +95,27 @@ namespace engine {
 		bool parseFromBinaryStream(ObjectInputStream* stream) {
 			uint64 oid = stream->readLong();
 
-			O obj = (O) DistributedObjectBroker::instance()->lookUp(oid);
-			*this = obj;
+			DistributedObject* obj = DistributedObjectBroker::instance()->lookUp(oid);
 
-			if (obj == NULL)
+			if (obj == NULL) {
+				updateObject(NULL);
 				return false;
+			}
+
+			updateObject((O) obj);
 
 			return true;
 		}
 
-	};
+	protected:
+		void updateObject(const O obj) {
+			Reference<O>::updateObject(obj);
+		}
+
+		void updateObject(const ManagedReference& ref) {
+			Reference<O>::updateObject(ref.object);
+		}
+};
 
   } // namespace core
 } // namespace engine
