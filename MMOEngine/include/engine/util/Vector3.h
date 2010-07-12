@@ -310,6 +310,25 @@ namespace engine {
 			return z;
 		}
 
+		//Setters
+		inline void setX(float xv) {
+			x = xv;
+		}
+
+		inline void setY(float yv) {
+			y = yv;
+		}
+
+		inline void setZ(float zv) {
+			z = zv;
+		}
+
+		inline void set(float x, float z, float y) {
+			this->x = x;
+			this->y = y;
+			this->z = z;
+		}
+
 		friend class Quaternion;
 	};
   }
