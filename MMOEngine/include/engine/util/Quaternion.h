@@ -24,7 +24,7 @@ namespace engine {
 		/**
 		* Creates a quaternion initialized to the quaternion identity.
 		*/
-		Quaternion() {
+		inline Quaternion() {
 			w = 1.0f;
 			x = 0.0f;
 			y = 0.0f;
@@ -33,7 +33,7 @@ namespace engine {
 			addSerializableVariables();
 		}
 
-		Quaternion(const Quaternion& qt) : Object(), Serializable() {
+		inline Quaternion(const Quaternion& qt) : Object(), Serializable() {
 			w = qt.w;
 			x = qt.x;
 			y = qt.y;
@@ -49,7 +49,7 @@ namespace engine {
 		* float fz = vector z
 		* float fw = scalar
 		*/
-		Quaternion(float fw, float fx, float fy, float fz) {
+		inline Quaternion(float fw, float fx, float fy, float fz) {
 			w = fw;
 			x = fx;
 			y = fy;
@@ -63,7 +63,7 @@ namespace engine {
 		* \param v The vector to base rotation off of. Should be a UNIT vector.
 		* \param angle The angle in radians.
 		*/
-		Quaternion(const Vector3& axis, float angle) {
+		inline Quaternion(const Vector3& axis, float angle) {
 			// Based on the formula q = cos(A/2)+sin(A/2)*(x*i+y*j+z*k).
 			float halfangle = angle * .5;
 			float fsin = Math::sin(halfangle);

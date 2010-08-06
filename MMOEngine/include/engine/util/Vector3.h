@@ -31,18 +31,18 @@ namespace engine {
 			addSerializableVariables();
 		}
 
-		Vector3(const Vector3& vec) : Object(), Serializable() {
-			x = vec.x;
-			y = vec.y;
-			z = vec.z;
-
-			addSerializableVariables();
-		}
-
 		inline Vector3(const float fx, const float fy, const float fz) {
 			x = fx;
 			y = fy;
 			z = fz;
+
+			addSerializableVariables();
+		}
+
+		Vector3(const Vector3& vec) : Object(), Serializable() {
+			x = vec.x;
+			y = vec.y;
+			z = vec.z;
 
 			addSerializableVariables();
 		}

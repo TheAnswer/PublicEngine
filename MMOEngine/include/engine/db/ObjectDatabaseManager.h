@@ -29,11 +29,65 @@ namespace engine {
 		void run();
 	};
 
+	class UpdateObject : public Object {
+	public:
+		Stream* stream;
+		uint64 objectid;
+
+		engine::db::ObjectDatabase* database;
+
+		//if stream null its a delete action
+
+		UpdateObject() {
+			stream = NULL;
+			objectid = 0;
+			database = NULL;
+		}
+
+		UpdateObject(Stream* str, uint64 id, engine::db::ObjectDatabase* database) {
+			stream = str;
+			objectid = id;
+			this->database = database;
+		}
+
+		UpdateObject(const UpdateObject& i) : Object() {
+			stream = i.stream;
+			objectid = i.objectid;
+			this->database = i.database;
+		}
+
+
+	};
+
+	class CurrentTransaction  {
+		Vector<UpdateObject> updateObjects;
+
+	public:
+		CurrentTransaction() {
+
+		}
+
+		inline void addUpdateObject(uint64 id, Stream* str, engine::db::ObjectDatabase* db) {
+			updateObjects.add(UpdateObject(str, id, db));
+		}
+
+		inline void addDeleteObject(uint64 id, engine::db::ObjectDatabase* db) {
+			updateObjects.add(UpdateObject(NULL, id, db));
+		}
+
+		inline Vector<UpdateObject>* getUpdateVector() {
+			return &updateObjects;
+		}
+
+	};
+
 	class ObjectDatabaseManager : public Logger, public Singleton<ObjectDatabaseManager>, public Mutex {
 		engine::db::berkley::Environment* databaseEnvironment;
 
 		VectorMap<uint16, ObjectDatabase*> databases;
 		VectorMap<String, uint16> nameDirectory;
+
+		ThreadLocal<CurrentTransaction> localTransaction;
 
 		ObjectDatabase* databaseDirectory;
 
@@ -44,6 +98,8 @@ namespace engine {
 		Reference<BerkeleyCheckpointTask*> checkpointTask;
 		uint32 checkpointTime;
 
+		bool loaded;
+
 	public:
 		const static int CHECKPOINTTIME = 1800000; //msec
 
@@ -51,13 +107,12 @@ namespace engine {
 		void openEnvironment();
 		void closeEnvironment();
 
-		void loadDatabases();
-
 	public:
 		ObjectDatabaseManager();
 
 		~ObjectDatabaseManager();
 
+		void loadDatabases();
 		void closeDatabases();
 
 		/**
@@ -71,6 +126,14 @@ namespace engine {
 		void checkpoint();
 
 		void getDatabaseName(uint16 tableID, String& name);
+
+		/*engine::db::berkley::Transaction* getLocalTransaction();
+
+		void failLocalTransaction();*/
+
+		void commitLocalTransaction();
+
+		CurrentTransaction* getCurrentTransaction();
 
 		inline ObjectDatabase* getDatabase(uint16 id) {
 			//Locker _locker(this);

@@ -16,10 +16,14 @@ import engine.core.ObjectUpdateToDatabaseTask;
 class ManagedObject implements Serializable {
 	protected int persistenceLevel;
 	
+	private transient unsigned int lastCRCSave;
+	
 	protected transient ObjectUpdateToDatabaseTask updateToDatabaseTask;
 	
 	public ManagedObject() {
 		persistenceLevel = 0;
+		
+		lastCRCSave = 0;
 		
 		updateToDatabaseTask = null;
 	}
@@ -54,6 +58,9 @@ class ManagedObject implements Serializable {
 	@nativeStub 
 	public native void setLockName(final string name);
 	
+	@nativeStub
+	public native boolean notifyDestroy();
+	
 	public abstract void writeObject(string data) {
 		Serializable.writeObject(data);
 	}
@@ -83,6 +90,14 @@ class ManagedObject implements Serializable {
 	
 	public void clearUpdateToDatabaseTask() {
 		updateToDatabaseTask = null;
+	}
+	
+	public unsigned int getLastCRCSave() {
+		return lastCRCSave;
+	}
+	
+	public void setLastCRCSave(unsigned int crc) {
+		lastCRCSave = crc;
 	}
 	
 	public boolean isPersistent() {

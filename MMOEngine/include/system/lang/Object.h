@@ -55,7 +55,8 @@ namespace sys {
 		}
 
 		Object(const Object& obj) : ReferenceCounter(), Variable() {
-			_references = obj._references;
+			//_references = obj._references;
+			initializeCount();
 		}
 
 		virtual ~Object() {
@@ -65,6 +66,10 @@ namespace sys {
 		#endif
 
 			finalize();
+		}
+
+		virtual bool notifyDestroy() {
+			return true;
 		}
 
 		void finalize() {
@@ -91,8 +96,10 @@ namespace sys {
 		}
 
 		inline void release() {
-			if (decreaseCount())
-				destroy();
+			if (decreaseCount()) {
+				if (notifyDestroy())
+					destroy();
+			}
 		}
 
 		void acquireWeak(void* ref);

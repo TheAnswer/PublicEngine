@@ -51,10 +51,10 @@ namespace engine {
 			updatePreviousPosition();
 		}
 
-		inline void initializePosition(const Vector3& pos) {
-			positionX = pos.getX();
-			positionZ = pos.getZ();
-			positionY = pos.getY();
+		inline void initializePosition(const Vector3& point) {
+			positionX = point.getX();
+			positionY = point.getY();
+			positionZ = point.getZ();
 
 			updatePreviousPosition();
 		}
@@ -77,12 +77,12 @@ namespace engine {
 			positionY = y;
 		}
 
-		inline void setPosition(const Vector3& pos) {
+		inline void setPosition(const Vector3& point) {
 			updatePreviousPosition();
 
-			positionX = pos.getX();
-			positionZ = pos.getZ();
-			positionY = pos.getY();
+			positionX = point.getX();
+			positionY = point.getY();
+			positionZ = point.getZ();
 		}
 
 		inline void setPositionX(float x) {
