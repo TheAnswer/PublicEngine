@@ -34,7 +34,7 @@ namespace engine {
 		const static int DEADLOCK_MAX_RETRIES = 1000;
 
 		int getData(uint64 objKey, ObjectInputStream* objectData);
-		int putData(uint64 objKey, ObjectOutputStream* stream);
+		int putData(uint64 objKey, ObjectOutputStream* stream, Object* obj);
 		int deleteData(uint64 objKey);
 
 		int tryPutData(uint64 objKey, Stream* stream, engine::db::berkley::Transaction* transaction);

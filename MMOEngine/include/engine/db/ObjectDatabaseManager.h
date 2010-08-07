@@ -35,6 +35,7 @@ namespace engine {
 		uint64 objectid;
 
 		engine::db::ObjectDatabase* database;
+		Reference<Object*> object; //we store a reference untill we commit it to the DB
 
 		//if stream null its a delete action
 
@@ -44,16 +45,18 @@ namespace engine {
 			database = NULL;
 		}
 
-		UpdateObject(Stream* str, uint64 id, engine::db::ObjectDatabase* database) {
+		UpdateObject(Stream* str, uint64 id, engine::db::ObjectDatabase* database, Object* obj) {
 			stream = str;
 			objectid = id;
 			this->database = database;
+			object = obj;
 		}
 
 		UpdateObject(const UpdateObject& i) : Object() {
 			stream = i.stream;
 			objectid = i.objectid;
 			this->database = i.database;
+			object = i.object;
 		}
 
 
@@ -67,12 +70,12 @@ namespace engine {
 
 		}
 
-		inline void addUpdateObject(uint64 id, Stream* str, engine::db::ObjectDatabase* db) {
-			updateObjects.add(UpdateObject(str, id, db));
+		inline void addUpdateObject(uint64 id, Stream* str, engine::db::ObjectDatabase* db, Object* obj) {
+			updateObjects.add(UpdateObject(str, id, db, obj));
 		}
 
 		inline void addDeleteObject(uint64 id, engine::db::ObjectDatabase* db) {
-			updateObjects.add(UpdateObject(NULL, id, db));
+			updateObjects.add(UpdateObject(NULL, id, db, NULL));
 		}
 
 		inline Vector<UpdateObject>* getUpdateVector() {
