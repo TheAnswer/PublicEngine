@@ -76,7 +76,12 @@ namespace engine {
 				return false;
 			}
 
-			updateObject((O) obj);
+			O castedObject = dynamic_cast<O>(obj);
+
+			updateObject(castedObject);
+
+			if (castedObject == NULL)
+				return false;
 
 			return true;
 		}
@@ -97,12 +102,12 @@ namespace engine {
 
 			DistributedObject* obj = DistributedObjectBroker::instance()->lookUp(oid);
 
-			if (obj == NULL) {
-				updateObject(NULL);
-				return false;
-			}
+			O castedObject = dynamic_cast<O>(obj);
 
-			updateObject((O) obj);
+			updateObject(castedObject);
+
+			if (castedObject == NULL)
+				return false;
 
 			return true;
 		}
