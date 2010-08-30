@@ -11,9 +11,13 @@ include system.io.Serializable;
 include system.io.ObjectInputStream;
 include system.io.ObjectOutputStream;
 
+include engine.orb.object.DistributedObjectServant;
+
+include engine.stm.TransactionalObject;
+
 import engine.core.ObjectUpdateToDatabaseTask;
 
-class ManagedObject implements Serializable {
+class ManagedObject implements TransactionalObject, Serializable {
 	protected int persistenceLevel;
 	
 	private transient unsigned int lastCRCSave;
@@ -116,4 +120,12 @@ class ManagedObject implements Serializable {
 	 * level 3 makes the object update to database after each change (write unlock)
 	 */
 	public native void setPersistent(int level);
+	
+/*	@local
+	@nativeStub 
+	public native DistributedObjectServant _getImplementation();
+
+	@local
+	@nativeStub 
+	public native void _setImplementation(DistributedObjectServant servant);*/
 }
