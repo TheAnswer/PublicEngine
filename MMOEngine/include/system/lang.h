@@ -62,9 +62,7 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #include "util/HashSet.h"
 #include "util/BinarySearchTree.h"
 #include "util/BinaryHeap.h"
-#include "util/AdvancedBinaryHeap.h"
 
-#include "thread/Atomic.h"
 #include "thread/Thread.h"
 #include "thread/ThreadLocal.h"
 #include "thread/Locker.h"
@@ -72,6 +70,9 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #include "thread/Mutex.h"
 #include "thread/ReadWriteLock.h"
 #include "thread/Condition.h"
+#include "thread/atomic/AtomicInteger.h"
+#include "thread/atomic/AtomicLong.h"
+#include "thread/atomic/AtomicReference.h"
 
 #include "net/InetAddress.h"
 #include "net/NetworkInterface.h"

@@ -23,13 +23,13 @@ namespace engine {
 		ManagedReference() : Reference<O>() {
 		}
 
-		ManagedReference(ManagedReference& ref) : Reference<O>(ref) {
-		}
+		/*ManagedReference(ManagedReference& ref) : Reference<O>(ref) {
+		}*/
 
 		ManagedReference(const ManagedReference& ref) : Reference<O>(ref) {
 		}
 
-		ManagedReference(const O obj) : Reference<O>(obj) {
+		ManagedReference(O obj) : Reference<O>(obj) {
 		}
 
 		~ManagedReference() {
@@ -69,19 +69,14 @@ namespace engine {
 		}
 
 		bool parseFromString(const String& str, int version = 0) {
-			DistributedObject* obj = DistributedObjectBroker::instance()->lookUp(UnsignedLong::valueOf(str));
+			O obj = dynamic_cast<O>(DistributedObjectBroker::instance()->lookUp(UnsignedLong::valueOf(str)));
 
 			if (obj == NULL) {
 				updateObject(NULL);
 				return false;
 			}
 
-			O castedObject = dynamic_cast<O>(obj);
-
-			updateObject(castedObject);
-
-			if (castedObject == NULL)
-				return false;
+			updateObject(obj);
 
 			return true;
 		}
@@ -100,20 +95,21 @@ namespace engine {
 		bool parseFromBinaryStream(ObjectInputStream* stream) {
 			uint64 oid = stream->readLong();
 
-			DistributedObject* obj = DistributedObjectBroker::instance()->lookUp(oid);
+			O obj = dynamic_cast<O>(DistributedObjectBroker::instance()->lookUp(oid));
 
-			O castedObject = dynamic_cast<O>(obj);
 
-			updateObject(castedObject);
-
-			if (castedObject == NULL)
+			if (obj == NULL) {
+				updateObject(NULL);
 				return false;
+			}
+
+			updateObject(obj);
 
 			return true;
 		}
 
 	protected:
-		void updateObject(const O obj) {
+		void updateObject(O obj) {
 			Reference<O>::updateObject(obj);
 		}
 

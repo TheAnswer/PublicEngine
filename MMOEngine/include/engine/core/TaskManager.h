@@ -33,11 +33,13 @@ namespace engine {
 
 		virtual ~TaskManager();
 
-		static const int DEAFULT_WORKER_THREADS = 20;
-		static const int DEAFULT_SCHEDULER_THREADS = 8;
+		static const int DEAFULT_WORKER_THREADS = 1;
+		static const int DEAFULT_SCHEDULER_THREADS = 1;
 
 	public:
 		void initialize();
+
+		void start();
 
 		void shutdown();
 

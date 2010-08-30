@@ -35,7 +35,8 @@ namespace engine {
 		uint64 objectid;
 
 		engine::db::ObjectDatabase* database;
-		Reference<Object*> object; //we store a reference untill we commit it to the DB
+
+		Reference<Object*> object;
 
 		//if stream null its a delete action
 

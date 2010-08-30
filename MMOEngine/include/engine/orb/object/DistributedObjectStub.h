@@ -16,19 +16,19 @@ namespace engine {
 	class DistributedObjectStub : public DistributedObject {
 	protected:
 		DistributedObjectServant* _impl;
-		
+
 		bool deployed;
-		
+
 		DistributedObjectClassHelper* _classHelper;
-		
+
 		bool destroyed;
 
 	#ifdef TRACE_REFERENCING
 		Vector<StackTrace*> traces;
-		
+
 		StackTrace* finalizedTrace;
 	#endif
-				
+
 	public:
 		DistributedObjectStub();
 
@@ -48,25 +48,25 @@ namespace engine {
 		virtual void finalize();
 
 		virtual void acquire();
-	
+
 		virtual void release();
-			
+
 		void printReferenceTrace();
-		
+
 		// setters
 		inline void setDeployingName(const String& name) {
 			_setName(name);
 		}
-		
+
 		inline void _setClassHelper(DistributedObjectClassHelper* helper) {
 			_classHelper = helper;
 		}
-		
+
 		inline void setDeployed(bool val) {
 			deployed = val;
 		}
 
-		inline void _setImplementation(DistributedObjectServant* impl) {
+		virtual void _setImplementation(DistributedObjectServant* impl) {
 			_impl = impl;
 		}
 
@@ -74,20 +74,20 @@ namespace engine {
 		inline bool isDeplyoed() {
 			return deployed;
 		}
-		
-		inline DistributedObjectServant* _getImplementation() {
+
+		virtual DistributedObjectServant* _getImplementation() {
 			return _impl;
 		}
-		
+
 		inline DistributedObjectClassHelper* _getClassHelper() {
 			return _classHelper;
-		}	
+		}
 	};
 
 	class DummyConstructorParameter : public Singleton<DummyConstructorParameter> {
 		friend class SingletonWrapper<DummyConstructorParameter>;
 	};
-	
+
   } // namespace ORB
 } // namespace engine
 

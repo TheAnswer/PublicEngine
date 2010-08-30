@@ -3,11 +3,13 @@
 
 #include "system/lang.h"
 
-#include "../log/Logger.h"
+#include "engine/log/Logger.h"
+
+#include "engine/stm/TransactionalMemoryManager.h"
+
+#include "engine/db/mysql/MySqlDatabase.h"
 
 #include "TaskManager.h"
-
-#include "../db/mysql/MySqlDatabase.h"
 
 #include <new>
 
@@ -26,8 +28,16 @@ namespace engine {
 			Logger::setGlobalFileLogger(globallogfile);
 		}
 
-		void run() {
+		virtual void initialize() {
+		#ifdef WITH_STM
+			engine::stm::Transaction* transaction = engine::stm::Transaction::currentTransaction();
 
+			if (!transaction->commit())
+				throw Exception("unable to commit initialization transaction");
+		#endif
+
+			TaskManager* taskManager = getTaskManager();
+			taskManager->start();
 		}
 
 		virtual ~Core() {
@@ -60,7 +70,7 @@ namespace engine {
 			TaskManager* taskManager = getTaskManager();
 			taskManager->initialize();
 
-			Thread::initializeMainThread(this);
+			Thread::initializeThread(this);
 		}
 
 		void finalizeContext() {

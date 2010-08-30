@@ -49,7 +49,6 @@ namespace sys {
 
 	public:
 		Object() : ReferenceCounter(), Variable() {
-			initializeCount();
 
 			_destroying = false;
 
@@ -60,7 +59,6 @@ namespace sys {
 
 		Object(const Object& obj) : ReferenceCounter(), Variable() {
 			//_references = obj._references;
-			initializeCount();
 
 			_destroying = false;
 		}

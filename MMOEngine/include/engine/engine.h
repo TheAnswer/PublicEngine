@@ -6,6 +6,8 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #ifndef ENGINE_H_
 #define ENGINE_H_
 
+//#define WITH_STM
+
 #include "system/lang.h"
 
 #include "core/Core.h"
@@ -65,6 +67,8 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #include "orb/DistributedObjectBroker.h"
 #include "orb/DOBObjectManager.h"
 #include "orb/DOBObjectManagerImplementation.h"
+
+#include "stm/TransactionalMemoryManager.h"
 
 #ifndef PLATFORM_WIN
 #include "db/Database.h"

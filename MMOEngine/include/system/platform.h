@@ -72,8 +72,6 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #include <Strings.h>
 #endif
 
-//using namespace std;
-
 namespace sys {
 	typedef unsigned long long uint64;
 	typedef unsigned int uint32;
@@ -87,6 +85,12 @@ namespace sys {
 
 	typedef uint8 byte;
 
+#ifdef PLATFORM64
+	typedef uint64 pointer;
+#else
+	typedef uint32 pointer;
+#endif
+
 	#define MAX(a, b) (a > b ? a : b)
 	#define MIN(a, b) (a < b ? a : b)
 
@@ -95,7 +99,7 @@ namespace sys {
 
 	//#define TRACE_REFERENCING
 	#define LINE_TRACING
-	//#define TRACE_REFERENCES
+	#define TRACE_REFERENCES
 
 	#ifdef VERSION_PUBLIC
 	#define CONNECTION_LIMIT 20

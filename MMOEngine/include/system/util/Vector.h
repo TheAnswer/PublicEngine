@@ -113,7 +113,7 @@ namespace sys {
    }
 
    template<class E> Vector<E>::Vector(const Vector<E>& vector) : Variable() {
-	   init(vector.size(), vector.size() / 2);
+	   init(10, 5);
 
 	   vector.clone(*this);
    }
@@ -390,9 +390,9 @@ namespace sys {
 	   Integer::toBinaryStream(size, stream);
 
 	   for (int i = 0; i < Vector<E>::size(); ++i) {
-		  // E obj = Vector<E>::get(i);
+		   E obj = Vector<E>::get(i);
 
-		   TypeInfo<E>::toBinaryStream(&Vector<E>::get(i), stream);
+		   TypeInfo<E>::toBinaryStream(&obj, stream);
 	   }
 
 	   return true;

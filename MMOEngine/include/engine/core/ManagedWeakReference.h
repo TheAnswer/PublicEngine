@@ -20,6 +20,9 @@ namespace engine {
 		ManagedWeakReference() : WeakReference<O>() {
 		}
 
+		/*ManagedWeakReference(ManagedWeakReference& ref) : WeakReference<O>(ref) {
+		}*/
+
 		ManagedWeakReference(const ManagedWeakReference& ref) : WeakReference<O>(ref) {
 		}
 
@@ -62,16 +65,9 @@ namespace engine {
 		bool parseFromString(const String& str, int version = 0) {
 			DistributedObject* obj = DistributedObjectBroker::instance()->lookUp(UnsignedLong::valueOf(str));
 
-			if (obj == NULL) {
-				WeakReference<O>::updateObject(NULL);
-				return false;
-			}
+			WeakReference<O>::updateObject((O) obj);
 
-			O castedObject = dynamic_cast<O>(obj);
-
-			WeakReference<O>::updateObject(castedObject);
-
-			if (castedObject == NULL)
+			if (obj == NULL)
 				return false;
 
 			return true;
@@ -91,18 +87,10 @@ namespace engine {
 		bool parseFromBinaryStream(ObjectInputStream* stream) {
 			uint64 oid = stream->readLong();
 
-			DistributedObject* obj = DistributedObjectBroker::instance()->lookUp(oid);
+			O obj = (O) DistributedObjectBroker::instance()->lookUp(oid);
+			*this = obj;
 
-			if (obj == NULL) {
-				WeakReference<O>::updateObject(NULL);
-				return false;
-			}
-
-			O castedObject = dynamic_cast<O>(obj);
-
-			WeakReference<O>::updateObject(castedObject);
-
-			if (castedObject == NULL)
+			if (obj == NULL)
 				return false;
 
 			return true;
