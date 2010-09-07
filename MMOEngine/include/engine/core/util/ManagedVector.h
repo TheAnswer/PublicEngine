@@ -15,7 +15,7 @@ namespace engine {
 namespace core {
 namespace util {
 
-class ManagedVector : public DistributedObjectStub {
+class ManagedVector : public DistributedObjectStub, public TransactionalObjectHeader<class ManagedVectorImplementation*> {
 public:
 protected:
 	ManagedVector(DummyConstructorParameter* param);
