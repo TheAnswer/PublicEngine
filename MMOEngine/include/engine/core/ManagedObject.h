@@ -36,7 +36,7 @@ using namespace engine::core;
 namespace engine {
 namespace core {
 
-class ManagedObject : public DistributedObjectStub, public TransactionalObjectHeader<class ManagedObjectImplementation*> {
+class ManagedObject : public DistributedObjectStub {
 public:
 	ManagedObject();
 
