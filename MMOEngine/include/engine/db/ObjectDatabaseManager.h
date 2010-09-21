@@ -13,6 +13,8 @@
 
 #include "berkley/Environment.h"
 
+//#define LASTOBJECTIDKEY 0xFFFFFFFFFFFFFFFF;
+
 namespace engine {
   namespace db {
 
@@ -65,22 +67,42 @@ namespace engine {
 
 	class CurrentTransaction  {
 		Vector<UpdateObject> updateObjects;
+		engine::db::berkley::Environment* databaseEnvironment;
+		engine::db::berkley::Transaction* berkeleyTransaction;
 
 	public:
-		CurrentTransaction() {
-
+		CurrentTransaction(engine::db::berkley::Environment* env) {
+			berkeleyTransaction = NULL;
+			databaseEnvironment = env;
 		}
 
 		inline void addUpdateObject(uint64 id, Stream* str, engine::db::ObjectDatabase* db, Object* obj) {
+			startBerkeleyTransaction();
+
 			updateObjects.add(UpdateObject(str, id, db, obj));
 		}
 
 		inline void addDeleteObject(uint64 id, engine::db::ObjectDatabase* db) {
+			startBerkeleyTransaction();
+
 			updateObjects.add(UpdateObject(NULL, id, db, NULL));
+		}
+
+		inline void startBerkeleyTransaction() {
+			if (berkeleyTransaction == NULL)
+				berkeleyTransaction = databaseEnvironment->beginTransaction(NULL);
 		}
 
 		inline Vector<UpdateObject>* getUpdateVector() {
 			return &updateObjects;
+		}
+
+		inline engine::db::berkley::Transaction* getBerkeleyTransaction() {
+			return berkeleyTransaction;
+		}
+
+		inline void clearBerkeleyTransaction() {
+			berkeleyTransaction = NULL;
 		}
 
 	};
@@ -106,6 +128,7 @@ namespace engine {
 
 	public:
 		const static int CHECKPOINTTIME = 1800000; //msec
+		const static uint64 LASTOBJECTIDKEY = uint64((uint64)0xFFFFFFFF << 32) + 0xFFFFFFFF;
 
 	private:
 		void openEnvironment();
@@ -136,8 +159,12 @@ namespace engine {
 		void failLocalTransaction();*/
 
 		void commitLocalTransaction();
+		void startLocalTransaction();
 
 		CurrentTransaction* getCurrentTransaction();
+
+		void updateLastUsedObjectID(uint64 id);
+		uint64 getLastUsedObjectID();
 
 		inline ObjectDatabase* getDatabase(uint16 id) {
 			//Locker _locker(this);
