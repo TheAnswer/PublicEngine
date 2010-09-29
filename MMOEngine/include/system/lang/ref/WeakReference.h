@@ -7,13 +7,26 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #define WEAKREFERENCE_H_
 
 #include "../Variable.h"
+#include "../../thread/ReadWriteLock.h"
 
 namespace sys {
   namespace lang {
 
-	template<class O> class WeakReference : public Variable {
+   class WeakReferenceBase {
+   public:
+	   virtual ~WeakReferenceBase() {
+
+	   }
+   protected:
+	   virtual void clearObject() = 0;
+
+	   friend class Object;
+   };
+
+	template<class O> class WeakReference : public Variable, public WeakReferenceBase {
 	protected:
 		O object;
+		ReadWriteLock rwlock;
 
 	public:
 		WeakReference() : Variable() {
@@ -62,8 +75,19 @@ namespace sys {
 			return object;
 		}
 
-		inline O get() const {
-			return object;
+		inline O get() {
+			rwlock.wlock();
+
+			O copy = object;
+
+			if (object != NULL && object->_isGettingDestroyed()) {
+				rwlock.unlock();
+				return NULL;
+			}
+
+			rwlock.unlock();
+
+			return copy;
 		}
 
 		bool toString(String& str) {
@@ -114,14 +138,18 @@ namespace sys {
 		inline void releaseObject() {
 			if (object != NULL) {
 				object->releaseWeak(this);
-				object = NULL;
+				clearObject();
 			}
 		}
 
-		inline void clearObject() {
+		void clearObject() {
+			rwlock.wlock();
+
 			if (object != NULL) {
 				object = NULL;
 			}
+
+			rwlock.unlock();
 		}
 
 		friend class Object;
