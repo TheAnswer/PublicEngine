@@ -1,0 +1,32 @@
+
+--This line, and those below, will be ignored--
+
+M    include/system/lang/SignalException.h
+M    include/system/lang/ref/WeakReference.h
+M    include/system/lang/Object.h
+M    include/system/platform.h
+M    include/system/util/Vector.h
+M    include/engine/service/DatagramServiceThread.h
+M    include/engine/service/ServiceMessageHandlerThread.h
+A    include/engine/service/ServiceHandler.h
+M    include/engine/orb/DOBObjectManagerImplementation.h
+M    include/engine/orb/DistributedObjectDirectory.h
+M    include/engine/orb/DOBObjectManager.h
+M    include/engine/db/ObjectDatabaseManager.h
+M    include/engine/core/TaskManager.h
+A    include/engine/core/ManagedService.idl
+M    include/engine/core/ManagedObject.idl
+M    include/engine/core/ManagedReference.h
+A    include/engine/core/ManagedService.h
+M    include/engine/core/ManagedWeakReference.h
+M    include/engine/core/ManagedObject.h
+M    include/engine/core/util/ManagedVector.h
+AM   include/engine/core/util/ManagedVector.idl
+M    include/engine/core/Core.h
+M    include/engine/engine.h
+M    include/engine/util/QuadTree.h
+M    include/engine/util/QuadTreeEntry.h
+M    lib/linux32/libengine3.a
+M    lib/linux64/libengine3.a
+M    bin/idlc.jar
+AM   Makefile
