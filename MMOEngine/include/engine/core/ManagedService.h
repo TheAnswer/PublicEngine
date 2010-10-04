@@ -52,8 +52,6 @@ public:
 protected:
 	virtual ~ManagedServiceImplementation();
 
-	TransactionalObject* clone();
-
 	void finalize();
 
 	void _initializeImplementation();
@@ -77,7 +75,6 @@ protected:
 	void _serializationHelperMethod();
 
 	friend class ManagedService;
-	friend class TransactionalObjectHandle<ManagedServiceImplementation*>;
 };
 
 class ManagedServiceAdapter : public ManagedObjectAdapter {

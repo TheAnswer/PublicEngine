@@ -15,7 +15,7 @@ namespace engine {
 namespace core {
 namespace util {
 
-class ManagedVector : public DistributedObjectStub, public TransactionalObjectHeader<class ManagedVectorImplementation*> {
+class ManagedVector : public DistributedObjectStub {
 public:
 	DistributedObjectServant* _getImplementation();
 
@@ -43,8 +43,6 @@ public:
 protected:
 	virtual ~ManagedVectorImplementation();
 
-	TransactionalObject* clone();
-
 	void finalize();
 
 	void _initializeImplementation();
@@ -68,7 +66,6 @@ protected:
 	void _serializationHelperMethod();
 
 	friend class ManagedVector;
-	friend class TransactionalObjectHandle<ManagedVectorImplementation*>;
 };
 
 class ManagedVectorAdapter : public DistributedObjectAdapter {
