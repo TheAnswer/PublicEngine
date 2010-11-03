@@ -162,7 +162,7 @@ public:
 
 	virtual void initializeTransientMembers();
 
-	virtual void updateToDatabase();
+	void updateToDatabase();
 
 	virtual void queueUpdateToDatabaseTask();
 
