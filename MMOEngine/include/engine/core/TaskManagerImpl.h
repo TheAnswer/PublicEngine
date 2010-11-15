@@ -36,8 +36,8 @@ namespace engine {
 
   		SortedVector<Task*> cancelledTasks;
 
-		static const int DEFAULT_WORKER_THREADS = 1;
-		static const int DEFAULT_SCHEDULER_THREADS = 1;
+		static const int DEFAULT_WORKER_THREADS = 10;
+		static const int DEFAULT_SCHEDULER_THREADS = 4;
 
 	public:
 		TaskManagerImpl();
@@ -57,6 +57,8 @@ namespace engine {
 
 		void executeTask(Task* task);
 
+		bool isTaskScheduled(Task* task);
+
 		void scheduleTask(Task* task, uint64 delay = 0);
 		void scheduleTask(Task* task, Time& time);
 
@@ -64,6 +66,8 @@ namespace engine {
 		void rescheduleTask(Task* task, Time& time);
 
 		bool cancelTask(Task* task);
+
+		void mergeTasks(TaskManagerImpl* manager);
 
 		void flushTasks();
 
@@ -78,8 +82,6 @@ namespace engine {
 		int getExecutingTaskSize();
 
 	private:
-		void mergeTasks(TaskManagerImpl* manager);
-
 		TaskScheduler* getTaskScheduler();
 
 		void setTaskScheduler(Task* task, TaskScheduler* scheduler);
@@ -95,7 +97,6 @@ namespace engine {
 
 		friend class TaskScheduler;
 		friend class TaskWorkerThread;
-		friend class TransactionalTaskManager;
 	};
 
   } // namespace core
