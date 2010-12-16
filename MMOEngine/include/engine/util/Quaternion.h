@@ -59,6 +59,7 @@ namespace engine {
 			addSerializableVariables();
 		}
 
+
 		/**
 		* Create a quaternion based on a vector and an angle of direction.
 		* \param v The vector to base rotation off of. Should be a UNIT vector.
@@ -112,12 +113,20 @@ namespace engine {
 			return Quaternion(w - q.w, x - q.x, y - q.y, z - q.z);
 		}
 
+		/**
+// the constructor takes its arguments as (x, y, z, w)
+	return Quaternion(w * rq.x + x * rq.w + y * rq.z - z * rq.y,
+	                  w * rq.y + y * rq.w + z * rq.x - x * rq.z,
+	                  w * rq.z + z * rq.w + x * rq.y - y * rq.x,
+	                  w * rq.w - x * rq.x - y * rq.y - z * rq.z);
+		 */
+
 		inline Quaternion operator * (const Quaternion& q) const {
 			return Quaternion(
 				w * q.w - x * q.x - y * q.y - z * q.z,
 				w * q.x + x * q.w + y * q.z - z * q.y,
-				w * q.y - x * q.z + y * q.w + z * q.x,
-				w * q.z + x * q.y - y * q.x + z * q.w);
+				w * q.y + y * q.w + z * q.x - x * q.z,
+				w * q.z + z * q.w + x * q.y - y * q.x);
 		}
 
 		inline Quaternion operator * (const float scalar) const {
@@ -215,6 +224,10 @@ namespace engine {
 			}
 
 			return angle;
+		}
+
+		inline Quaternion getConjugate() const {
+			return Quaternion(w, -x, -y, -z);
 		}
 
 		inline float getSpecialDegrees() const { // returns 0-100 degrees
