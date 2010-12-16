@@ -113,14 +113,6 @@ namespace engine {
 			return Quaternion(w - q.w, x - q.x, y - q.y, z - q.z);
 		}
 
-		/**
-// the constructor takes its arguments as (x, y, z, w)
-	return Quaternion(w * rq.x + x * rq.w + y * rq.z - z * rq.y,
-	                  w * rq.y + y * rq.w + z * rq.x - x * rq.z,
-	                  w * rq.z + z * rq.w + x * rq.y - y * rq.x,
-	                  w * rq.w - x * rq.x - y * rq.y - z * rq.z);
-		 */
-
 		inline Quaternion operator * (const Quaternion& q) const {
 			return Quaternion(
 				w * q.w - x * q.x - y * q.y - z * q.z,
