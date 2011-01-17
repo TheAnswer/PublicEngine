@@ -26,13 +26,13 @@ namespace sys {
 		}
 
 		ReferenceCounter(const ReferenceCounter& counter) {
-			//_references = counter._references; this is wrong!
+			//_references = counter._references; //this is wrong!
 		}
 
 		virtual ~ReferenceCounter() {
 			if (getReferenceCount() > 1) {
-				System::out << "WARNING - reference count was not zero on delete\n";
 				StackTrace::printStackTrace();
+				assert(0 && "reference count was not zero on delete");
 			}
 		}
 
@@ -42,10 +42,8 @@ namespace sys {
 		}
 
 		inline bool decreaseCount() {
-			if (getReferenceCount() < 1) {
-				System::out << "WARNING - reference count getting under zero\n";
-				raise(SIGSEGV);
-			}
+			/*if (getReferenceCount() < 1)
+				assert(0 && "reference count getting under zero");*/
 
 			return _references.decrement() == 0;
 		}

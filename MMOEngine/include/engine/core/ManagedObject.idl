@@ -5,15 +5,15 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 package engine.core;
 
+include system.lang.Object;
 include system.thread.ReadWriteLock;
+include system.thread.Lockable;
 
 include system.io.Serializable;
 include system.io.ObjectInputStream;
 include system.io.ObjectOutputStream;
 
 include engine.orb.object.DistributedObjectServant;
-
-include engine.stm.TransactionalObject;
 
 import engine.core.ObjectUpdateToDatabaseTask;
 
@@ -47,6 +47,10 @@ class ManagedObject implements Serializable {
 	@nativeStub 
 	public native void lock(ManagedObject obj);
 
+	@local
+	@nativeStub 
+	public native void lock(Lockable obj);
+
 	@nativeStub 
 	public native void rlock(boolean doLock = true);
 
@@ -55,7 +59,7 @@ class ManagedObject implements Serializable {
 
 	@nativeStub 
 	public native void wlock(ManagedObject obj);
-	
+
 	@nativeStub 
 	public native void unlock(boolean doLock = true);
 

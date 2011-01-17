@@ -21,7 +21,11 @@ class ObjectUpdateToDatabaseTask;
 
 using namespace engine::core;
 
+#include "system/lang/Object.h"
+
 #include "system/thread/ReadWriteLock.h"
+
+#include "system/thread/Lockable.h"
 
 #include "system/io/Serializable.h"
 
@@ -30,8 +34,6 @@ using namespace engine::core;
 #include "system/io/ObjectOutputStream.h"
 
 #include "engine/orb/object/DistributedObjectServant.h"
-
-#include "engine/stm/TransactionalObject.h"
 
 namespace engine {
 namespace core {
@@ -45,6 +47,8 @@ public:
 	void lock(bool doLock = true);
 
 	void lock(ManagedObject* obj);
+
+	void lock(Lockable* obj);
 
 	void rlock(bool doLock = true);
 
@@ -97,6 +101,8 @@ protected:
 
 	void _lock(ManagedObject* obj);
 
+	void _lock(Lockable* obj);
+
 	void _rlock(bool doLock = true);
 
 	void _wlock(bool doLock = true);
@@ -133,6 +139,8 @@ public:
 	void lock(bool doLock = true);
 
 	void lock(ManagedObject* obj);
+
+	void lock(Lockable* obj);
 
 	void rlock(bool doLock = true);
 

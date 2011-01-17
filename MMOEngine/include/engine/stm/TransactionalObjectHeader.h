@@ -8,7 +8,9 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "system/lang.h"
 
-#include "TransactionalObject.h"
+#include "TransactionalMemoryManager.h"
+
+#include "TransactionAbortedException.h"
 
 #include "Transaction.h"
 
@@ -18,7 +20,7 @@ namespace engine {
 	template<class O> class TransactionalObjectHandle;
 
 	template<class O> class TransactionalObjectHeader {
-		O object;
+		Reference<Object*> object;
 
 		AtomicReference<Transaction> ownerTransaction;
 
@@ -30,7 +32,7 @@ namespace engine {
 		}
 
 		TransactionalObjectHeader(O obj) {
-			object = obj;
+			setObject(obj);
 
 			ownerTransaction = NULL;
 		}
@@ -48,12 +50,14 @@ namespace engine {
 
 		void discardObject(Transaction* transaction);
 
-		O getObject() const {
-			return object;
-		}
+		Object* getObject();
 
 		Transaction* getTransaction() const {
 			return ownerTransaction;
+		}
+
+		bool hasObject(Object* obj) const {
+			return object == obj;
 		}
 
 		bool isNull() {
@@ -61,7 +65,7 @@ namespace engine {
 		}
 
 		void setObject(O obj) {
-			object = obj;
+			object = dynamic_cast<Object*>(obj);
 		}
 
 		friend class Transaction;
@@ -69,7 +73,17 @@ namespace engine {
 	};
 
 	template<class O> TransactionalObjectHandle<O>* TransactionalObjectHeader<O>::createHandle() {
-		return new TransactionalObjectHandle<O>(this);
+		TransactionalObjectHandle<O>* handle = new TransactionalObjectHandle<O>(this);
+
+		return handle;
+	}
+
+	template<class O> Object* TransactionalObjectHeader<O>::getObject() {
+		if (ownerTransaction != NULL)
+			throw TransactionAbortedException();
+			//return ownerTransaction->getOpenedObject(this);
+		 else
+			return object;
 	}
 
 	template<class O> O TransactionalObjectHeader<O>::get() {
@@ -88,15 +102,15 @@ namespace engine {
 	}
 
 	template<class O> void TransactionalObjectHeader<O>::releaseObject(TransactionalObjectHandle<O>* handle) {
-		delete object;
-
 		object = handle->getObjectLocalCopy();
+
+		//ownerTransaction->release();
 
 		ownerTransaction = NULL;
 	}
 
 	template<class O> void TransactionalObjectHeader<O>::discardObject(Transaction* transaction) {
-		assert(ownerTransaction.compareAndSet(transaction, NULL));
+		ownerTransaction.compareAndSet(transaction, NULL);
 	}
 
   } // namespace stm

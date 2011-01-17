@@ -6,8 +6,6 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #ifndef ENGINE_STM_TRANSACTIONALOBJECTHANDLE_H_
 #define ENGINE_STM_TRANSACTIONALOBJECTHANDLE_H_
 
-#include "TransactionalObject.h"
-
 namespace engine {
   namespace stm {
 
@@ -18,8 +16,8 @@ namespace engine {
 	template<class O> class TransactionalObjectHandle {
 		TransactionalObjectHeader<O>* header;
 
-		O object;
-		O objectCopy;
+		Reference<Object*> object;
+		Reference<Object*> objectCopy;
 
 	public:
 		TransactionalObjectHandle(TransactionalObjectHeader<O>* hdr);
@@ -50,11 +48,11 @@ namespace engine {
 				return -1;
 		}
 
-		O getObject() {
+		Object* getObject() {
 			return object;
 		}
 
-		O getObjectLocalCopy() {
+		Object* getObjectLocalCopy() {
 			return objectCopy;
 		}
 	};
@@ -66,7 +64,7 @@ namespace engine {
 
 		//System::out.println("[" + Thread::getCurrentThread()->getName() +"] cloning " + String::valueOf((uint64) object));
 
-		objectCopy = (O) object->clone();
+		objectCopy = object->clone();
 		//System::out.println("[" + Thread::getCurrentThread()->getName() +"] cloning " + String::valueOf((uint64) object) + " finished");
 	}
 
@@ -74,7 +72,7 @@ namespace engine {
 		header = NULL;
 		object = NULL;
 
-		assert(objectCopy == NULL);
+		//assert(objectCopy == NULL);
 	}
 
 	template<class O> bool TransactionalObjectHandle<O>::acquireHeader(Transaction* transaction) {
@@ -90,7 +88,6 @@ namespace engine {
 	template<class O> void TransactionalObjectHandle<O>::discardHeader(Transaction* transaction) {
 		header->discardObject(transaction);
 
-		delete objectCopy;
 		objectCopy = NULL;
 	}
 
@@ -99,7 +96,7 @@ namespace engine {
 	}
 
 	template<class O> bool TransactionalObjectHandle<O>::hasObjectChanged() {
-		return object != header->getObject();
+		return !header->hasObject(object);
 	}
 
 	template<class O> bool TransactionalObjectHandle<O>::hasObjectContentChanged() {

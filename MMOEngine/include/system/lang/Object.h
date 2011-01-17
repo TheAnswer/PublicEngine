@@ -12,15 +12,17 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "Variable.h"
 
-#include "../thread/Mutex.h"
+#include "system/thread/Mutex.h"
 
-#include "../util/Vector.h"
+#include "system/util/Vector.h"
 
 #ifdef TRACE_REFERENCES
 #include "ref/Reference.h"
 
-#include "../util/VectorMap.h"
+#include "system/util/VectorMap.h"
 #endif
+
+#include "system/util/VectorMap.h"
 
 namespace sys {
 	namespace io {
@@ -49,7 +51,6 @@ namespace sys {
 
 	public:
 		Object() : ReferenceCounter(), Variable() {
-
 			_destroying = false;
 
 		#ifdef TRACE_REFERENCES
@@ -58,8 +59,6 @@ namespace sys {
 		}
 
 		Object(const Object& obj) : ReferenceCounter(), Variable() {
-			//_references = obj._references;
-
 			_destroying = false;
 
 		#ifdef TRACE_REFERENCES
@@ -72,8 +71,11 @@ namespace sys {
 			for (int i = 0; i < referenceHolders.size(); ++i)
 				delete referenceHolders.get(i);
 		#endif
-
 			finalize();
+		}
+
+		virtual Object* clone() {
+			assert(0 && "clone method not declared");
 		}
 
 		virtual bool notifyDestroy() {
@@ -85,14 +87,6 @@ namespace sys {
 		}
 
 		void finalize() {
-		}
-
-		bool toString(String& str) {
-			return false;
-		}
-
-		bool parseFromString(const String& str, int version = 0) {
-			return false;
 		}
 
 		bool toBinaryStream(ObjectOutputStream* stream) {
@@ -112,9 +106,13 @@ namespace sys {
 		}
 
 		inline void release() {
+			if (_references.get() == 0)
+				assert(0 && "Object already delted");
+
 			if (decreaseCount()) {
-				if (notifyDestroy())
+				if (notifyDestroy()) {
 					destroy();
+				}
 			}
 		}
 

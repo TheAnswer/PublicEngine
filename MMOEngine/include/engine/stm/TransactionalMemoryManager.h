@@ -10,6 +10,8 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "engine/util/Singleton.h"
 
+#include "orb/TransactionalObjectManager.h"
+
 #include "engine/stm/service/TransactionalSocketManager.h"
 
 #include "Transaction.h"
@@ -19,12 +21,29 @@ Distribution of this file for usage outside of Core3 is prohibited.
 namespace engine {
   namespace stm {
 
-	class TransactionalMemoryManager : public Singleton<TransactionalMemoryManager> {
+	class TransactionalMemoryManager : public Singleton<TransactionalMemoryManager>, public Logger {
+		TransactionalObjectManager* objectManager;
+
 		TransactionalSocketManager* socketManager;
 
 		ThreadLocal<Transaction> currentTransaction;
 
+		AtomicInteger startedTransactions;
+		AtomicInteger commitedTransactions;
+		AtomicInteger abortedTransactions;
+
 	public:
+		static void commitPureTransaction();
+
+		void printStatistics();
+
+		TransactionalObjectManager* getObjectManager() {
+			//FIXME: temp hack
+			objectManager->initialize();
+
+			return objectManager;
+		}
+
 		TransactionalSocketManager* getSocketManager() {
 			return socketManager;
 		}
@@ -34,7 +53,11 @@ namespace engine {
 
 		Transaction* getTransaction();
 
-		void clearTransaction();
+		void startTransaction(Transaction* transaction);
+
+		void commitTransaction();
+
+		void abortTransaction();
 
 		friend class SingletonWrapper<TransactionalMemoryManager>;
 		friend class Transaction;
