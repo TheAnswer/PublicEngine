@@ -23,12 +23,12 @@ Distribution of this file for usage outside of Core3 is prohibited.
 namespace engine {
   namespace stm {
 
-	class TransactionalMemoryManager : public Singleton<TransactionalMemoryManager>, public Logger {
+	class TransactionalMemoryManager : public Singleton<TransactionalMemoryManager>, public MemoryManager, public Logger {
 		TransactionalObjectManager* objectManager;
 
 		TransactionalSocketManager* socketManager;
 
-		ThreadLocal<Transaction> currentTransaction;
+		ThreadLocal<Transaction*> currentTransaction;
 
 		AtomicInteger transactionID;
 
@@ -36,8 +36,14 @@ namespace engine {
 		AtomicInteger commitedTransactions;
 		AtomicInteger abortedTransactions;
 
+		ThreadLocal<Vector<Object*>* > reclamationList;
+
 	public:
 		static void commitPureTransaction();
+
+		static void closeThread() {
+			instance()->reclaimObjects();
+		}
 
 		void printStatistics();
 
@@ -61,6 +67,12 @@ namespace engine {
 		void commitTransaction();
 
 		void abortTransaction();
+
+		void reclaim(Object* object);
+
+		void reclaimObjects(int objectsToSpare = 0);
+
+		Vector<Object*>* getReclamationList();
 
 		friend class SingletonWrapper<TransactionalMemoryManager>;
 		friend class Transaction;

@@ -100,14 +100,14 @@ namespace engine {
 
 	};
 
-	class DatabaseManager : public Logger, public Mutex {
+	class DatabaseManager : public Logger, public Mutex, public Object {
 	protected:
 		engine::db::berkley::Environment* databaseEnvironment;
 
 		VectorMap<uint16, LocalDatabase*> databases;
 		VectorMap<String, uint16> nameDirectory;
 
-		ThreadLocal<CurrentTransaction> localTransaction;
+		ThreadLocal<CurrentTransaction*> localTransaction;
 
 		LocalDatabase* databaseDirectory;
 

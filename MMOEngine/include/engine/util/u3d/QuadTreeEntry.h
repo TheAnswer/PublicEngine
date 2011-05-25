@@ -135,9 +135,11 @@ namespace engine {
 namespace util {
 namespace u3d {
 
-class QuadTreeEntryImplementation : public ObservableImplementation, public Coordinate {
+class QuadTreeEntryImplementation : public ObservableImplementation {
 protected:
-	Reference<QuadTreeNode*> node;
+	Coordinate coordinates;
+
+	TransactionalReference<QuadTreeNode*> node;
 
 	bool bounding;
 

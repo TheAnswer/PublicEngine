@@ -115,20 +115,13 @@ namespace sys {
 			increaseCount();
 		}
 
-		inline void release() {
-			if (_references.get() == 0)
-				assert(0 && "Object already delted");
-
-			if (decreaseCount()) {
-				if (notifyDestroy()) {
-					destroy();
-				}
-			}
-		}
+		void release();
 
 		void acquireWeak(WeakReferenceBase* ref);
 
 		void releaseWeak(WeakReferenceBase* ref);
+
+		virtual String toString();
 
 	#ifdef TRACE_REFERENCES
 		void addHolder(void* obj);
@@ -141,6 +134,7 @@ namespace sys {
 	protected:
 		virtual void destroy();
 
+		friend class MemoryManager;
 		friend class WeakReference<Object*>;
 	};
 
