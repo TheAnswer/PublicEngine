@@ -50,7 +50,7 @@ namespace sys {
 	   if (this == &vector)
 		   return *this;
 
-	   vector.clone(*this);
+	   ArrayList<E>::operator=(vector);
 
 	   return *this;
    }*/
