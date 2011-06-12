@@ -41,6 +41,10 @@ namespace engine {
 
 		O getForUpdate();
 
+		O getForDirty() {
+			return dynamic_cast<O>(object.get());
+		}
+
 		bool isCurrentVersion(Object* obj);
 
 	protected:
@@ -70,6 +74,8 @@ namespace engine {
 
 		void setObject(O obj) {
 			object = dynamic_cast<Object*>(obj);
+
+			assert(object != NULL);
 		}
 
 		friend class Transaction;

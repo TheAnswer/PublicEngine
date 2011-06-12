@@ -50,9 +50,9 @@ class ManagedObject {
 	@nativeStub 
 	public native void lock(ManagedObject obj);
 
-	/*@local
+	@local
 	@nativeStub 
-	public native void lock(Lockable obj);*/
+	public native void lock(Lockable obj);
 
 	@nativeStub 
 	public native void rlock(boolean doLock = true);
@@ -80,6 +80,7 @@ class ManagedObject {
 	}*/
 	
 	@local
+	@nativeStub
 	@noImplementationDeclaration
 	public native void writeObject(ObjectOutputStream stream);
 	
@@ -115,10 +116,12 @@ class ManagedObject {
 		updateToDatabaseTask = null;
 	}
 	
+	@nativeStub
 	public unsigned int getLastCRCSave() {
 		return lastCRCSave;
 	}
 	
+	@nativeStub
 	public void setLastCRCSave(unsigned int crc) {
 		lastCRCSave = crc;
 	}

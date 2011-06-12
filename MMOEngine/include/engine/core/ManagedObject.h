@@ -48,6 +48,8 @@ public:
 
 	void lock(ManagedObject* obj);
 
+	void lock(Lockable* obj);
+
 	void rlock(bool doLock = true);
 
 	void wlock(bool doLock = true);
@@ -103,6 +105,8 @@ protected:
 
 	void _lock(ManagedObject* obj);
 
+	void _lock(Lockable* obj);
+
 	void _rlock(bool doLock = true);
 
 	void _wlock(bool doLock = true);
@@ -116,6 +120,12 @@ protected:
 	void _setLockName(const String& name);
 
 	bool _notifyDestroy();
+
+	void _writeObject(ObjectOutputStream* stream);
+
+	unsigned int _getLastCRCSave();
+
+	void _setLastCRCSave(unsigned int crc);
 
 	friend class ManagedObjectHelper;
 };
@@ -141,6 +151,8 @@ public:
 	void lock(bool doLock = true);
 
 	void lock(ManagedObject* obj);
+
+	void lock(Lockable* obj);
 
 	void rlock(bool doLock = true);
 

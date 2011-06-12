@@ -10,9 +10,12 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "engine/util/Singleton.h"
 
-#include "orb/TransactionalObjectManager.h"
+#include "engine/stm/task/TransactionalTaskManager.h"
+
+#include "engine/stm/orb/TransactionalObjectManager.h"
 
 #include "engine/stm/service/TransactionalSocketManager.h"
+#include "engine/stm/service/TransactionalBaseClientManager.h"
 
 #include "Transaction.h"
 
@@ -24,9 +27,13 @@ namespace engine {
   namespace stm {
 
 	class TransactionalMemoryManager : public Singleton<TransactionalMemoryManager>, public MemoryManager, public Logger {
+		TransactionalTaskManager* taskManager;
+
 		TransactionalObjectManager* objectManager;
 
 		TransactionalSocketManager* socketManager;
+
+		TransactionalBaseClientManager* baseClientManager;
 
 		ThreadLocal<Transaction*> currentTransaction;
 
@@ -35,6 +42,7 @@ namespace engine {
 		AtomicInteger startedTransactions;
 		AtomicInteger commitedTransactions;
 		AtomicInteger abortedTransactions;
+		AtomicInteger retryConflicts;
 
 		ThreadLocal<Vector<Object*>* > reclamationList;
 
@@ -47,12 +55,20 @@ namespace engine {
 
 		void printStatistics();
 
+		TransactionalTaskManager* getTaskManager() {
+			return taskManager;
+		}
+
 		TransactionalObjectManager* getObjectManager() {
 			return objectManager;
 		}
 
 		TransactionalSocketManager* getSocketManager() {
 			return socketManager;
+		}
+
+		inline TransactionalBaseClientManager* getBaseClientManager() {
+			return baseClientManager;
 		}
 
 	protected:
@@ -67,6 +83,8 @@ namespace engine {
 		void commitTransaction();
 
 		void abortTransaction();
+
+		void retryTransaction();
 
 		void reclaim(Object* object);
 
