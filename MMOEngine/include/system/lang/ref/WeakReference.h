@@ -18,6 +18,15 @@ namespace sys {
 	   virtual ~WeakReferenceBase() {
 
 	   }
+
+	   int compareTo(WeakReferenceBase* base) {
+		   if (this < base)
+			   return 1;
+		   else if (this > base)
+			   return -1;
+		   else return 0;
+	   }
+
    protected:
 	   virtual void clearObject() = 0;
 
@@ -64,8 +73,10 @@ namespace sys {
 			return *this;
 		}
 
-		void operator=(O obj) {
+		O operator=(O obj) {
 			updateObject(obj);
+
+			return object;
 		}
 
 		O operator->() const {

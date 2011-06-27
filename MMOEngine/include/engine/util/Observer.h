@@ -76,7 +76,7 @@ public:
 
 	int compareTo(Observer* obj);
 
-	Observer* _this;
+	WeakReference<Observer*> _this;
 
 	operator const Observer*();
 

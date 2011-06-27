@@ -44,7 +44,7 @@ public:
 	ManagedServiceImplementation();
 	ManagedServiceImplementation(DummyConstructorParameter* param);
 
-	ManagedService* _this;
+	WeakReference<ManagedService*> _this;
 
 	operator const ManagedService*();
 

@@ -61,7 +61,7 @@ public:
 
 	virtual int clearSession();
 
-	Facade* _this;
+	WeakReference<Facade*> _this;
 
 	operator const Facade*();
 

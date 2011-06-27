@@ -51,11 +51,11 @@ namespace engine {
   	namespace u3d {
 
 	class QuadTree : public Object {
-	#ifdef WITH_STM
+	//#ifdef WITH_STM
 		TransactionalReference<QuadTreeNode*> root;
-	#else
+	/*#else
 		Reference<QuadTreeNode*> root;
-	#endif
+	#endif*/
 
 		static bool logTree;
 
@@ -126,11 +126,11 @@ namespace engine {
 		bool update(QuadTreeEntry *obj);
 
 	private:
-		void _insert(QuadTreeNode *node, QuadTreeEntry *obj);
-		bool _update(QuadTreeNode *node, QuadTreeEntry *obj);
+		void _insert(TransactionalReference<QuadTreeNode*> node, QuadTreeEntry *obj);
+		bool _update(TransactionalReference<QuadTreeNode*> node, QuadTreeEntry *obj);
 
-		void _inRange(QuadTreeNode *node, QuadTreeEntry *obj, float range);
-		int _inRange(QuadTreeNode *node, float x, float y, float range, SortedVector<QuadTreeEntry*>& objects);
+		void _inRange(TransactionalReference<QuadTreeNode*> node, QuadTreeEntry *obj, float range);
+		int _inRange(TransactionalReference<QuadTreeNode*> node, float x, float y, float range, SortedVector<QuadTreeEntry*>& objects);
 
 	public:
 		static void setLogging(bool doLog) {

@@ -6,15 +6,16 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #ifndef OBJECT_H_
 #define OBJECT_H_
 
-#include "ref/ReferenceCounter.h"
-
-#include "ref/WeakReference.h"
-
-#include "Variable.h"
+#include "system/lang/ref/ReferenceCounter.h"
+#include "system/lang/ref/WeakReference.h"
 
 #include "system/thread/Mutex.h"
 
 #include "system/util/ArrayList.h"
+
+#include "system/thread/atomic/AtomicBoolean.h"
+
+#include "Variable.h"
 
 #ifdef TRACE_REFERENCES
 #include "ref/Reference.h"
@@ -27,7 +28,13 @@ namespace sys {
 		class ObjectOutputStream;
 		class ObjectInputStream;
 	}
+
+	namespace util {
+		template<class O> class SortedVector;
+		template<class E> class HashSet;
+	}
 }
+
 
 namespace sys {
   namespace lang {
@@ -35,44 +42,33 @@ namespace sys {
     class String;
 
 	using namespace sys::io;
+	using namespace sys::util;
 
 	class Object : public ReferenceCounter, public Variable {
-	#ifndef WITH_STM
+//	#ifndef WITH_STM
 		Mutex referenceMutex;
-	#endif
+//	#endif
 
-		ArrayList<WeakReferenceBase*> weakReferences;
+		//ArrayList<WeakReferenceBase*> weakReferences;
 
-		bool _destroying;
+//#ifndef WITH_STM
+		HashSet<WeakReferenceBase*>* weakReferences;
+/*#else
+		TransactionalReference<Vector<WeakReferenceBase*>*>* weakReferences;
+#endif*/
+
+		AtomicBoolean _destroying;
 
 	#ifdef TRACE_REFERENCES
 		VectorMap<void*, StackTrace*> referenceHolders;
 	#endif
 
 	public:
-		Object() : ReferenceCounter(), Variable() {
-			_destroying = false;
+		Object();
 
-		#ifdef TRACE_REFERENCES
-			referenceHolders.setNullValue(NULL);
-		#endif
-		}
+		Object(const Object& obj);
 
-		Object(const Object& obj) : ReferenceCounter(), Variable() {
-			_destroying = false;
-
-		#ifdef TRACE_REFERENCES
-			referenceHolders.setNullValue(NULL);
-		#endif
-		}
-
-		virtual ~Object() {
-		#ifdef TRACE_REFERENCES
-			for (int i = 0; i < referenceHolders.size(); ++i)
-				delete referenceHolders.get(i);
-		#endif
-			finalize();
-		}
+		virtual ~Object();
 
 		virtual Object* clone() {
 			assert(0 && "clone method not declared");
@@ -92,8 +88,12 @@ namespace sys {
 			return true;
 		}
 
-		inline void _setDestroying(bool val) {
-			_destroying = val;
+		bool _setDestroying() {
+			return _destroying.compareAndSet(false, true);
+		}
+
+		void _clearDestroying() {
+			_destroying.set(false);
 		}
 
 		void finalize() {
@@ -108,7 +108,7 @@ namespace sys {
 		}
 
 		inline bool _isGettingDestroyed() const {
-			return _destroying;
+			return _destroying.get();
 		}
 
 		inline void acquire() {

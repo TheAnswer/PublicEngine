@@ -194,7 +194,7 @@ protected:
 public:
 	void setPersistent(int level);
 
-	ManagedObject* _this;
+	WeakReference<ManagedObject*> _this;
 
 	operator const ManagedObject*();
 

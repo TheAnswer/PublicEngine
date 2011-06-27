@@ -76,7 +76,7 @@ public:
 
 	int getObserverCount(unsigned int eventType);
 
-	Observable* _this;
+	WeakReference<Observable*> _this;
 
 	operator const Observable*();
 

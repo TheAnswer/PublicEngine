@@ -99,7 +99,7 @@ public:
 
 	int inRangeObjectCount();
 
-	QuadTreeNode* getNode();
+	TransactionalReference<QuadTreeNode*> getNode();
 
 	unsigned long long getObjectID();
 
@@ -214,7 +214,7 @@ public:
 
 	int inRangeObjectCount();
 
-	QuadTreeNode* getNode();
+	TransactionalReference<QuadTreeNode*> getNode();
 
 	virtual unsigned long long getObjectID();
 
@@ -230,7 +230,7 @@ public:
 
 	void clearBounding();
 
-	QuadTreeEntry* _this;
+	WeakReference<QuadTreeEntry*> _this;
 
 	operator const QuadTreeEntry*();
 

@@ -35,7 +35,7 @@ public:
 	ManagedVectorImplementation();
 	ManagedVectorImplementation(DummyConstructorParameter* param);
 
-	ManagedVector* _this;
+	WeakReference<ManagedVector*> _this;
 
 	operator const ManagedVector*();
 
