@@ -86,6 +86,7 @@ namespace sys {
 	protected:
 		static void* executeThread(void* th);
 
+	public:
 		//! Initializes main thread local key
 		static void initializeThread(Thread* thread);
 

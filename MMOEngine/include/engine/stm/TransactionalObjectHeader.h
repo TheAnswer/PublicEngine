@@ -21,9 +21,9 @@ namespace engine {
 
 	template<class O> class TransactionalObjectHeader {
 	protected:
-		AtomicReference<Transaction> ownerTransaction;
+		AtomicReference<Transaction*> ownerTransaction;
 
-		AtomicReference<TransactionalObjectHandle<O> > last;
+		AtomicReference<TransactionalObjectHandle<O>* > last;
 
 	public:
 		TransactionalObjectHeader() {
@@ -201,32 +201,33 @@ namespace engine {
 		}
 
 	template<class O> Object* TransactionalStrongObjectHeader<O>::getObjectForWrite(TransactionalObjectHandle<O>* handle) {
-		add(handle);
+			Transaction* transaction = TransactionalObjectHeader<O>::ownerTransaction;
 
-		Transaction* transaction = TransactionalObjectHeader<O>::ownerTransaction;
-
-		if (transaction != NULL) {
-			//if (transaction->isCommited())
-			throw TransactionAbortedException(false);
-			//return ownerTransaction->getOpenedObject(this);
-		}
-
-		return object;
+			/*if (transaction != NULL) {
+				if (!transaction->isCommited())
+						return object;
+					else
+				throw TransactionAbortedException();
+				//return ownerTransaction->getOpenedObject(this);
+			} else {*/
+			add(handle);
+			return object;
+			//}
 	}
 
-
 	template<class O> Object* TransactionalWeakObjectHeader<O>::getObjectForWrite(TransactionalObjectHandle<O>* handle) {
-		add(handle);
-
 		Transaction* transaction = TransactionalObjectHeader<O>::ownerTransaction;
 
-		if (transaction != NULL) {
-			//if (transaction->isCommited())
-			throw TransactionAbortedException(false);
-			//return ownerTransaction->getOpenedObject(this);
-		}
-
+		/*if (transaction != NULL) {
+						if (!transaction->isCommited())
+								return object;
+							else
+						throw TransactionAbortedException();
+						//return ownerTransaction->getOpenedObject(this);
+					} else {*/
+		add(handle);
 		return object;
+		//
 	}
 
 	template<class O> O TransactionalObjectHeader<O>::get() {

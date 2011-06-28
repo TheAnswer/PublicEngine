@@ -71,7 +71,6 @@ namespace engine {
 		AtomicInteger failedToResolveConflictReleasedTransaction;
 		AtomicInteger failedToNotUNDECIDED;
 		AtomicInteger failedToExceptions;
-		AtomicInteger deletedTransactions;
 
 
 		bool reclaiming;
@@ -117,10 +116,6 @@ namespace engine {
 
 		inline void increaseFailedByObjectChanged() {
 			failedOnAcquireRW.increment();
-		}
-
-		inline void increaseDeletedTransactions() {
-			deletedTransactions.increment();
 		}
 
 		inline void unblockTransactions() {
