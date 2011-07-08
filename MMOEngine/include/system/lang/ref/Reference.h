@@ -102,14 +102,14 @@ namespace sys {
 			setObject(obj);*/
 
 			if (obj != NULL)
-				obj->acquire();
+				((Object*)obj)->acquire();
 
 			while (true) {
 				O oldobj = object.get();
 
 				if (object.compareAndSet(oldobj, obj)) {
 					if (oldobj != NULL)
-						oldobj->release();
+						((Object*)oldobj)->release();
 
 					return;
 				}
