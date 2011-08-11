@@ -83,11 +83,13 @@ namespace sys {
 		}
 
 		bool toBinaryStream(ObjectOutputStream* stream) {
-			return object->toBinaryStream(stream);
+			//return object->toBinaryStream(stream);
+			return false;
 		}
 
 		bool parseFromBinaryStream(ObjectInputStream* stream) {
-			return object->parseFromBinaryStream(stream);
+			//return object->parseFromBinaryStream(stream);
+			return false;
 		}
 
 	protected:
@@ -135,20 +137,22 @@ namespace sys {
 			#ifdef TRACE_REFERENCES
 				object->addHolder(this);
 			#endif
-				object->acquire();
+				((Object*)object.get())->acquire();
 			}
 		}
 
-		inline void releaseObject() {
+		void releaseObject() {
 			if (object != NULL) {
 			#ifdef TRACE_REFERENCES
 				object->removeHolder(this);
 			#endif
-				object->release();
+				((Object*)object.get())->release();
 				object = NULL;
 			}
 		}
 	};
+
+	
 
   } // namespace lang
 } // namespace sys

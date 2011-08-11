@@ -74,6 +74,8 @@ namespace sys {
 
 		virtual Object* clone() {
 			assert(0 && "clone method not declared");
+
+			return NULL;
 		}
 
 		virtual int compareTo(Object* object) {
