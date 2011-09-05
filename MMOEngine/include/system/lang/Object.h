@@ -24,6 +24,10 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #endif
 
 namespace sys {
+	namespace mm {
+		class MemoryManager;
+	}
+
 	namespace io {
 		class ObjectOutputStream;
 		class ObjectInputStream;
@@ -76,6 +80,10 @@ namespace sys {
 			assert(0 && "clone method not declared");
 
 			return NULL;
+		}
+
+		virtual Object* clone(void* object) {
+			return clone();
 		}
 
 		virtual int compareTo(Object* object) {
@@ -138,7 +146,9 @@ namespace sys {
 	protected:
 		virtual void destroy();
 
-		friend class MemoryManager;
+		virtual void free();
+
+		friend class sys::mm::MemoryManager;
 		friend class WeakReference<Object*>;
 	};
 

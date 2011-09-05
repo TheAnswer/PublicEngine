@@ -194,7 +194,7 @@ namespace engine {
 		}
 
 		void clearHelperTransaction() {
-			helperTransaction.set(NULL);
+			return helperTransaction.set(NULL);
 		}
 
 		void discardReadWriteObjects();
