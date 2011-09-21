@@ -236,7 +236,7 @@ namespace engine {
 	}
 
 	template<class O> void Transaction::createObject(TransactionalObjectHeader<O>* header) {
-		Reference<TransactionalObjectHandle<O>*> handle = header->createWriteHandle(this);
+		Reference<TransactionalObjectHandle<O>*> handle = header->createCreationHandle(this);
 
 		localObjectCache.put(handle->getObjectLocalCopy(), header);
 		localObjectCache.put(handle->getObject(), header);

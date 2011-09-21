@@ -58,6 +58,7 @@ namespace engine {
 		}
 
 	protected:
+		Reference<TransactionalObjectHandle<O>*> createCreationHandle(Transaction* transaction);
 		Reference<TransactionalObjectHandle<O>*> createReadOnlyHandle(Transaction* transaction);
 		Reference<TransactionalObjectHandle<O>*> createWriteHandle(Transaction* transaction);
 
@@ -86,16 +87,23 @@ namespace engine {
 		friend class TransactionalObjectHandle<O>;
 	};
 
+	template<class O> Reference<TransactionalObjectHandle<O>*> TransactionalObjectHeader<O>::createCreationHandle(Transaction* transaction) {
+		Reference<TransactionalObjectHandle<O>*> handle = new TransactionalObjectHandle<O>();
+		handle->initialize(this, TransactionalObjectHandle<O>::CREATE, transaction);
+
+		return handle;
+	}
+
 	template<class O> Reference<TransactionalObjectHandle<O>*> TransactionalObjectHeader<O>::createReadOnlyHandle(Transaction* transaction) {
 		Reference<TransactionalObjectHandle<O>*> handle = new TransactionalObjectHandle<O>();
-		handle->initialize(this, false, transaction);
+		handle->initialize(this, TransactionalObjectHandle<O>::READ, transaction);
 
 		return handle;
 	}
 
 	template<class O> Reference<TransactionalObjectHandle<O>*> TransactionalObjectHeader<O>::createWriteHandle(Transaction* transaction) {
 		Reference<TransactionalObjectHandle<O>*> handle = new TransactionalObjectHandle<O>();
-		handle->initialize(this, true, transaction);
+		handle->initialize(this, TransactionalObjectHandle<O>::WRITE, transaction);
 
 		return handle;
 	}

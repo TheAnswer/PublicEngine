@@ -27,7 +27,9 @@ namespace engine {
 
 	public:
 		TransactionalObjectHandle();
-		void initialize(TransactionalObjectHeader<O>* hdr, bool forWrite, Transaction* trans);
+
+		enum {CREATE, READ, WRITE};
+		void initialize(TransactionalObjectHeader<O>* hdr, int accessType, Transaction* trans);
 
 		virtual ~TransactionalObjectHandle();
 
@@ -100,13 +102,12 @@ namespace engine {
 		objectCopy = NULL;
 	}
 
-	template<class O> void TransactionalObjectHandle<O>::initialize(TransactionalObjectHeader<O>* hdr, bool forWrite, Transaction* trans) {
+	template<class O> void TransactionalObjectHandle<O>::initialize(TransactionalObjectHeader<O>* hdr, int accessType, Transaction* trans) {
 		header = hdr;
 
 		transaction = trans;
 
-
-		if (forWrite) {
+		if (accessType == WRITE) {
 			//KernelCall kernelCall;
 
 			//System::out.println("[" + Thread::getCurrentThread()->getName() +"] cloning " + String::valueOf((uint64) object));
@@ -115,10 +116,14 @@ namespace engine {
 			objectCopy = object->clone();
 
 			//System::out.println("[" + Thread::getCurrentThread()->getName() +"] cloning " + String::valueOf((uint64) object) + " finished");
-		} else {
+		} else if (accessType == READ){
 			object = header->getObjectForRead(this);
 
 			objectCopy = NULL;
+		} else {
+			object = header->getObjectForWrite(this);
+
+			objectCopy = object;
 		}
 	}
 
