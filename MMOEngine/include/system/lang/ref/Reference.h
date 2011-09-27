@@ -104,14 +104,14 @@ namespace sys {
 			setObject(obj);*/
 
 			if (obj != NULL)
-				(dynamic_cast<Object*>(obj))->acquire();
+				(static_cast<Object*>(obj))->acquire();
 
 			while (true) {
 				O oldobj = object.get();
 
 				if (object.compareAndSet(oldobj, obj)) {
 					if (oldobj != NULL)
-						(dynamic_cast<Object*>(oldobj))->release();
+						(static_cast<Object*>(oldobj))->release();
 
 					return;
 				}
