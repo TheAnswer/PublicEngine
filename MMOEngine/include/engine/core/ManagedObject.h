@@ -72,6 +72,8 @@ public:
 
 	bool parseFromBinaryStream(ObjectInputStream* stream);
 
+	DistributedObjectServant* getServant();
+
 	void initializeTransientMembers();
 
 	void updateToDatabase();
@@ -123,9 +125,7 @@ protected:
 
 	void _writeObject(ObjectOutputStream* stream);
 
-	unsigned int _getLastCRCSave();
-
-	void _setLastCRCSave(unsigned int crc);
+	DistributedObjectServant* _getServant();
 
 	friend class ManagedObjectHelper;
 };
@@ -171,6 +171,8 @@ public:
 	bool toBinaryStream(ObjectOutputStream* stream);
 
 	bool parseFromBinaryStream(ObjectInputStream* stream);
+
+	DistributedObjectServant* getServant();
 
 	virtual void initializeTransientMembers();
 
@@ -219,7 +221,7 @@ protected:
 
 class ManagedObjectAdapter : public DistributedObjectAdapter {
 public:
-	ManagedObjectAdapter(ManagedObjectImplementation* impl);
+	ManagedObjectAdapter(ManagedObject* impl);
 
 	Packet* invokeMethod(sys::uint32 methid, DistributedMethod* method);
 
@@ -254,6 +256,10 @@ public:
 	unsigned int getLastCRCSave();
 
 	void setLastCRCSave(unsigned int crc);
+
+	bool isPersistent();
+
+	int getPersistenceLevel();
 
 protected:
 	String _param0_setLockName__String_;

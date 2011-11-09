@@ -115,7 +115,7 @@ protected:
 
 class ObserverAdapter : public ManagedObjectAdapter {
 public:
-	ObserverAdapter(ObserverImplementation* impl);
+	ObserverAdapter(Observer* impl);
 
 	Packet* invokeMethod(sys::uint32 methid, DistributedMethod* method);
 

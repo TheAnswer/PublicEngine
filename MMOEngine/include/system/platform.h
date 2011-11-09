@@ -102,6 +102,13 @@ extern "C" int isinf (double);
 #define isinf(x) (!_finite(x) && !_isnan(x))
 #endif
 
+//#define WMB() __asm__ __volatile__ ("" ::: "memory");
+#define WMB() __sync_synchronize()
+
+#ifdef __clang__
+#define CLANG_COMPILER
+#endif
+
 namespace sys {
 	typedef unsigned long long uint64;
 	typedef unsigned int uint32;
@@ -147,11 +154,12 @@ namespace sys {
 	//#define TRACE_TASKS
 
 	#ifdef VERSION_PUBLIC
-	#define CONNECTION_LIMIT 20
-	#define TIME_LIMIT 12
+	#define CONNECTION_LIMIT 2000000000
+	#define TIME_LIMIT 24
 	#endif
 
 	//#define WITH_STM
+	//#define MEMORY_PROTECTION
 
 	namespace lang {
 	} // namespace net

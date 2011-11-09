@@ -100,7 +100,7 @@ protected:
 
 class FacadeAdapter : public ManagedObjectAdapter {
 public:
-	FacadeAdapter(FacadeImplementation* impl);
+	FacadeAdapter(Facade* impl);
 
 	Packet* invokeMethod(sys::uint32 methid, DistributedMethod* method);
 
