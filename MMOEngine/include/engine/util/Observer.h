@@ -45,11 +45,8 @@ public:
 	int compareTo(Observer* obj);
 
 	DistributedObjectServant* _getImplementation();
-	DistributedObjectServant* _getDirtyImplementation();
 
 	void _setImplementation(DistributedObjectServant* servant);
-
-	bool _isCurrentVersion(ManagedObjectImplementation* servant);
 
 protected:
 	Observer(DummyConstructorParameter* param);
@@ -89,10 +86,6 @@ public:
 protected:
 	virtual ~ObserverImplementation();
 
-	Object* clone();
-	Object* clone(void* object);
-	void free();
-
 	void finalize();
 
 	void _initializeImplementation();
@@ -118,8 +111,6 @@ protected:
 	int writeObjectMembers(ObjectOutputStream* stream);
 
 	friend class Observer;
-	friend class TransactionalObjectHandle<ObserverImplementation*>;
-	friend class TransactionalObjectHeader<ObserverImplementation*>;
 };
 
 class ObserverAdapter : public ManagedObjectAdapter {
