@@ -120,8 +120,11 @@ public:
 	void setParent(QuadTreeEntry* par);
 
 	DistributedObjectServant* _getImplementation();
+	DistributedObjectServant* _getDirtyImplementation();
 
 	void _setImplementation(DistributedObjectServant* servant);
+
+	bool _isCurrentVersion(ManagedObjectImplementation* servant);
 
 protected:
 	QuadTreeEntry(DummyConstructorParameter* param);
@@ -145,7 +148,7 @@ class QuadTreeEntryImplementation : public ObservableImplementation {
 protected:
 	Coordinate coordinates;
 
-	Reference<QuadTreeNode* > node;
+	TransactionalReference<QuadTreeNode* > node;
 
 	bool bounding;
 
@@ -248,6 +251,10 @@ public:
 protected:
 	virtual ~QuadTreeEntryImplementation();
 
+	Object* clone();
+	Object* clone(void* object);
+	void free();
+
 	void finalize();
 
 	void _initializeImplementation();
@@ -273,6 +280,8 @@ protected:
 	int writeObjectMembers(ObjectOutputStream* stream);
 
 	friend class QuadTreeEntry;
+	friend class TransactionalObjectHandle<QuadTreeEntryImplementation*>;
+	friend class TransactionalObjectHeader<QuadTreeEntryImplementation*>;
 };
 
 class QuadTreeEntryAdapter : public ObservableAdapter {

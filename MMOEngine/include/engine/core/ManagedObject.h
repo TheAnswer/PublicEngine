@@ -39,6 +39,8 @@ namespace engine {
 namespace core {
 
 class ManagedObject : public DistributedObjectStub {
+protected:
+	Reference<TransactionalObjectHeader<class ManagedObjectImplementation*>* > header;
 public:
 	ManagedObject();
 
@@ -93,8 +95,11 @@ public:
 	void setPersistent(int level);
 
 	DistributedObjectServant* _getImplementation();
+	DistributedObjectServant* _getDirtyImplementation();
 
 	void _setImplementation(DistributedObjectServant* servant);
+
+	bool _isCurrentVersion(ManagedObjectImplementation* servant);
 
 protected:
 	ManagedObject(DummyConstructorParameter* param);
@@ -206,6 +211,10 @@ public:
 protected:
 	virtual ~ManagedObjectImplementation();
 
+	Object* clone();
+	Object* clone(void* object);
+	void free();
+
 	void finalize();
 
 	void _initializeImplementation();
@@ -217,6 +226,8 @@ protected:
 	int writeObjectMembers(ObjectOutputStream* stream);
 
 	friend class ManagedObject;
+	friend class TransactionalObjectHandle<ManagedObjectImplementation*>;
+	friend class TransactionalObjectHeader<ManagedObjectImplementation*>;
 };
 
 class ManagedObjectAdapter : public DistributedObjectAdapter {
