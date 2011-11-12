@@ -21,18 +21,41 @@ namespace engine {
 		static AtomicInteger deletedHandles;
 	};
 
-	template<class O> class TransactionalObjectHandle : public Object {
-		TransactionalObjectHeader<O>* header;
+	class TransactionalObjectHandleBase : public Object {
+	public:
+		virtual Transaction* acquireHeader(Transaction* transaction) = 0;
+
+		virtual void releaseHeader() = 0;
+
+		virtual void discardHeader(Transaction* transaction) = 0;
+
+		//virtual uint64 getHeaderID() = 0;
+
+		virtual bool hasObjectChanged() = 0;
+
+		virtual bool isCopyEqualToObject() = 0;
+
+		virtual int compareTo(TransactionalObjectHandleBase* handle) = 0;
+
+		virtual Transaction* getCompetingTransaction() = 0;
+
+		virtual uint64 getHeaderAddress() = 0;
+	};
+
+	template<class O> class TransactionalObjectHandle : public TransactionalObjectHandleBase {
+		Reference<TransactionalObjectHeader<O>*> header;
 
 		Reference<Object*> object;
 		Reference<Object*> objectCopy;
+		
+		int currentType;
 
 		//Reference<TransactionalObjectHandle<O>*> next;
 
 	public:
 		TransactionalObjectHandle();
 
-		enum {CREATE, READ, WRITE};
+		enum {CREATE, READ, WRITE, WRITE_AFTER_READ};
 
 		void initialize(TransactionalObjectHeader<O>* hdr, int accessType, Transaction* trans);
 
@@ -54,6 +77,10 @@ namespace engine {
 			return header;
 		}
 
+		uint64 getHeaderAddress() {
+			return (uint64)header.get();
+		}
+
 		Reference<TransactionalObjectHandle<Object*>*> getLastHandle() {
 			Reference<TransactionalObjectHandle<Object*>*> ref = (TransactionalObjectHandle<Object*>*) header->getLastHandle().get();
 
@@ -67,18 +94,25 @@ namespace engine {
 			return objectCopy == object;
 		}
 
-		int compareTo(TransactionalObjectHandle* handle) {
-			if ((TransactionalObjectHandle*) this == handle)
+		int compareTo(Object* object) {
+			TransactionalObjectHandle* otherHandle = (TransactionalObjectHandle*) object;
+
+			return compareToHeaders(otherHandle);
+		}
+
+		int compareTo(TransactionalObjectHandleBase* handle) {
+			/*if ((TransactionalObjectHandle*) this == handle)
 				return 0;
 			else if ((TransactionalObjectHandle*) this < handle)
 				return 1;
 			else
-				return -1;
+				return -1;*/
+			return compareToHeaders((TransactionalObjectHandle*) handle);
 		}
 
 		int compareToHeaders(TransactionalObjectHandle<O>* handle);
 
-		uint64 getHeaderID();
+		//uint64 getHeaderID();
 
 		Object* getObject() {
 			return object;
@@ -92,6 +126,8 @@ namespace engine {
 			object = NULL;
 
 			objectCopy = NULL;
+
+			//header = NULL;
 		}
 	};
 
@@ -102,6 +138,8 @@ namespace engine {
 		object = NULL;
 
 		objectCopy = NULL;
+		
+		currentType = 0;
 
 //		HandleCounter::createdHandles.increment();
 	}
@@ -111,6 +149,8 @@ namespace engine {
 
 		assert((uintptr_t) trans > 0x1000);
 		//transaction = trans;
+		
+		currentType = accessType;
 
 		if (accessType == WRITE) {
 			//KernelCall kernelCall;
@@ -166,6 +206,10 @@ namespace engine {
 		header->add(this);
 
 		objectCopy = object->clone();
+		
+		assert(objectCopy != NULL);
+		
+		currentType = WRITE_AFTER_READ;
 		/*
 	        assert(object != NULL);
 	        
@@ -183,11 +227,14 @@ namespace engine {
 	template<class O> void TransactionalObjectHandle<O>::releaseHeader() {
 		Reference<Object*> obj = objectCopy.get();
 
-		if (obj != NULL && objectCopy.compareAndSet(obj, NULL)) { // this is to avoid several threads releasing it*/
-			header->releaseObject(this, obj);
+		//if (objectCopy.compareAndSet(obj.get(), NULL)) { // this is to avoid several threads releasing it*/
 
-			resetObjects();
-		}
+		//if (object.compareAndSet(object.get(), NULL)) {
+		header->releaseObject(this, obj);
+
+		resetObjects();
+		//}
+		//}
 
 	}
 
@@ -215,19 +262,15 @@ namespace engine {
 		next = n;
 	}*/
 
-	template<class O> uint64 TransactionalObjectHandle<O>::getHeaderID() {
+	/*template<class O> uint64 TransactionalObjectHandle<O>::getHeaderID() {
 		return header->getHeaderID();
-	}
+	}*/
 
 
 	template<class O> int TransactionalObjectHandle<O>::compareToHeaders(TransactionalObjectHandle<O>* handle) {
-		//printf("blia\n");
-
-		uint64 headerID = handle->getHeaderID();
-
-		if (header->getHeaderID() == headerID)
+		if (header == handle->header)
 			return 0;
-		else if (header->getHeaderID() < headerID)
+		else if (header < handle->header)
 			return 1;
 		else
 			return -1;

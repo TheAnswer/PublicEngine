@@ -15,6 +15,7 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #include "Transaction.h"
 
 //#define STMLINKELISTDHELP
+//#define EAGERABORTS
 
 namespace engine {
   namespace stm {
@@ -29,9 +30,9 @@ namespace engine {
 
 		Reference<Object*> object;
 
-		uint64 headerID;
+		//uint64 headerID;
 
-		static AtomicLong globalHeaderCounter;
+		//static AtomicLong globalHeaderCounter;
 
 	public:
 		TransactionalObjectHeader(O obj) {
@@ -40,24 +41,24 @@ namespace engine {
 			ownerTransaction = NULL;
 			//last = NULL;
 
-			headerID = globalHeaderCounter.increment();
+	//		headerID = globalHeaderCounter.increment();
 		}
 
 		virtual ~TransactionalObjectHeader() {
 		}
 
 		int compareTo(TransactionalObjectHeader* header) {
-			if (headerID == header->headerID)
+			if (this == header)
 				return 0;
-			else if (headerID < header->headerID)
+			else if (this < header)
 				return -1;
 			else
 				return 1;
 		}
 
-		uint64 getHeaderID() {
+		/*uint64 getHeaderID() {
 			return headerID;
-		}
+		}*/
 
 		O get();
 
@@ -121,8 +122,8 @@ namespace engine {
 		friend class TransactionalObjectHandle<O>;
 	};
 
-	template<class O>
-	AtomicLong TransactionalObjectHeader<O>::globalHeaderCounter;
+	/*template<class O>
+	AtomicLong TransactionalObjectHeader<O>::globalHeaderCounter;*/
 
 	template<class O> Reference<TransactionalObjectHandle<O>*> TransactionalObjectHeader<O>::createCreationHandle(Transaction* transaction) {
 		Reference<TransactionalObjectHandle<O>*> handle = new TransactionalObjectHandle<O>();
@@ -209,21 +210,32 @@ namespace engine {
 	template<class O> void TransactionalObjectHeader<O>::releaseObject(TransactionalObjectHandle<O>* handle, Object* objectCopy) {
 		//if (objectCopy != NULL) {
 
-		assert(ownerTransaction != NULL);
+		//if (owner)
 
-		object = objectCopy;
+		//assert(ownerTransaction != NULL);
+
+		Reference<Transaction*> oldTrans = ownerTransaction.get();
+
+		if (oldTrans != NULL && ownerTransaction.compareAndSet(oldTrans.get(), NULL) && objectCopy != NULL) {
+#ifdef MEMORY_PROTECTION
+			object = objectCopy->clone(NULL);
+#else
+			object = objectCopy;
+#endif
+		}
 
 		assert(object != NULL);
 
-		TransactionalObjectHeader<O>::ownerTransaction = NULL;
+		//ownerTransaction.compareAndSet(ownerTransaction.get(), NULL);
+		//ownerTransaction = NULL;
 		//s}
 	}
 
 	template<class O> O TransactionalObjectHeader<O>::getObjectForRead(TransactionalObjectHandle<O>* handle) {
-		/*Transaction* transaction = TransactionalObjectHeader<O>::ownerTransaction;
+		Transaction* transaction = TransactionalObjectHeader<O>::ownerTransaction;
 
 		assert(object != NULL);
-
+#ifdef EAGERABORTS
 		if (transaction != NULL) {
 			if (!transaction->isCommited())
 				return dynamic_cast<O>(object.get());
@@ -234,22 +246,25 @@ namespace engine {
 		} else {
 			//add(handle);
 			return dynamic_cast<O>(object.get());
-		}*/
+		}
+#endif
 
 		return dynamic_cast<O>(object.get());
 	}
 
 	template<class O> O TransactionalObjectHeader<O>::getObjectForWrite(TransactionalObjectHandle<O>* handle) {
-		/*Transaction* transaction = TransactionalObjectHeader<O>::ownerTransaction;
+#ifdef EAGERABORTS
+		Transaction* transaction = TransactionalObjectHeader<O>::ownerTransaction;
 
 		if (transaction != NULL) {
 			 	 if (!transaction->isCommited())
-			 	 	 return object;
+			 	 	 return dynamic_cast<O>(object.get());
 			 	 else
 			 	 	 throw TransactionAbortedException();
 
 			 	 //return ownerTransaction->getOpenedObject(this);
-			 } else {*/
+			 } else {
+#endif
 
 		this->add(handle);
 
@@ -259,7 +274,10 @@ namespace engine {
 
 		assert(objectToReturn != NULL);
 		return objectToReturn;
-		//}
+
+#ifdef EAGERABORTS
+		}
+#endif
 	}
 
   } // namespace stm
