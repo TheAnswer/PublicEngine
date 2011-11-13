@@ -158,8 +158,8 @@ namespace sys {
 	#define TIME_LIMIT 24
 	#endif
 
-	//#define WITH_STM
-	//#define MEMORY_PROTECTION
+//	#define WITH_STM
+//	#define MEMORY_PROTECTION
 
 	namespace lang {
 	} // namespace net
