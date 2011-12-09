@@ -17,6 +17,8 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "TransactionalObjectHandle.h"
 
+#define transaction_cast dynamic_cast
+
 namespace engine {
   namespace stm {
 
@@ -35,19 +37,18 @@ namespace engine {
 		}
 
 		template<class O> TransactionalObjectHandle<O>* put(TransactionalObjectHeader<O>* header, TransactionalObjectHandle<O>* handle) {
-			//Reference<TransactionalObjectHandle<Object*>*> ref = (TransactionalObjectHandle<Object*>*) handle;
-
-			return dynamic_cast<TransactionalObjectHandle<O>*>(HashTable<uint64, Reference<TransactionalObjectHandleBase*> >::put((uint64) header, handle).get());
+			return transaction_cast<TransactionalObjectHandle<O>*>(HashTable<uint64, Reference<TransactionalObjectHandleBase*> >::put((uint64) header, handle).get());
 		}
 
 		template<class O> TransactionalObjectHandle<O>* get(TransactionalObjectHeader<O>* header) {
-			return dynamic_cast<TransactionalObjectHandle<O>*>(HashTable<uint64, Reference<TransactionalObjectHandleBase*> >::get((uint64) header).get());
+			return transaction_cast<TransactionalObjectHandle<O>*>(HashTable<uint64, Reference<TransactionalObjectHandleBase*> >::get((uint64) header).get());
 		}
 	};
 
-	class TransactionalObjectHandleVector : public SortedVector<Reference<TransactionalObjectHandleBase*> > {
-		int compare(Reference<TransactionalObjectHandleBase*>& o1, const Reference<TransactionalObjectHandleBase*>& o2) const {
-			return o1->compareTo(o2.get());
+	class TransactionalObjectHandleVector : public SortedVector<TransactionalObjectHandleBase* > {
+		int compare(TransactionalObjectHandleBase*& o1, const TransactionalObjectHandleBase*& o2) const {
+			//this needs a specific order based on the header to not create cycle helps
+			return o1->compareTo(o2);
 		}
 
 	public:
@@ -56,43 +57,35 @@ namespace engine {
 		}
 
 		template<class O> void addHandle(TransactionalObjectHandle<O>* handle) {
-			SortedVector<Reference<TransactionalObjectHandleBase*> >::put(handle);
-/*
-			uint64 lastHeaderID = 0;
-
-			for (int i = 0; i < size(); ++i) {
-				uint64 hID = get(i)->getHeaderAddress();
-				//transaction->info("hID:" + String::valueOf(hID), true);
-
-				if (hID < lastHeaderID) {
-					assert("hui" && 0);
-				} else
-					lastHeaderID = hID;
-			}*/
-
+			SortedVector<TransactionalObjectHandleBase* >::put(handle);
 		}
 
 		template<class O> bool removeHandle(TransactionalObjectHandle<O>* handle) {
-			return SortedVector<Reference<TransactionalObjectHandleBase*> >::drop(handle);
+			return SortedVector<TransactionalObjectHandleBase* >::drop(handle);
 		}
 
 		template<class O> bool containsHandle(TransactionalObjectHandle<O>* handle) {
-			return SortedVector<Reference<TransactionalObjectHandleBase*> >::contains(handle);
+			return SortedVector<TransactionalObjectHandleBase* >::contains(handle);
 		}
 	};
 
-	class TransactionalObjectHeaderMap : public HashTable<uint64, TransactionalObjectHeader<Object*>*> {
+	class TransactionalObjectHeaderMap : public HashTable<uint64, Reference<TransactionalObjectHeader<Object*>*> > {
 	public:
-		TransactionalObjectHeaderMap() : HashTable<uint64, TransactionalObjectHeader<Object*>*>(1000) {
+		TransactionalObjectHeaderMap() : HashTable<uint64, Reference<TransactionalObjectHeader<Object*>*> >(1000) {
 		}
 
 		template<class O> TransactionalObjectHeader<O>* put(Object* object, TransactionalObjectHeader<O>* header) {
-			return (TransactionalObjectHeader<O>*) HashTable<uint64, TransactionalObjectHeader<Object*>*>::put((uint64) object,
-				dynamic_cast<TransactionalObjectHeader<Object*>*>(header));
+
+			TransactionalObjectHeader<Object*>* test = (TransactionalObjectHeader<Object*>*)header;
+
+			//assert(test != NULL);
+
+			return (TransactionalObjectHeader<O>*) HashTable<uint64, Reference<TransactionalObjectHeader<Object*>*> >::put((uint64) object,
+				test).get();
 		}
 
 		template<class O> TransactionalObjectHeader<O>* get(O object) {
-			return (TransactionalObjectHeader<O>*) HashTable<uint64, TransactionalObjectHeader<Object*>*>::get((uint64) dynamic_cast<O>(object));
+			return (TransactionalObjectHeader<O>*) HashTable<uint64, Reference<TransactionalObjectHeader<Object*>*> >::get((uint64) (object)).get();
 		}
 	};
 
@@ -105,18 +98,11 @@ namespace engine {
 
 		TransactionalObjectHandleVector readOnlyObjects;
 		TransactionalObjectHandleVector readWriteObjects;
-		/*AtomicInteger currentWriteObjectAcquiring;
-		AtomicInteger currentReadObjectAcquiring;
-		AtomicInteger currentReadOnlyHandleCleaning;
-		AtomicInteger currentReadWriteObjectCleanup;*/
-
 		TransactionalObjectHeaderMap localObjectCache;
 
 		Vector<Object*> reclaimedObjects;
 
 		Reference<Task*> task;
-
-		//SortedVector<Reference<Transaction*> > helpedTransactions;
 
 		Vector<Command*> commands;
 
@@ -237,18 +223,18 @@ namespace engine {
 	template<class O> void Transaction::createObject(TransactionalObjectHeader<O>* header) {
 		assert(!isCommited());
 
-		Reference<TransactionalObjectHandle<O>*> handle = header->createCreationHandle(this);
+		TransactionalObjectHandle<O>* handle = header->createCreationHandle(this);
+
+		openedObjets.put<O>(header, handle);
 
 		localObjectCache.put(handle->getObjectLocalCopy(), header);
 		localObjectCache.put(handle->getObject(), header);
-
-		openedObjets.put<O>(header, handle);
 
 		readWriteObjects.addHandle<O>(handle);
 	}
 
 	template<class O> O Transaction::getOpenedObject(TransactionalObjectHeader<O>* header) {
-		Reference<TransactionalObjectHandle<O>*> handle = openedObjets.get<O>(header);
+		TransactionalObjectHandle<O>* handle = openedObjets.get<O>(header);
 
 		if (handle == NULL)
 			return NULL;
@@ -256,10 +242,10 @@ namespace engine {
 		O object = NULL;
 
 		if (!isAborted()) {
-			object = dynamic_cast<O>(handle->getObject());
+			object = transaction_cast<O>(handle->getObject());
 
 			if (handle->getObjectLocalCopy() != NULL) {
-				object = dynamic_cast<O>(handle->getObjectLocalCopy());
+				object = transaction_cast<O>(handle->getObjectLocalCopy());
 			}
 		}
 
@@ -269,22 +255,22 @@ namespace engine {
 	template<class O> O Transaction::openObject(TransactionalObjectHeader<O>* header) {
 		assert(!isCommited());
 
-		Reference<TransactionalObjectHandle<O>*> handle = openedObjets.get<O>(header);
+		TransactionalObjectHandle<O>* handle = openedObjets.get<O>(header);
 
 		if (handle == NULL) {
 			handle = header->createReadOnlyHandle(this);
 
-			localObjectCache.put(handle->getObject(), header);
-
 			openedObjets.put<O>(header, handle);
+
+			localObjectCache.put(handle->getObject(), header);
 
 			readOnlyObjects.addHandle<O>(handle);
 		}
 
-		O object = dynamic_cast<O>(handle->getObject());
+		O object = transaction_cast<O>(handle->getObject());
 
 		if (handle->getObjectLocalCopy() != NULL) {
-			object = dynamic_cast<O>(handle->getObjectLocalCopy());
+			object = transaction_cast<O>(handle->getObjectLocalCopy());
 		}
 
 		assert(object != NULL);
@@ -295,18 +281,18 @@ namespace engine {
 		//info("opening opbject");
 		assert(!isCommited());
 
-		Reference<TransactionalObjectHandle<O>*> handle = openedObjets.get<O>(header);
+		TransactionalObjectHandle<O>* handle = openedObjets.get<O>(header);
 
 		if (handle == NULL) {
 			handle = header->createWriteHandle(this);
 
+			openedObjets.put<O>(header, handle);
+
 			localObjectCache.put(handle->getObjectLocalCopy(), header);
 			localObjectCache.put(handle->getObject(), header);
 
-			openedObjets.put<O>(header, handle);
-
 			readWriteObjects.addHandle<O>(handle);
-		} else if (readOnlyObjects.containsHandle(handle.get())) {
+		} else if (readOnlyObjects.containsHandle(handle)) {
 			readOnlyObjects.removeHandle<O>(handle);
 
 			readWriteObjects.addHandle<O>(handle);
@@ -315,7 +301,7 @@ namespace engine {
 			localObjectCache.put(handle->getObjectLocalCopy(), header);
 		}
 
-		O localCopy = dynamic_cast<O>(handle->getObjectLocalCopy());
+		O localCopy = transaction_cast<O>(handle->getObjectLocalCopy());
 
 		assert(localCopy != NULL);
 		
@@ -335,9 +321,9 @@ namespace engine {
 		Transaction* transaction = currentTransaction();
 
 		if (status == COMMITTED)
-			return dynamic_cast<O>(handle->getObjectLocalCopy());
+			return static_cast<O>(handle->getObjectLocalCopy());
 		else
-			return dynamic_cast<O>(handle->getObject());
+			return static_cast<O>(handle->getObject());
 	}*/
 
   } // namespace stm

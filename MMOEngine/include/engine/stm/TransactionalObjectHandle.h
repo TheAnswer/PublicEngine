@@ -35,11 +35,15 @@ namespace engine {
 
 		virtual bool isCopyEqualToObject() = 0;
 
-		virtual int compareTo(TransactionalObjectHandleBase* handle) = 0;
+		virtual int compareTo(const TransactionalObjectHandleBase* handle) = 0;
 
 		virtual Transaction* getCompetingTransaction() = 0;
 
 		virtual uint64 getHeaderAddress() = 0;
+
+		virtual bool isWriteHandle() = 0;
+
+		virtual bool isReadHandle() = 0;
 	};
 
 	template<class O> class TransactionalObjectHandle : public TransactionalObjectHandleBase {
@@ -55,7 +59,7 @@ namespace engine {
 	public:
 		TransactionalObjectHandle();
 
-		enum {CREATE, READ, WRITE, WRITE_AFTER_READ};
+		enum {CREATE, READ, WRITE};
 
 		void initialize(TransactionalObjectHeader<O>* hdr, int accessType, Transaction* trans);
 
@@ -87,6 +91,14 @@ namespace engine {
 			return ref;
 		}
 
+		bool isWriteHandle() {
+			return currentType == WRITE || currentType == CREATE;
+		}
+
+		bool isReadHandle() {
+			return currentType == READ;
+		}
+
 		bool hasObjectChanged();
 		bool hasObjectContentChanged();
 
@@ -100,7 +112,7 @@ namespace engine {
 			return compareToHeaders(otherHandle);
 		}
 
-		int compareTo(TransactionalObjectHandleBase* handle) {
+		int compareTo(const TransactionalObjectHandleBase* handle) {
 			/*if ((TransactionalObjectHandle*) this == handle)
 				return 0;
 			else if ((TransactionalObjectHandle*) this < handle)
@@ -131,17 +143,8 @@ namespace engine {
 		}
 	};
 
-	template<class O> TransactionalObjectHandle<O>::TransactionalObjectHandle() {
-		header = NULL;
-		//transaction = NULL;
-
-		object = NULL;
-
-		objectCopy = NULL;
-		
+	template<class O> TransactionalObjectHandle<O>::TransactionalObjectHandle() : header(NULL), object(NULL), objectCopy(NULL) {
 		currentType = 0;
-
-//		HandleCounter::createdHandles.increment();
 	}
 
 	template<class O> void TransactionalObjectHandle<O>::initialize(TransactionalObjectHeader<O>* hdr, int accessType, Transaction* trans) {
@@ -209,11 +212,13 @@ namespace engine {
 		
 		assert(objectCopy != NULL);
 		
-		currentType = WRITE_AFTER_READ;
+		currentType = WRITE;
+
+		//currentType = WRITE_AFTER_READ;
 		/*
 	        assert(object != NULL);
 	        
-		objectCopy = dynamic_cast<O>(object->clone());
+		objectCopy = static_cast<O>(object->clone());
 		
 		ptrdiff_t rel = (ptrdiff_t)objectCopy.get() - (ptrdiff_t)0x8000000000;
 		

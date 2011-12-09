@@ -103,6 +103,8 @@ public:
 
 	TransactionalReference<QuadTreeNode*> getNode();
 
+	unsigned long long getDirtyObjectID();
+
 	unsigned long long getObjectID();
 
 	float getRadius();
@@ -128,6 +130,10 @@ protected:
 
 	virtual ~QuadTreeEntry();
 
+	int _compareTo(QuadTreeEntry* obj);
+
+	unsigned long long _getDirtyObjectID();
+
 	friend class QuadTreeEntryHelper;
 };
 
@@ -148,6 +154,8 @@ protected:
 	Reference<QuadTreeNode* > node;
 
 	bool bounding;
+
+	ManagedWeakReference<QuadTreeEntry* > parent;
 
 	SortedVector<ManagedReference<QuadTreeEntry* > > closeobjects;
 
@@ -221,6 +229,8 @@ public:
 	int inRangeObjectCount();
 
 	TransactionalReference<QuadTreeNode*> getNode();
+
+	virtual unsigned long long getDirtyObjectID();
 
 	virtual unsigned long long getObjectID();
 
@@ -330,6 +340,8 @@ public:
 	bool isInQuadTree();
 
 	int inRangeObjectCount();
+
+	unsigned long long getDirtyObjectID();
 
 	unsigned long long getObjectID();
 
