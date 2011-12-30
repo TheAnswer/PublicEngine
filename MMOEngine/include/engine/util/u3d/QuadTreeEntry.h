@@ -41,15 +41,11 @@ public:
 
 	void addInRangeObject(QuadTreeEntry* obj, bool doNotifyUpdate = true);
 
-	QuadTreeEntry* getInRangeObject(int index);
-
 	void removeInRangeObject(QuadTreeEntry* obj);
 
 	void removeInRangeObject(int index);
 
 	void removeInRangeObjects();
-
-	bool containsInRangeObject(QuadTreeEntry* obj);
 
 	bool isInRange(QuadTreeEntry* obj, float range);
 
@@ -98,8 +94,6 @@ public:
 	int compareTo(QuadTreeEntry* obj);
 
 	bool isInQuadTree();
-
-	int inRangeObjectCount();
 
 	TransactionalReference<QuadTreeNode*> getNode();
 
@@ -157,7 +151,7 @@ protected:
 
 	ManagedWeakReference<QuadTreeEntry* > parent;
 
-	SortedVector<ManagedReference<QuadTreeEntry* > > closeobjects;
+	Reference<SortedVector<ManagedReference<QuadTreeEntry* > >* > closeobjects;
 
 	float radius;
 
@@ -168,15 +162,11 @@ public:
 
 	void addInRangeObject(QuadTreeEntry* obj, bool doNotifyUpdate = true);
 
-	QuadTreeEntry* getInRangeObject(int index);
-
 	void removeInRangeObject(QuadTreeEntry* obj);
 
 	void removeInRangeObject(int index);
 
 	void removeInRangeObjects();
-
-	bool containsInRangeObject(QuadTreeEntry* obj);
 
 	virtual bool isInRange(QuadTreeEntry* obj, float range);
 
@@ -225,8 +215,6 @@ public:
 	virtual int compareTo(QuadTreeEntry* obj);
 
 	bool isInQuadTree();
-
-	int inRangeObjectCount();
 
 	TransactionalReference<QuadTreeNode*> getNode();
 
@@ -293,15 +281,11 @@ public:
 
 	void addInRangeObject(QuadTreeEntry* obj, bool doNotifyUpdate);
 
-	QuadTreeEntry* getInRangeObject(int index);
-
 	void removeInRangeObject(QuadTreeEntry* obj);
 
 	void removeInRangeObject(int index);
 
 	void removeInRangeObjects();
-
-	bool containsInRangeObject(QuadTreeEntry* obj);
 
 	bool isInRange(QuadTreeEntry* obj, float range);
 
@@ -338,8 +322,6 @@ public:
 	int compareTo(QuadTreeEntry* obj);
 
 	bool isInQuadTree();
-
-	int inRangeObjectCount();
 
 	unsigned long long getDirtyObjectID();
 
