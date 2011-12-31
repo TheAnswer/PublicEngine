@@ -57,6 +57,8 @@ public:
 
 	QuadTreeEntry* getParent();
 
+	bool containsPoint(float x, float y);
+
 	QuadTreeEntry* getRootParent();
 
 	bool isInSWArea(QuadTreeNode* node);
@@ -178,6 +180,8 @@ public:
 
 	virtual QuadTreeEntry* getParent();
 
+	virtual bool containsPoint(float x, float y);
+
 	QuadTreeEntry* getRootParent();
 
 	bool isInSWArea(QuadTreeNode* node);
@@ -294,6 +298,8 @@ public:
 	float getDistanceTo(QuadTreeEntry* obj);
 
 	QuadTreeEntry* getParent();
+
+	bool containsPoint(float x, float y);
 
 	QuadTreeEntry* getRootParent();
 
