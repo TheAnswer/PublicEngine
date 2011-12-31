@@ -21,7 +21,7 @@
 #ifdef RANDOM_MOVEMENT
 #define TASKSTOQUEUE 250000
 #else
-#define TASKSTOQUEUE 300000
+#define TASKSTOQUEUE 30000
 #endif
 #else
 #ifdef RANDOM_MOVEMENT
