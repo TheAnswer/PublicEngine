@@ -36,4 +36,8 @@ class Observer extends ManagedObject {
 		else
 			return 0;
 	}
+	
+	public abstract boolean isLairObserver() {
+		return false;
+	}
 }
