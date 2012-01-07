@@ -14,9 +14,15 @@ import engine.util.Observable;
 
 //@nonTransactional
 class Observer extends ManagedObject {
+
+	protected unsigned int observerType;
 	
 	public abstract int notifyObserverEvent(unsigned int eventType, Observable observable, ManagedObject arg1, long arg2) {
 		return 1;
+	}
+	
+	public Observer() {
+		observerType = 0;
 	}
 	
 	public abstract native unsigned long getObjectID();
@@ -37,7 +43,11 @@ class Observer extends ManagedObject {
 			return 0;
 	}
 	
-	public abstract boolean isLairObserver() {
-		return false;
+	public void setObserverType(unsigned int type) {
+		observerType = type;
+	}
+	
+	public abstract boolean isObserverType(unsigned int type) {
+		return observerType == type;
 	}
 }
