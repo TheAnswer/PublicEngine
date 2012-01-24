@@ -163,7 +163,7 @@ namespace engine {
 
 			assert(object != NULL);
 
-			objectCopy = dynamic_cast<O>(object->clone());
+			objectCopy = static_cast<O>(object->clone());
 
 #ifdef MEMORY_PROTECTION
 			ptrdiff_t rel = (ptrdiff_t)objectCopy.get() - (ptrdiff_t)0x8000000000;
