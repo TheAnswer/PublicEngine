@@ -15,7 +15,7 @@ public:
 	LoggerTest() {
 		setLogging(true);
 		setLoggingName("LoggerTest");
-		setFileLogger("huia/nehuisa/loggertest.log", true);
+		setFileLogger("loggertest.log", true);
 	}
 };
 
