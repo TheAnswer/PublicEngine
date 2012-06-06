@@ -24,8 +24,8 @@ namespace engine {
 	class TaskManagerImpl : public TaskManager, public Mutex, public Logger {
 		TaskQueue tasks;
 
-		Vector<TaskWorkerThread*> workers;
-		Vector<TaskScheduler*> schedulers;
+		Vector<Reference<TaskWorkerThread*> > workers;
+		Vector<Reference<TaskScheduler*> > schedulers;
 
 #ifdef WITH_STM
 		TaskWorkerThread* serialWorker;
@@ -40,8 +40,8 @@ namespace engine {
 		bool shuttingDown;
 
 	public:
-		static const int DEFAULT_WORKER_THREADS = 15;
-		static const int DEFAULT_SCHEDULER_THREADS = 10;
+		static const int DEFAULT_WORKER_THREADS = 10;
+		static const int DEFAULT_SCHEDULER_THREADS = 4;
 
 		TaskManagerImpl();
 
