@@ -34,8 +34,10 @@ namespace engine {
 		ManagedReference(const Reference<O>& r) : Reference<O>(r) {
 		}
 
-		ManagedReference(ManagedWeakReference<O> r) : Reference<O>(r.get()) {
+		ManagedReference(const ManagedWeakReference<O>& r) : Reference<O>() {
+			ManagedWeakReference<O>& nonconst = const_cast<ManagedWeakReference<O>&>(r);
 
+			updateObject(nonconst.get());
 		}
 
 		ManagedReference(O obj) : Reference<O>(obj) {
@@ -63,6 +65,14 @@ namespace engine {
 			updateObject(obj);
 
 			return obj;
+		}
+
+		template<class B>
+		ManagedReference<B> castTo() {
+			ManagedReference<B> stored;
+
+			stored = dynamic_cast<B>(get());
+			return stored;
 		}
 
 		inline O get() const {

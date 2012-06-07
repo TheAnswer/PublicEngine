@@ -35,7 +35,7 @@ namespace sys {
 		}
 
 		WeakReference(const WeakReference<O>& ref) : Variable() {
-			initializeObject(ref.object);
+			initializeObject(ref.get().get());
 		}
 
 		WeakReference(O obj) : Variable() {
@@ -66,6 +66,15 @@ namespace sys {
 			updateObject(ref.object);
 
 			return *this;
+		}
+
+		template<class B>
+		Reference<B> castTo() {
+			Reference<B> stored;
+			Reference<O> strong = get();
+
+			stored = dynamic_cast<B>(strong.get());
+			return stored;
 		}
 
 		O operator=(O obj) {
