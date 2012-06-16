@@ -163,7 +163,7 @@ namespace sys {
 			char* ret = ctime_r(&ts.tv_sec, str);
 
 			if (ret != NULL)
-				return String(ret);
+				return String(ret, strlen(str) - 1);
 			else
 				return String("");
 		}
@@ -278,7 +278,6 @@ namespace sys {
 		inline struct timespec* getTimeSpec() {
 			return &ts;
 		}
-
 	};
 
   } // namespace lang
