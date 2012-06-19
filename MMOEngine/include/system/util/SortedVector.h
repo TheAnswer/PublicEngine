@@ -103,9 +103,7 @@ namespace sys {
 			E& obj = Vector<E>::elementData[m];
 			cmp = compare(obj, o);
 
-			if (cmp == 0)
-				return m;
-			else if (cmp > 0) {
+			if (cmp > 0) {
 				l = m + 1;
 
 				if (r < l)
@@ -125,25 +123,26 @@ namespace sys {
 		if (ArrayList<E>::size() == 0)
 			return -1;
 
-		int l = 0, r = Vector<E>::elementCount - 1;
+		int l = 0;
+		int r = Vector<E>::elementCount - 1;
 		int m = 0, cmp = 0;
 
 		while (l <= r) {
-			m = (l + r) / 2;
+ 			m = (l + r) / 2;
 
 			E& obj = Vector<E>::elementData[m];
 			cmp = compare(obj, o);
 
-			if (cmp == 0 || cmp > 0) {
+			if (cmp >= 0) {
 				l = m + 1;
 
 				if (r < l)
-					return m < ArrayList<E>::size() - 1 ? m + 1 : -1;
+					return m == ArrayList<E>::size() - 1 ? m : -1;
 			} else {
 				r = m - 1;
 
 				if (r < l)
-					return m;
+					return m - 1;
 			}
 		}
 
