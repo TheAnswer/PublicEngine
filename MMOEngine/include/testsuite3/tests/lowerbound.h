@@ -14,13 +14,15 @@ void lowerBoundTest() {
 	vec.put(2);
 	vec.put(3);
 	vec.put(4);*/
-	vec.put("Alfa");
-	vec.put("AlfaBeta");
-	vec.put("AlfaBetaGamma");
+	vec.put("Alpha");
+	vec.put("AlphaBeta");
+	vec.put("AlphaBetaGamma");
+	vec.put("AlphaBetaGammaTheta");
+	vec.put("AlphaBetaGamma23");
 
 	//int search = 4;
 
-	String search("AlfaBetaGamma");
+	String search("AlphaBetaGamma");
 
 	int low = vec.lowerBound(search);
 	int up = vec.upperBound(search);
