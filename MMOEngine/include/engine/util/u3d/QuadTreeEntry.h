@@ -19,6 +19,8 @@
 
 #include "engine/stm/TransactionalReference.h"
 
+#include "engine/util/u3d/CloseObjectsVector.h"
+
 #include "engine/util/u3d/Coordinate.h"
 
 #include "engine/core/ManagedObject.h"
@@ -56,6 +58,10 @@ public:
 	SortedVector<ManagedReference<QuadTreeEntry* > >* getCloseObjects();
 
 	ManagedWeakReference<QuadTreeEntry* > getParent();
+
+	QuadTreeEntry* getParentUnsafe();
+
+	QuadTreeEntry* getRootParentUnsafe();
 
 	bool containsPoint(float x, float y);
 
@@ -98,6 +104,8 @@ public:
 	bool isInQuadTree();
 
 	TransactionalReference<QuadTreeNode*> getNode();
+
+	void setCloseObjects(CloseObjectsVector* vec);
 
 	unsigned long long getDirtyObjectID();
 
@@ -153,7 +161,7 @@ protected:
 
 	ManagedWeakReference<QuadTreeEntry* > parent;
 
-	Reference<SortedVector<ManagedReference<QuadTreeEntry* > >* > closeobjects;
+	Reference<CloseObjectsVector* > closeobjects;
 
 	float radius;
 
@@ -179,6 +187,10 @@ public:
 	SortedVector<ManagedReference<QuadTreeEntry* > >* getCloseObjects();
 
 	ManagedWeakReference<QuadTreeEntry* > getParent();
+
+	QuadTreeEntry* getParentUnsafe();
+
+	QuadTreeEntry* getRootParentUnsafe();
 
 	virtual bool containsPoint(float x, float y);
 
@@ -221,6 +233,8 @@ public:
 	bool isInQuadTree();
 
 	TransactionalReference<QuadTreeNode*> getNode();
+
+	void setCloseObjects(CloseObjectsVector* vec);
 
 	virtual unsigned long long getDirtyObjectID();
 
@@ -298,6 +312,10 @@ public:
 	float getDistanceTo(QuadTreeEntry* obj);
 
 	ManagedWeakReference<QuadTreeEntry* > getParent();
+
+	QuadTreeEntry* getParentUnsafe();
+
+	QuadTreeEntry* getRootParentUnsafe();
 
 	bool containsPoint(float x, float y);
 

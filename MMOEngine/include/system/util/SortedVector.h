@@ -12,6 +12,7 @@ namespace sys {
   namespace util {
 
 	template<class E> class SortedVector : public Vector<E> {
+	protected:
 		int insertPlan;
 
 		virtual int compare(E& o1, const E& o2) const {
@@ -32,16 +33,16 @@ namespace sys {
 
 		SortedVector<E>& operator=(const SortedVector<E>& vector);
 
-		int put(const E& o);
+		virtual int put(const E& o);
+
+		virtual int find(const E& o) const;
 
 		bool contains(const E& o) const;
-
-		int find(const E& o) const;
 
 		int lowerBound(const E& o) const;
 		int upperBound(const E& o) const;
 
-		bool drop(const E& o);
+		virtual bool drop(const E& o);
 
 		Object* clone();
 
@@ -123,26 +124,25 @@ namespace sys {
 		if (ArrayList<E>::size() == 0)
 			return -1;
 
-		int l = 0;
-		int r = Vector<E>::elementCount - 1;
+		int l = 0, r = Vector<E>::elementCount - 1;
 		int m = 0, cmp = 0;
 
 		while (l <= r) {
- 			m = (l + r) / 2;
+			m = (l + r) / 2;
 
 			E& obj = Vector<E>::elementData[m];
 			cmp = compare(obj, o);
 
-			if (cmp >= 0) {
+			if (cmp == 0 || cmp > 0) {
 				l = m + 1;
 
 				if (r < l)
-					return m == ArrayList<E>::size() - 1 ? m : -1;
+					return m < ArrayList<E>::size() - 1 ? m + 1 : -1;
 			} else {
 				r = m - 1;
 
 				if (r < l)
-					return m - 1;
+					return m;
 			}
 		}
 

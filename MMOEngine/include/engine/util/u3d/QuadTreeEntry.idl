@@ -10,6 +10,7 @@ include system.lang.Math;
 include system.util.SortedVector;
 
 include engine.stm.TransactionalReference;
+include engine.util.u3d.CloseObjectsVector;
 
 import engine.core.ManagedObject;
 
@@ -32,7 +33,7 @@ class QuadTreeEntry extends Observable {
 	@weakReference
 	protected QuadTreeEntry parent;
 
-	transient protected SortedVector<QuadTreeEntry> closeobjects;
+	transient protected CloseObjectsVector closeobjects;
 
 	protected float radius;
 
@@ -129,6 +130,12 @@ class QuadTreeEntry extends Observable {
 	public QuadTreeEntry getParent() {
 		return parent;
 	}
+	
+	@read
+	public native QuadTreeEntry getParentUnsafe();
+	
+	@read
+	public native QuadTreeEntry getRootParentUnsafe();
 	
 	@read
 	public abstract native boolean containsPoint(float x, float y);
@@ -228,6 +235,11 @@ class QuadTreeEntry extends Observable {
 	@read
 	public TransactionalReference<QuadTreeNode> getNode() {
 		return node;
+	}
+
+	@local
+	public void setCloseObjects(CloseObjectsVector vec) {
+		closeobjects = vec;
 	}
 	
 	@nativeStub

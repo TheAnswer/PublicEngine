@@ -43,7 +43,8 @@ namespace engine {
 			if (this == &ref)
 				return *this;
 
-			WeakReference<O>::updateObject(ref.object);
+
+			WeakReference<O>::operator=(ref);
 
 			savedObjectID = ref.savedObjectID;
 
@@ -70,12 +71,24 @@ namespace engine {
 			return stored;
 		}
 
-		bool operator==(O obj) {
-			return get() == obj;
+		inline O getReferenceUnsafe() const {
+			return WeakReference<O>::getReferenceUnsafeStaticCast();
 		}
 
-		bool operator!=(O obj) {
-			return get() != obj;
+		inline bool operator==(O obj) {
+			return getReferenceUnsafe() == obj;
+		}
+
+		inline bool operator!=(O obj) {
+			return getReferenceUnsafe() != obj;
+		}
+
+		inline bool operator!=(const ManagedWeakReference<O>& r) {
+			return getReferenceUnsafe() != r.getReferenceUnsafe();
+		}
+
+		inline bool operator==(const ManagedWeakReference<O>& r) {
+			return getReferenceUnsafe() == r.getReferenceUnsafe();
 		}
 
 		inline ManagedReference<O> get() {

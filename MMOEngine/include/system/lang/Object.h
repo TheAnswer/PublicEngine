@@ -137,8 +137,33 @@ namespace sys {
 #endif
 		}
 
-		void acquire();
-		void release();
+		inline void acquire() {
+			if (referenceCounters == NULL) {
+				StrongAndWeakReferenceCount* newCount = new StrongAndWeakReferenceCount(0, 2, this);
+
+				if (!referenceCounters.compareAndSet(NULL, newCount)) {
+					delete newCount;
+				}
+			}
+
+			referenceCounters->increaseStrongCount();
+		}
+
+		inline void release() {
+		/*	if (getReferenceCount() == 0)
+				assert(0 && "Object already delted");*/
+
+			if (referenceCounters->decrementAndTestAndSetStrongCount() != 0) {
+				if (notifyDestroy()) {
+		#ifdef WITH_STM
+					MemoryManager::getInstance()->reclaim(this);
+		#else
+					destroy();
+		#endif
+				}
+			}
+		}
+
 
 		inline uint32 getReferenceCount() {
 			if (referenceCounters == NULL)
@@ -147,18 +172,15 @@ namespace sys {
 				return referenceCounters->getStrongReferenceCount();
 		}
 
-		template<class O>
-		void acquireWeak(WeakReference<O>* ref) {
+		StrongAndWeakReferenceCount* requestWeak() {
 			if (referenceCounters == NULL) {
-				StrongAndWeakReferenceCount* newCount = new StrongAndWeakReferenceCount(0, 1);
+				StrongAndWeakReferenceCount* newCount = new StrongAndWeakReferenceCount(0, 2, this);
 
 				if (!referenceCounters.compareAndSet(NULL, newCount))
 					delete newCount;
 			}
 
-			referenceCounters->increaseWeakCount();
-
-			ref->set(referenceCounters);
+			return referenceCounters;
 		}
 
 		virtual String toString();

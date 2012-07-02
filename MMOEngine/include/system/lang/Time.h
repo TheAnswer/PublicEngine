@@ -278,6 +278,7 @@ namespace sys {
 		inline struct timespec* getTimeSpec() {
 			return &ts;
 		}
+
 	};
 
   } // namespace lang
