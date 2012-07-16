@@ -30,7 +30,7 @@ namespace sys {
 		UnicodeString(const char* ascii, int len);
 		UnicodeString(const UnicodeString& str);
 
-		~UnicodeString();
+		virtual ~UnicodeString();
 
 		UnicodeString& operator=(const UnicodeString& str);
 		UnicodeString& operator=(const String& ascii);
