@@ -44,11 +44,11 @@ namespace sys {
 	
 		bool read(Packet* pack);
 	
-		void readFrom(Packet* pack, SocketAddress* addr);
+		int readFrom(Packet* pack, SocketAddress* addr);
 	
-		void send(Packet* pack);
+		int send(Packet* pack);
 	
-		void sendTo(Packet* pack, SocketAddress* addr);
+		int sendTo(Packet* pack, SocketAddress* addr);
 		
 		void close();
 		
