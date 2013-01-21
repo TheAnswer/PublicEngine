@@ -56,6 +56,16 @@ namespace sys {
 				return InterlockedDecrement((long*) &value);
 			#endif
 		}
+		
+		uint64 add(uint64 val) {
+		       #if GCC_VERSION >= 40100 && defined(PLATFORM_64) || defined(__MINGW32__)
+				return __sync_add_and_fetch(&value, val);
+			#elif defined(PLATFORM_FREEBSD) || defined(PLATFORM_LINUX) || defined(PLATFORM_SOLARIS) || defined(PLATFORM_CYGWIN)
+				return value += val;
+			#else
+				return InterlockedAdd64((volatile LONGLONG *) &value, val);
+			#endif 
+		}
 
 		bool compareAndSet(uint64 oldval, uint64 newval) {
 		#if GCC_VERSION >= 40100 && defined(PLATFORM_64) || defined(__MINGW32__)
