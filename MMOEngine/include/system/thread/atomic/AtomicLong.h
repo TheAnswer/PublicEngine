@@ -108,6 +108,18 @@ namespace sys {
 
 			return val == value;
 		}
+
+		bool toBinaryStream(sys::io::ObjectOutputStream* stream) {
+			stream->writeLong(value);
+
+			return true;
+		}
+
+		bool parseFromBinaryStream(sys::io::ObjectInputStream* stream) {
+			*this = stream->readLong();
+
+			return true;
+		}
 	};
 
 	} // namespace atomic
