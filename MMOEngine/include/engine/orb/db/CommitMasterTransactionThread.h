@@ -21,6 +21,7 @@ namespace engine {
 
 		engine::db::berkley::Transaction* transaction;
 		Vector<UpdateModifiedObjectsThread*>* threads;
+		Vector<DistributedObject* >* objectsToDeleteFromRam;
 		int numberOfThreads;
 
 		bool doRun;
@@ -30,9 +31,11 @@ namespace engine {
 
 		void run();
 
-		void startWatch(engine::db::berkley::Transaction* trans, Vector<UpdateModifiedObjectsThread*>* workers, int number);
+		void startWatch(engine::db::berkley::Transaction* trans, Vector<UpdateModifiedObjectsThread*>* workers, int number, Vector<DistributedObject* >* objectsToCollect);
 
 		void commitData();
+
+		int garbageCollect(DOBObjectManager* objectManager);
 	};
 
   } // namespace ORB

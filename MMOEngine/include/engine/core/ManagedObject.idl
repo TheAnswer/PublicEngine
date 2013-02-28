@@ -84,10 +84,12 @@ class ManagedObject {
 	@noImplementationDeclaration
 	public native void writeObject(ObjectOutputStream stream);
 	
+	@read
 	@local
 	@noImplementationDeclaration
 	public native void readObject(ObjectInputStream stream);
-	
+
+	@read	
 	@local
 	public boolean toBinaryStream(ObjectOutputStream stream) {
 		writeObject(stream);
@@ -128,6 +130,7 @@ class ManagedObject {
 		updateToDatabaseTask = null;
 	}
 	
+	@read
 	@dirty
 	public unsigned int getLastCRCSave() {
 		return lastCRCSave;
@@ -138,11 +141,13 @@ class ManagedObject {
 		lastCRCSave = crc;
 	}
 	
+	@read
 	@dirty
 	public boolean isPersistent() {
 		return persistenceLevel != 0;
 	}
 	
+	@read
 	@dirty
 	public int getPersistenceLevel() {
 		return persistenceLevel;
