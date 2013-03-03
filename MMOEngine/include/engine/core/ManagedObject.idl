@@ -143,12 +143,14 @@ class ManagedObject {
 	
 	@read
 	@dirty
+	@read
 	public boolean isPersistent() {
 		return persistenceLevel != 0;
 	}
 	
 	@read
 	@dirty
+	@read
 	public int getPersistenceLevel() {
 		return persistenceLevel;
 	}
