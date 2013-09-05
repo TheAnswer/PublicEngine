@@ -1,4 +1,16 @@
 # Copyright (C) 2007 <SWGEmu>. All rights reserved.
 # Distribution of this file for usage outside of Core3 is prohibited.
 
-all: 
+
+MACHINE_TYPE := $(shell uname -m)
+DIR = 
+
+ifeq ($(MACHINE_TYPE), x86_64)
+	DIR = linux64
+else
+	DIR = linux32
+endif
+all:
+	mkdir -p lib/unix
+	cp -rf lib/$(DIR)/* lib/unix/
+	
