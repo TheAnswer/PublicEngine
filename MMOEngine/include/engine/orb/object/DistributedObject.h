@@ -33,10 +33,6 @@ namespace engine {
 		DistributedObject();
 
 		virtual ~DistributedObject();
-		
-		virtual bool isPersistent() {
-  		    return false;
-		}		
 
 		// setters
 		inline void _setClassName(const String& n) {

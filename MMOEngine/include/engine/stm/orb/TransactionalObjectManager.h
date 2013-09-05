@@ -58,14 +58,22 @@ namespace engine {
 
 		DistributedObjectStub* undeploy(const String& name);
 
-		DistributedObject* lookUp(const String& name);
-		DistributedObject* lookUp(uint64 objid);
+		Reference<DistributedObject*> lookUp(const String& name);
+		Reference<DistributedObject*> lookUp(uint64 objid);
 
 		bool destroyObject(DistributedObjectStub* obj);
 
 		void addObjectsToSave(const Vector<Reference<Object*> >& objects);
 
 		ObjectsToSaveMap* getModifiedObjectsToSave();
+
+		uint64 getNextFreeObjectID() {
+			return objectBroker->getNextFreeObjectID();
+		}
+
+		DOBObjectManager* getObjectManager() {
+			return objectBroker->getObjectManager();
+		}
 
   	protected:
 		LocalObjectManager* getLocalObjectManager();
