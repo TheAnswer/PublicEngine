@@ -27,9 +27,11 @@ namespace engine {
 	class Lua : public Logger, public Object {
 	protected:
 		lua_State* L;
+		bool deinitOnDestruction;
 
 	public:
 		Lua();
+		Lua(lua_State* L);
 
 		virtual ~Lua();
 
@@ -79,14 +81,19 @@ namespace engine {
 		virtual void setGlobalShort(const String& name, const short value);
 		virtual void setGlobalByte(const String& name, const char value);
 		virtual void setGlobalFloat(const String& name, const float value);
+		virtual void setGlobalBoolean(const String& name, const bool value);
 
 		//statics
-		inline static bool checkStack(lua_State* lState, int num);
-		inline static int checkStack(lua_State* lState);
+		static bool checkStack(lua_State* lState, int num);
+		static int checkStack(lua_State* lState);
 
 		virtual lua_State* getLuaState();
-		inline virtual int checkStack();
-		inline virtual bool checkStack(int num);
+		virtual int checkStack();
+		virtual bool checkStack(int num);
+
+		void setDeinitOnDestruction(bool val) {
+			deinitOnDestruction = val;
+		}
 
 	};
 
