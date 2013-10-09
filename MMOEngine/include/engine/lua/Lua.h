@@ -89,6 +89,9 @@ namespace engine {
 		virtual int checkStack();
 		virtual bool checkStack(int num);
 
+		virtual LuaFunction* createFunction(const String& funcname, int argsThatWillReturn);
+		virtual LuaFunction* createFunction(const String& object, const String& func, int argsThatWillReturn);
+
 		void setDeinitOnDestruction(bool val) {
 			deinitOnDestruction = val;
 		}
