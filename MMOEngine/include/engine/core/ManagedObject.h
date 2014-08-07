@@ -72,6 +72,11 @@ public:
 
 	bool parseFromBinaryStream(ObjectInputStream* stream);
 
+	/**
+	 * Gets called when this objects is loaded from database
+	 * @pre { this locked }
+	 * @post { this locked }
+	 */
 	void notifyLoadFromDatabase();
 
 	DistributedObjectServant* getServant();
@@ -92,6 +97,13 @@ public:
 
 	int getPersistenceLevel();
 
+	/**
+	 * Sets the persistence level of the object
+	 * level 0 makes the object transient
+	 * level 1 makes the object persistent but its not auto updated
+	 * level 2 makes the object auto update every 5 minutes
+	 * level 3 makes the object update to database after each change (write unlock)
+	 */
 	void setPersistent(int level);
 
 	DistributedObjectServant* _getImplementation();
@@ -175,6 +187,11 @@ public:
 
 	bool parseFromBinaryStream(ObjectInputStream* stream);
 
+	/**
+	 * Gets called when this objects is loaded from database
+	 * @pre { this locked }
+	 * @post { this locked }
+	 */
 	virtual void notifyLoadFromDatabase();
 
 	DistributedObjectServant* getServant();
@@ -199,6 +216,13 @@ protected:
 	void _setClassName(const String& name);
 
 public:
+	/**
+	 * Sets the persistence level of the object
+	 * level 0 makes the object transient
+	 * level 1 makes the object persistent but its not auto updated
+	 * level 2 makes the object auto update every 5 minutes
+	 * level 3 makes the object update to database after each change (write unlock)
+	 */
 	void setPersistent(int level);
 
 	WeakReference<ManagedObject*> _this;
