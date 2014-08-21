@@ -15,7 +15,9 @@ namespace sys {
  	 template<class K, class V> class VectorMap;
 
  	 template<class K, class V>
- 	 class SynchronizedVectorMap : public VectorMap<K, V> {
+ 	 class SynchronizedVectorMap : public Object {
+ 		 VectorMap<K, V> vectorMap;
+
  		 mutable ReadWriteLock guard;
  	 public:
  		 SynchronizedVectorMap();
@@ -26,28 +28,60 @@ namespace sys {
 
  		 int put(const K& key, const V& value);
 
- 		 V& get(int index);
- 		 V& get(const K& key);
+ 		 V get(int index);
+ 		 V get(const K& key);
 
  		 int find(const K& key);
+
+ 		 bool toBinaryStream(ObjectOutputStream* stream);
+
+ 		 bool parseFromBinaryStream(ObjectInputStream* stream);
 
  		 Object* clone();
 
  		 bool contains(const K& key);
 
  		 bool drop(const K& key);
+
+ 		 int size() const {
+ 			 return vectorMap.size();
+ 		 }
+
+ 		 inline void setInsertPlan(int plan) {
+ 			 vectorMap.setInsertPlan(plan);
+ 		 }
+
+ 		 inline void setNoDuplicateInsertPlan() {
+ 			 vectorMap.setNoDuplicateInsertPlan();
+ 		 }
+
+ 		 inline void setAllowDuplicateInsertPlan() {
+ 			 vectorMap.setAllowDuplicateInsertPlan();
+ 		 }
+
+ 		 inline void setAllowOverwriteInsertPlan() {
+ 			 vectorMap.setAllowOverwriteInsertPlan();
+ 		 }
+
+ 		 inline void setNullValue(V val) {
+ 			 vectorMap.setNullValue(val);
+ 		 }
+
+ 		 inline int getInsertPlan() const {
+ 			 return vectorMap.getInsertPlan();
+ 		 }
  	 };
 
  	 template<class K, class V> SynchronizedVectorMap<K, V>::SynchronizedVectorMap()
-		: VectorMap<K, V>() {
+		: vectorMap() {
  	 }
 
  	 template<class K, class V> SynchronizedVectorMap<K, V>::SynchronizedVectorMap(int initsize, int incr)
-		: VectorMap<K, V>(initsize, incr) {
+		: vectorMap(initsize, incr) {
  	 }
 
  	 template<class K, class V> SynchronizedVectorMap<K, V>::SynchronizedVectorMap(const SynchronizedVectorMap<K, V>& vector)
-		: VectorMap<K, V>(vector) {
+		: Object(), vectorMap(vector.vectorMap) {
  	 }
 
  	 template<class K, class V> SynchronizedVectorMap<K, V>& SynchronizedVectorMap<K, V>::operator=(const SynchronizedVectorMap<K, V>& vector) {
@@ -56,51 +90,73 @@ namespace sys {
  		 if (this == &vector)
  			 return *this;
 
- 		 VectorMap<K, V>::operator=(vector);
+ 		 vectorMap.operator=(vector);
 
  		 return *this;
+ 	 }
+
+ 	 template<class K, class V> bool SynchronizedVectorMap<K, V>::toBinaryStream(ObjectOutputStream* stream) {
+ 		 return vectorMap.toBinaryStream(stream);
+ 	 }
+
+ 	 template<class K, class V> bool SynchronizedVectorMap<K, V>::parseFromBinaryStream(ObjectInputStream* stream) {
+ 		 return vectorMap.parseFromBinaryStream(stream);
  	 }
 
  	 template<class K, class V> Object* SynchronizedVectorMap<K, V>::clone() {
  		 ReadLocker locker(&guard);
 
- 		 return new SynchronizedVectorMap<K, V>(*this);
+ 		 SynchronizedVectorMap<K, V>* val = new SynchronizedVectorMap<K, V>(*this);
+
+ 		 return val;
  	 }
 
  	 template<class K, class V> int SynchronizedVectorMap<K, V>::put(const K& key, const V& value) {
  		 Locker locker(&guard);
 
- 		 return VectorMap<K, V>::put(key, value);
+ 		 int ret = vectorMap.put(key, value);
+
+ 		 return ret;
  	 }
 
- 	 template<class K, class V> V& SynchronizedVectorMap<K, V>::get(int index) {
+ 	 template<class K, class V> V SynchronizedVectorMap<K, V>::get(int index) {
  		 ReadLocker locker(&guard);
 
- 		 return VectorMap<K, V>::get(index);
+ 		 V obj = vectorMap.get(index);
+
+ 		 return obj;
  	 }
 
- 	 template<class K, class V> V& SynchronizedVectorMap<K, V>::get(const K& key) {
+ 	 template<class K, class V> V SynchronizedVectorMap<K, V>::get(const K& key) {
  		 ReadLocker locker(&guard);
 
- 		 return VectorMap<K, V>::get(key);
+ 		 V obj = vectorMap.get(key);
+
+ 		 return obj;
  	 }
 
  	 template<class K, class V> int SynchronizedVectorMap<K, V>::find(const K& key) {
  		 ReadLocker locker(&guard);
 
- 		 return VectorMap<K, V>::find(key);
+ 		 int ret = vectorMap.find(key);
+
+ 		 return ret;
  	 }
 
  	 template<class K, class V> bool SynchronizedVectorMap<K, V>::contains(const K& key) {
  		ReadLocker locker(&guard);
 
- 		return VectorMap<K, V>::contains(key);
+ 		bool ret = vectorMap.contains(key);
+
+ 		return ret;
  	 }
 
  	 template<class K, class V> bool SynchronizedVectorMap<K, V>::drop(const K& key) {
  		 Locker locker(&guard);
 
- 		 return VectorMap<K, V>::drop(key);
+ 		 bool val = vectorMap.drop(key);
+
+ 		 return val;
  	 }
  }
 }

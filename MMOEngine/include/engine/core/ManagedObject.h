@@ -89,13 +89,13 @@ public:
 
 	void clearUpdateToDatabaseTask();
 
-	unsigned int getLastCRCSave();
+	unsigned int getLastCRCSave() const;
 
 	void setLastCRCSave(unsigned int crc);
 
 	bool isPersistent();
 
-	int getPersistenceLevel();
+	int getPersistenceLevel() const;
 
 	/**
 	 * Sets the persistence level of the object
@@ -107,7 +107,7 @@ public:
 	void setPersistent(int level);
 
 	DistributedObjectServant* _getImplementation();
-	DistributedObjectServant* _getImplementationForRead();
+	DistributedObjectServant* _getImplementationForRead() const;
 
 	void _setImplementation(DistributedObjectServant* servant);
 
@@ -204,13 +204,13 @@ public:
 
 	void clearUpdateToDatabaseTask();
 
-	unsigned int getLastCRCSave();
+	unsigned int getLastCRCSave() const;
 
 	void setLastCRCSave(unsigned int crc);
 
 	bool isPersistent();
 
-	int getPersistenceLevel();
+	int getPersistenceLevel() const;
 
 protected:
 	void _setClassName(const String& name);
@@ -284,13 +284,13 @@ public:
 
 	void clearUpdateToDatabaseTask();
 
-	unsigned int getLastCRCSave();
+	unsigned int getLastCRCSave() const;
 
 	void setLastCRCSave(unsigned int crc);
 
 	bool isPersistent();
 
-	int getPersistenceLevel();
+	int getPersistenceLevel() const;
 
 };
 
