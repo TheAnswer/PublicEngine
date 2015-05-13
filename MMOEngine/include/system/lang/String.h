@@ -31,6 +31,8 @@ namespace sys {
 		char* value;
 #endif
 
+		static const unsigned int crctable[256];
+
 	public:
 		String();
 		String(char* str);
@@ -75,6 +77,16 @@ namespace sys {
 		bool endsWith(const String& str) const ;
 
 		uint32 hashCode() const;
+
+#ifdef CXX11_COMPILER
+		static constexpr uint32 hashCode(const char* string, uint32 startCRC = 0xFFFFFFFF) {
+			return *string ?
+					hashCode(string + 1, crctable[((startCRC >> 24) ^ (byte)(*string)) & 0xFF] ^ (startCRC << 8))
+					: ~startCRC;
+		}
+#else
+		static uint32 hashCode(const char* string, uint32 startCRC = 0xFFFFFFFF);
+#endif
 
 		String subString(int beginIndex) const ;
 		String subString(int beginIndex, int endIndex) const ;
