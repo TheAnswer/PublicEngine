@@ -37,6 +37,9 @@ namespace engine {
 #ifdef CXX11_COMPILER
 		ManagedReference(ManagedReference<O>&& ref) : Reference<O>(std::move(ref)) {
 		}
+
+		ManagedReference(Reference<O>&& ref) : Reference<O>(std::move(ref)) {
+		}
 #endif
 
 		ManagedReference(const ManagedWeakReference<O>& r) : Reference<O>() {
@@ -59,6 +62,15 @@ namespace engine {
 
 #ifdef CXX11_COMPILER
 		ManagedReference<O>& operator=(ManagedReference<O>&& ref) {
+			if (this == &ref)
+				return *this;
+
+			Reference<O>::operator=(std::move(ref));
+
+			return *this;
+		}
+
+		ManagedReference<O>& operator=(Reference<O>&& ref) {
 			if (this == &ref)
 				return *this;
 
