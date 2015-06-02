@@ -70,6 +70,10 @@ namespace engine {
 			}
 		}
 
+		int compareTo(const UpdateObject& a) const {
+			return -1;
+		}
+
 
 	};
 

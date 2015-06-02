@@ -30,6 +30,14 @@ public:
 		return SortedVector<ManagedReference<QuadTreeEntry*> >::remove(index);
 	}
 
+	bool contains(const ManagedReference<QuadTreeEntry*>& o) const {
+		ReadLocker locker(&mutex);
+
+		bool ret = find(o) != -1;
+
+		return ret;
+	}
+
 	void removeAll(int newSize = 10, int newIncrement = 5) {
 		Locker locker(&mutex);
 
@@ -41,14 +49,6 @@ public:
 
 		return SortedVector<ManagedReference<QuadTreeEntry*> >::drop(o);
 	}
-
-/*	ManagedReference<QuadTreeEntry*>& get(int index) const {
-		ReadLocker locker(&mutex);
-
-		return SortedVector<ManagedReference<QuadTreeEntry*> >::get(index);
-	}
-
-*/
 
 	void safeCopyTo(Vector<QuadTreeEntry*>& vec) {
 		ReadLocker locker(&mutex);
@@ -62,6 +62,12 @@ public:
 		ReadLocker locker(&mutex);
 
 		vec.addAll(*this);
+	}
+
+	SortedVector<ManagedReference<QuadTreeEntry*> > getSafeCopy() {
+		ReadLocker locker(&mutex);
+
+		return SortedVector<ManagedReference<QuadTreeEntry*> >(*this);
 	}
 
 	int put(const ManagedReference<QuadTreeEntry*>& o) {
