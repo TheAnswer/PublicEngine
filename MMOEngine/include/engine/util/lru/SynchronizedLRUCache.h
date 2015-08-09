@@ -13,8 +13,16 @@
 template <typename K,typename V> class SynchronizedLRUCache :
 		public lru_cache_using_engine3<K,V> {
 public:
-	SynchronizedLRUCache(V (*function)(const K&), size_t capacity, int minAccessCountForPromotion = 5)
+	SynchronizedLRUCache(LRUFunction<K, V>* function, size_t capacity, int minAccessCountForPromotion = 5)
 		: lru_cache_using_engine3<K,V>(function, capacity, minAccessCountForPromotion) {
+	}
+};
+
+template <typename KeyType, typename Arg1, typename Arg2, typename V> class SynchronizedLRUCache2 :
+		public lru_cache_using_engine3_2args<KeyType, Arg1, Arg2, V> {
+public:
+	SynchronizedLRUCache2(LRUFunction2<KeyType, Arg1, Arg2, V>* function, size_t capacity, int minAccessCountForPromotion = 5)
+		: lru_cache_using_engine3_2args<KeyType, Arg1, Arg2, V>(function, capacity, minAccessCountForPromotion) {
 	}
 };
 
