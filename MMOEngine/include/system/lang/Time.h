@@ -29,6 +29,21 @@ namespace sys {
   namespace lang {
 
 	class Time : public Variable {
+	public:
+#if defined(PLATFORM_MAC) || defined(PLATFORM_WIN)
+		typedef int ClockType;
+
+		const static ClockType REAL_TIME = 0;
+		const static ClockType THREAD_TIME = 0;
+		const static ClockType PROCESS_TIME = 0;
+#else
+		typedef clockid_t ClockType;
+
+		const static ClockType REAL_TIME = CLOCK_REALTIME;
+		const static ClockType THREAD_TIME = CLOCK_THREAD_CPUTIME_ID;
+		const static ClockType PROCESS_TIME = CLOCK_PROCESS_CPUTIME_ID;
+#endif
+	private:
 		struct timespec ts;
 
 	#ifdef PLATFORM_WIN
@@ -41,8 +56,8 @@ namespace sys {
 	#endif
 
 	public:
-		Time() {
-			updateToCurrentTime();
+		Time(ClockType type = REAL_TIME) {
+			updateToCurrentTime(type);
 		}
 
 		Time(uint32 seconds) {
@@ -92,15 +107,19 @@ namespace sys {
 			return true;
 		}
 
-		inline void updateToCurrentTime() {
+		inline void updateToCurrentTime(ClockType type = REAL_TIME) {
 			#ifdef PLATFORM_MAC
+				//assert(type == 0);
+
 				struct timeval tv;
 				gettimeofday(&tv, NULL);
 				TIMEVAL_TO_TIMESPEC(&tv, &ts);
 
 			#elif !defined(PLATFORM_WIN)
-				clock_gettime(CLOCK_REALTIME, &ts);
+				clock_gettime(type, &ts);
 			#else
+				assert(type == 0);
+
 				FILETIME ft;
 				SYSTEMTIME st;
 
@@ -181,8 +200,9 @@ namespace sys {
 				return 0;
 		}
 
-		inline static uint64 currentNanoTime() {
+		inline static uint64 currentNanoTime(ClockType type = REAL_TIME) {
 			#ifdef PLATFORM_MAC
+				//assert(type == 0);
 				struct timeval tv;
 				gettimeofday(&tv, NULL);
 
@@ -198,7 +218,7 @@ namespace sys {
 
 			#elif !defined(PLATFORM_WIN)
 				struct timespec cts;
-				clock_gettime(CLOCK_REALTIME, &cts);
+				clock_gettime(type, &cts);
 
 				uint64 time;
 
