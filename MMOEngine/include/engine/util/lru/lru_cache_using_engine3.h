@@ -146,7 +146,7 @@ public:
     assert(minAccessCountForPromoting > 0);
   }
 
-  ~lru_cache_using_engine3() {
+  virtual ~lru_cache_using_engine3() {
 	  delete _fn;
   }
 
@@ -161,7 +161,7 @@ public:
   }
 
   // Obtain value of the cached function for k
-  value_type operator()(const key_type& k) {
+  virtual value_type operator()(const key_type& k) {
 	  // Attempt to find existing record
 	  ReadLocker readLocker(&_key_to_value);
 
@@ -222,16 +222,38 @@ public:
 	  return missCount.get();
   }
 
+  ReadWriteLock* getLock() {
+	  return &_key_to_value;
+  }
+
+  virtual void remove(const key_type& hash) {
+	  Locker writeLock(&_key_to_value);
+
+	  if (!_key_to_value.containsKey(hash))
+		  return;
+
+	  map_value_type entry = _key_to_value.remove(hash);
+
+	  const key_traker_iterator_type it = entry.second();
+
+	  _key_tracker.erase(it);
+  }
+
+  int getSize() {
+	  return _key_to_value.size();
+  }
+
+
 private:
   // Record a fresh key-value pair in the cache
-  void insert(const key_type& k,const value_type& v) {
+  virtual bool insert(const key_type& k,const value_type& v) {
 	  Locker locker(&_key_to_value);
 
 	  // Method is only called on cache misses
 	  //assert(_key_to_value.find(k) == _key_to_value.end());
 
 	  if (_key_to_value.containsKey(k))
-		  return;
+		  return false;
 
 	  // Make space if necessary
 	  if (_key_to_value.size() >= _capacity)
@@ -245,19 +267,24 @@ private:
 	  _key_to_value.put(k, custom_make_pair(v, it));
 	  // No need to check return,
 	  // given previous assert.
+
+	  return true;
   }
 
   // Purge the least-recently-used element in the cache
-  void evict() {
+  virtual value_type evict() {
 	  // Assert method is never called when cache is empty
 	  assert(!_key_tracker.empty());
 
 	  // Identify least recently used key
 	  // Erase both elements to completely purge record
-	  _key_to_value.remove(_key_tracker.front());
+	  value_type ret = _key_to_value.remove(_key_tracker.front());
 	  _key_tracker.pop_front();
+
+	  return ret;
   }
 
+protected:
   // The function to be cached
   //value_type (*_fn)(const key_type&);
   function_type _fn;
@@ -305,7 +332,7 @@ public:
     assert(minAccessCountForPromoting > 0);
   }
 
-  ~lru_cache_using_engine3_2args() {
+  virtual ~lru_cache_using_engine3_2args() {
 	  delete _fn;
   }
 
@@ -320,7 +347,7 @@ public:
   }
 
   // Obtain value of the cached function for k
-  value_type operator()(const Arg1& k, const Arg2& k2) {
+  virtual value_type operator()(const Arg1& k, const Arg2& k2) {
 	  // Attempt to find existing record
 	  key_type hash = _fn->hash(k, k2);
 
@@ -375,6 +402,25 @@ public:
 	  }
   }
 
+  virtual void remove(const Arg1& k, const Arg2& k2) {
+	  key_type hash = _fn->hash(k, k2);
+
+	  remove(hash);
+  }
+
+  virtual void remove(const key_type& hash) {
+	  Locker writeLock(&_key_to_value);
+
+	  if (!_key_to_value.containsKey(hash))
+		  return;
+
+	  map_value_type entry = _key_to_value.remove(hash);
+
+	  const key_traker_iterator_type it = entry.second();
+
+	  _key_tracker.erase(it);
+  }
+
   int getHitCount() {
 	  return hitCount.get();
   }
@@ -383,18 +429,25 @@ public:
 	  return missCount.get();
   }
 
+  ReadWriteLock* getLock() {
+	  return &_key_to_value;
+  }
+
+  int getSize() {
+	  return _key_to_value.size();
+  }
+
 private:
   // Record a fresh key-value pair in the cache
-  void insert(const Arg1& k, const Arg2& k2, const value_type& v) {
-	  Locker locker(&_key_to_value);
-
+  virtual bool insert(const Arg1& k, const Arg2& k2, const value_type& v) {
 	  // Method is only called on cache misses
 	  //assert(_key_to_value.find(k) == _key_to_value.end());
-
 	  key_type hash = _fn->hash(k, k2);
 
+	  Locker locker(&_key_to_value);
+
 	  if (_key_to_value.containsKey(hash))
-		  return;
+		  return false;
 
 	  // Make space if necessary
 	  if (_key_to_value.size() >= _capacity)
@@ -408,19 +461,24 @@ private:
 	  _key_to_value.put(hash, custom_make_pair(v, it));
 	  // No need to check return,
 	  // given previous assert.
+
+	  return true;
   }
 
   // Purge the least-recently-used element in the cache
-  void evict() {
+  virtual value_type evict() {
 	  // Assert method is never called when cache is empty
 	  assert(!_key_tracker.empty());
 
 	  // Identify least recently used key
 	  // Erase both elements to completely purge record
-	  _key_to_value.remove(_key_tracker.front());
+	  value_type ret = _key_to_value.remove(_key_tracker.front());
 	  _key_tracker.pop_front();
+
+	  return ret;
   }
 
+protected:
   // The function to be cached
   //value_type (*_fn)(const key_type&);
   function_type _fn;
