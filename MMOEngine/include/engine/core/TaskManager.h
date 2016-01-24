@@ -40,7 +40,7 @@ namespace engine {
 		virtual bool getNextExecutionTime(Task* task, Time& nextExecutionTime) = 0;
 
 		virtual void executeTask(Task* task) = 0;
-		
+
 		virtual void executeTask(Task* task, int taskqueue) {
 		        executeTask(task);
 		}
@@ -90,7 +90,45 @@ namespace engine {
 		virtual int getScheduledTaskSize() = 0;
 
 		virtual int getExecutingTaskSize() = 0;
-	};
+
+
+#ifdef CXX11_COMPILER
+		  template<class Lambda>
+		  class LambdaTask : public Task {
+			  Lambda lambda;
+		  public:
+			  template<class L>
+			  LambdaTask(L&& l) : lambda(std::forward<L>(l)) {
+			  }
+
+			  void run() {
+				  lambda();
+			  }
+		  };
+
+		  virtual void executeTask(std::function<void()>&& function) {
+			  auto taskObject = new LambdaTask<decltype(function)>(std::move(function));
+			  taskObject->execute();
+		  }
+
+		  virtual void executeTask(const std::function<void()>& function) {
+			  auto taskObject = new LambdaTask<decltype(function)>(function);
+			  taskObject->execute();
+		  }
+
+		  virtual void scheduleTask(std::function<void()>&& function, uint64 delay = 0) {
+			  auto taskObject = new LambdaTask<decltype(function)>(std::move(function));
+			  taskObject->schedule(delay);
+		  }
+
+		  virtual void scheduleTask(const std::function<void()>& function, uint64 delay = 0) {
+			  auto taskObject = new LambdaTask<decltype(function)>(function);
+			  taskObject->schedule(delay);
+		  }
+#endif
+
+
+	  };
 
   } // namespace core
 } // namespace engine

@@ -70,6 +70,25 @@ namespace engine {
 
 		void executeTask(Task* task);
 		void executeTask(Task* task, int taskQueue);
+
+#ifdef CXX11_COMPILER
+		  void executeTask(std::function<void()>&& function) {
+			  TaskManager::executeTask(std::move(function));
+		  }
+
+		  void executeTask(const std::function<void()>& function) {
+			  TaskManager::executeTask(function);
+		  }
+
+		  void scheduleTask(std::function<void()>&& function, uint64 delay = 0) {
+			  TaskManager::scheduleTask(std::move(function), delay);
+		  }
+
+		  void scheduleTask(const std::function<void()>& function, uint64 delay = 0) {
+			  TaskManager::scheduleTask(function, delay);
+		  }
+#endif
+
 		void executeTasks(const Vector<Task*>& tasks);
 
 		void executeTaskFront(Task* task);
