@@ -18,7 +18,7 @@ namespace sys {
  	 protected:
  		 int insertPlan;
 
- 		 virtual int compare(E& o1, const E& o2) const {
+ 		 virtual int compare(const E& o1, const E& o2) const {
  			 return TypeInfo<E>::compare(o1, o2);
  		 }
 
@@ -106,7 +106,8 @@ namespace sys {
  		 int m = 0, cmp = 0;
 
  		 while (l <= r) {
- 			 m = (l + r) / 2;
+ 			 //m = (l + r) / 2;
+			 m = ((unsigned int)l + (unsigned int)r) >> 1;
 
  			 E& obj = SynchronizedVector<E>::vector.elementData[m];
  			 cmp = compare(obj, o);
@@ -137,7 +138,8 @@ namespace sys {
  		 int m = 0, cmp = 0;
 
  		 while (l <= r) {
- 			 m = (l + r) / 2;
+ 			 //m = (l + r) / 2;
+			 m = ((unsigned int)l + (unsigned int)r) >> 1;
 
  			 E& obj = SynchronizedVector<E>::vector.elementData[m];
  			 cmp = compare(obj, o);
@@ -165,7 +167,8 @@ namespace sys {
  		 int r = SynchronizedVector<E>::vector.size() - 1;
 
  		 while (l <= r) {
- 			 m = (l + r) / 2;
+ 			 //m = (l + r) / 2;
+			 m = ((unsigned int)l + (unsigned int)r) >> 1;
 
  			 E& obj = SynchronizedVector<E>::vector.elementData[m];
  			 int cmp = compare(obj, o);
@@ -211,7 +214,8 @@ namespace sys {
  		 int m = 0, cmp = 0;
 
  		 while (l <= r) {
- 			 m = (l + r) / 2;
+ 			 //m = (l + r) / 2;
+			 m = ((unsigned int)l + (unsigned int)r) >> 1;
 
  			 E& obj = SynchronizedVector<E>::vector.elementData[m];
  			 cmp = compare(obj, o);
