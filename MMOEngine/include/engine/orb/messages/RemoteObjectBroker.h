@@ -39,6 +39,8 @@ namespace engine {
 		void deploy(DistributedObjectStub* obj);
 		void deploy(const String& name, DistributedObjectStub* obj);
 
+		void requestServant(DistributedObjectStub* obj);
+
 		DistributedObjectStub* undeploy(const String& name);
 
 		Reference<DistributedObject*> lookUp(const String& name);
@@ -46,7 +48,7 @@ namespace engine {
 
 		bool destroyObject(DistributedObjectStub* obj);
 
-		void invokeMethod(DistributedMethod& method);
+		void invokeMethod(DistributedMethod& method, bool async);
 		
 		DOBObjectManager* getObjectManager() {
 			return NULL;
