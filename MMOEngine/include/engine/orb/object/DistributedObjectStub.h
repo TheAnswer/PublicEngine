@@ -43,8 +43,6 @@ namespace engine {
 		void deploy(const String& name);
 		void deploy(const String& name, sys::uint64 nid);
 
-		void _requestServant();
-
 		bool undeploy();
 
 		// reference counting methods

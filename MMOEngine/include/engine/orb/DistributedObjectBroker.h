@@ -76,8 +76,6 @@ namespace engine {
 		void deploy(DistributedObjectStub* obj);
 		void deploy(const String& name, DistributedObjectStub* obj);
 
-		void requestServant(DistributedObjectStub* obj);
-
 		bool destroyObject(DistributedObjectStub* obj);
 
 		Reference<DistributedObject*> lookUp(const String& name);
