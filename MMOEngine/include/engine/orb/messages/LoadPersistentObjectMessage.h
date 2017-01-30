@@ -21,16 +21,12 @@ namespace engine {
 		bool found;
 
 	public:
-		LoadPersistentObjectMessage(uint64 objectid) : DOBMessage(LOADPERSISTENTOBJECTMESSAGE, 40), objectID(objectid) {
+		LoadPersistentObjectMessage(uint64 objectid) : DOBMessage(LOADPERSISTENTOBJECTMESSAGE, 40) {
 			insertLong(objectid);
-
-			found = false;
 		}
 
 		LoadPersistentObjectMessage(Packet* message) : DOBMessage(message) {
 			objectID = message->parseLong();
-
-			found = false;
 		}
 
 		void execute() {

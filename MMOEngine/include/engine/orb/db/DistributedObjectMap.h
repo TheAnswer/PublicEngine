@@ -21,10 +21,8 @@ namespace engine {
 		~DistributedObjectMap() {
 		}
 		
-		bool add(sys::uint64 objectID, DistributedObject* object) {
-			const static Reference<DistributedObject*> nullReference;
-
-			return objectMap.put(objectID, object) != nullReference;
+		DistributedObject* add(sys::uint64 objectID, DistributedObject* object) {
+			return objectMap.put(objectID, object);
 		}
 	
 		DistributedObject* get(sys::uint64 objectID) {

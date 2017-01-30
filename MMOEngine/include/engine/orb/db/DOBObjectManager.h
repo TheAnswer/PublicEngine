@@ -38,8 +38,6 @@ namespace engine {
 
 		ObjectDatabaseManager* databaseManager;
 
-		DistributedObjectMap remoteDeployedObjects;
-
 		Reference<Task*> updateModifiedObjectsTask;
 
 		Vector<UpdateModifiedObjectsThread*> updateModifiedObjectsThreads;

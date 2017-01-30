@@ -32,7 +32,6 @@ namespace sys {
 		SortedVector(const SortedVector<E>& vector);
 
 #ifdef CXX11_COMPILER
-		SortedVector(std::initializer_list<E> l);
 		SortedVector(SortedVector<E>&& vector);
 #endif
 
@@ -90,14 +89,6 @@ namespace sys {
 	}
 
 #ifdef CXX11_COMPILER
-	template<class E> SortedVector<E>::SortedVector(std::initializer_list<E> l) : Vector<E>(l.size(), 5) {
-		insertPlan = ALLOW_DUPLICATE;
-
-		for (auto it = l.begin(); it != l.end(); ++it) {
-			put(*it);
-		}
-	}
-
 	template<class E> SortedVector<E>::SortedVector(SortedVector<E>&& vector) : Vector<E>(std::move(vector)) {
 		insertPlan = vector.insertPlan;
 	}

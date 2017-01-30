@@ -9,7 +9,7 @@
 
 #include "system/util/Timer.h"
 
-#define COLLECT_TASKSTATISTICS
+//#define COLLECT_TASKSTATISTICS
 
 #define EXECUTE_TASK_1(Param1, Code) \
         { \

@@ -24,7 +24,6 @@ namespace sys {
        Vector(const Vector<E>& vector);
 
 #ifdef CXX11_COMPILER
-	   Vector(std::initializer_list<E> l);
        Vector(Vector<E>&& vector);
 #endif
 
@@ -66,9 +65,6 @@ namespace sys {
    }
 
 #ifdef CXX11_COMPILER
-   template<class E> Vector<E>::Vector(std::initializer_list<E> l) : ArrayList<E>(l), Object() {
-   }
-
    template<class E> Vector<E>::Vector(Vector<E>&& vector) : ArrayList<E>(std::move(vector)), Object() {
    }
 #endif

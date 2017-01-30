@@ -28,6 +28,9 @@ namespace engine {
 			savedObjectID = 0;
 		}
 
+		/*ManagedWeakReference(ManagedWeakReference& ref) : WeakReference<O>(ref) {
+		}*/
+
 		ManagedWeakReference(const ManagedWeakReference& ref) : WeakReference<O>(ref) {
 			savedObjectID = ref.savedObjectID;
 		}
@@ -129,7 +132,11 @@ namespace engine {
 		}
 
 		inline ManagedReference<O> get() {
+		        //Locker locker(Core::getObjectBroker()->getObjectManager());
+		        
 			ManagedReference<O> strongRef = WeakReference<O>::get();
+			
+			//locker.release();
 
 			if (savedObjectID != 0 && strongRef == NULL) {
 				Reference<DistributedObject*> tempObj = Core::lookupObject(savedObjectID);
@@ -142,7 +149,11 @@ namespace engine {
 		}
 
 		inline ManagedReference<O> getForUpdate() {
+		        //Locker locker(Core::getObjectBroker()->getObjectManager());
+		        
 			ManagedReference<O> strongRef = WeakReference<O>::get();
+			
+			//locker.release();
 
 			if (savedObjectID != 0 && strongRef == NULL) {
 				Reference<DistributedObject*> tempObj = Core::lookupObject(savedObjectID);
@@ -154,10 +165,6 @@ namespace engine {
 			return strongRef;
 		}
 
-		inline uint64 getSavedObjectID() const {
-			return savedObjectID;
-		}
-
 		int compareTo(const ManagedWeakReference& ref) const;
 
 		bool toString(String& str);
@@ -167,6 +174,12 @@ namespace engine {
 		bool toBinaryStream(ObjectOutputStream* stream);
 
 		bool parseFromBinaryStream(ObjectInputStream* stream);
+
+//#ifdef WITH_STM
+//	private:
+//#else
+	public:
+//#endif
 
 	};
 
@@ -222,6 +235,21 @@ namespace engine {
 	template<class O> bool ManagedWeakReference<O>::parseFromBinaryStream(ObjectInputStream* stream) {
 		uint64 oid = stream->readLong();
 		savedObjectID = oid;
+/*
+		DistributedObject* obj = Core::getObjectBroker()->lookUp(oid);
+
+		if (obj == NULL) {
+			WeakReference<O>::updateObject(NULL);
+			return false;
+		}
+
+		O castedObject = dynamic_cast<O>(obj);
+
+		if (castedObject == NULL)
+			return false;
+
+		savedObjectID = oid;
+		*/
 
 		WeakReference<O>::updateObject(NULL);
 

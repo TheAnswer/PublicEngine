@@ -10,8 +10,6 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "engine/orb/ObjectBroker.h"
 
-#include "system/util/SynchronizedSortedVector.h"
-
 namespace engine {
   namespace ORB {
 
@@ -19,21 +17,27 @@ namespace engine {
 
 	class RemoteObjectBroker : public ObjectBroker {
 		Reference<DOBServiceClient*> brokerClient;
-		SynchronizedSortedVector<DistributedObject*> deployedObjects;
 
 	public:
-		RemoteObjectBroker(const String& address, int port);
-		RemoteObjectBroker(DOBServiceClient* client);
+		RemoteObjectBroker(const String& address, int port) {
+			brokerClient = new DOBServiceClient(address, port);
+			brokerClient->start();
+		}
 
-		~RemoteObjectBroker();
+		RemoteObjectBroker(DOBServiceClient* client) {
+			brokerClient = client;
+		}
 
-		void registerClass(const String& name, DistributedObjectClassHelper* helper);
+		~RemoteObjectBroker() {
+		}
+
+		void registerClass(const String& name, DistributedObjectClassHelper* helper) {
+			assert(0);
+		}
 
 		// deployment methods
 		void deploy(DistributedObjectStub* obj);
 		void deploy(const String& name, DistributedObjectStub* obj);
-
-		void requestServant(DistributedObjectStub* obj);
 
 		DistributedObjectStub* undeploy(const String& name);
 
@@ -42,14 +46,7 @@ namespace engine {
 
 		bool destroyObject(DistributedObjectStub* obj);
 
-		void invokeMethod(DistributedMethod& method, bool async);
-
-		void addDeployedObject(DistributedObject* obj);
-		void removeDeployedObject(DistributedObject* obj);
-
-		SynchronizedSortedVector<DistributedObject*>& getDeployedObjects() {
-			return deployedObjects;
-		}
+		void invokeMethod(DistributedMethod& method);
 		
 		DOBObjectManager* getObjectManager() {
 			return NULL;

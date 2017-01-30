@@ -76,8 +76,6 @@ namespace engine {
 		void deploy(DistributedObjectStub* obj);
 		void deploy(const String& name, DistributedObjectStub* obj);
 
-		void requestServant(DistributedObjectStub* obj);
-
 		bool destroyObject(DistributedObjectStub* obj);
 
 		Reference<DistributedObject*> lookUp(const String& name);
@@ -86,7 +84,7 @@ namespace engine {
 		DistributedObjectStub* undeploy(const String& name);
 
 		DistributedObjectStub* createObjectStub(const String& className, const String& name);
-		DistributedObjectServant* createObjectServant(const String& className, DistributedObjectStub* stub, bool addToObjectManager = false);
+		DistributedObjectServant* createObjectServant(const String& className, DistributedObjectStub* stub);
 
 		DistributedObjectAdapter* getObjectAdapter(const String& name);
 		DistributedObjectAdapter* getObjectAdapter(uint64 oid);

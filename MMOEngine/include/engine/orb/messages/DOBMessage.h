@@ -26,23 +26,41 @@ namespace engine {
 							DEPLOYOBJECTMESSAGE, UNDEPLOYOBJECTMESSAGE,
 							INVOKEMETHODMESSAGE,
 							LOADPERSISTENTOBJECTMESSAGE, UPDATEPERSISTENTOBJECTMESSAGE,
-							GETNEXTFREEOBJECTIDMESSAGE, REQUESTSERVANT, SENDOBJECTDATA };
+							GETNEXTFREEOBJECTIDMESSAGE };
 
 	public:	
-		DOBMessage(uint32 messageType);
-		DOBMessage(uint32 messageType, uint32 initialBufferSize);
-		DOBMessage(Packet* packet);
+		DOBMessage(uint32 messageType) : Packet(20), client(NULL), sequence(0) {
+			insertInt(messageType);
+			insertInt(0); // sequence
+		}
 
-		~DOBMessage();
+		DOBMessage(uint32 messageType, uint32 initialBufferSize) : Packet(initialBufferSize), client(NULL), sequence(0) {
+			insertInt(messageType);
+			insertInt(0); // sequence
+		}
+
+		DOBMessage(Packet* packet) : Packet(40), client(NULL) {
+			sequence = packet->parseInt();
+
+			insertInt(REPLYMESSAGE); // messageType
+			insertInt(sequence); // sequence
+		}
 
 		virtual void execute() = 0;
 
 		virtual void handleReply(Packet* response) {
 		}
 
-		void signalReply();
+		void signalReply() {
+			replyCondition.signal();
+		}
 
-		bool waitForReply(uint32 timeout = 10000);
+		bool waitForReply(uint32 timeout = 10000) {
+			Time time;
+			time.addMiliTime(timeout);
+
+			return replyCondition.timedWait(&time) == 0;
+		}
 
 		DOBServiceClient* getClient() {
 			return client;
@@ -58,11 +76,7 @@ namespace engine {
 
 		void setSequence(uint32 seq) {
 			sequence = seq;
-			insertInt(8, seq); // sequence
-		}
-
-		void setSize() {
-			insertInt(0, size());
+			insertInt(4, seq); // sequence
 		}
 	};
 

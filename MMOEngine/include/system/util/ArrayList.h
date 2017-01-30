@@ -17,10 +17,6 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "system/lang/Integer.h"
 
-#ifdef CXX11_COMPILER
-#include <initializer_list>
-#endif
-
 namespace sys {
  namespace util {
    template<typename E> class ArrayListReverseIterator;
@@ -43,6 +39,7 @@ namespace sys {
        ArrayList(int initsize, int incr);
        ArrayList(const ArrayList<E>& array);
 
+
 	   typedef E* iterator;
 	   typedef const E* const_iterator;
 
@@ -51,7 +48,6 @@ namespace sys {
 
 #ifdef CXX11_COMPILER
        ArrayList(ArrayList<E>&& array);
-	   ArrayList(std::initializer_list<E> v);
 #endif
 
        ArrayList<E>& operator=(const ArrayList<E>& array);
@@ -281,17 +277,6 @@ namespace sys {
    }
 
 #ifdef CXX11_COMPILER
-	template<class E> ArrayList<E>::ArrayList(std::initializer_list<E> v)  {
-		init(v.size(), 5);
-
-		elementCount = v.size();
-
-		auto it = v.begin();
-		for (int i = 0; i < elementCount; ++i, ++it) {
-			createElementAt(*it, i);
-		}
-	}
-
    template<class E> ArrayList<E>::ArrayList(ArrayList<E>&& array) {
 	   elementData = array.elementData;
 

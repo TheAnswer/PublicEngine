@@ -10,8 +10,6 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "engine/service/StreamServiceClient.h"
 
-#include "system/util/SynchronizedHashTable.h"
-
 #include "DOBMessage.h"
 
 namespace engine {
@@ -22,7 +20,7 @@ namespace engine {
 	class DOBServiceClient : public StreamServiceClient, public Logger {
 		RemoteObjectBroker* rob;
 		
-		SynchronizedHashTable<uint32, DOBMessage*> sentMessageQueue;
+		HashTable<uint32, DOBMessage*> sentMessageQueue;
 		AtomicInteger sentMessageSequence;
 
 	public:
@@ -32,8 +30,6 @@ namespace engine {
 		~DOBServiceClient();
 		
 		void run();
-
-		void receiveMessages();
 		
 		bool send(DOBMessage* message);
 
