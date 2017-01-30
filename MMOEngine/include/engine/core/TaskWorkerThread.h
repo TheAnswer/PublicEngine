@@ -6,8 +6,9 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #ifndef TASKWORKERTHREAD_H_
 #define TASKWORKERTHREAD_H_
 
-
 #include "engine/service/ServiceThread.h"
+
+#include "TaskStatistics.h"
 
 namespace engine {
   namespace core {
@@ -57,6 +58,7 @@ namespace engine {
 	class TaskWorkerThread : public ServiceThread {
 		Mutex blockMutex;
 		TaskQueue* queue;
+		int cpu;
 
 		bool blockDuringSave;
 

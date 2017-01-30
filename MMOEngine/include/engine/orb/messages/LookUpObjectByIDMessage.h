@@ -25,12 +25,16 @@ namespace engine {
 		bool found;
 
 	public:	
-		LookUpObjectByIDMessage(uint64 objectid) : DOBMessage(LOOKUPOBJECTBYIDMESSAGE, 20) {
+		LookUpObjectByIDMessage(uint64 objectid) : DOBMessage(LOOKUPOBJECTBYIDMESSAGE, 20), objectid(objectid) {
 			insertLong(objectid);
+
+			found = false;
 		}
 	
 		LookUpObjectByIDMessage(Packet* message) : DOBMessage(message) {
 			objectid = message->parseLong();
+
+			found = false;
 		}
 
 		void execute() {
@@ -61,15 +65,15 @@ namespace engine {
 			}
 		}
 
-		const String& getClassName() {
+		const String& getClassName() const {
 			return className;
 		}
 
-		const String& getName() {
+		const String& getName() const {
 			return name;
 		}
 
-		bool isFound() {
+		bool isFound() const {
 			return found;
 		}
 	};

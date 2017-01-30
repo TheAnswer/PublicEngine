@@ -23,26 +23,14 @@ namespace engine {
 		uint64 objectID;
 
 	public:
-		GetNextFreeObjectIDMessage() : DOBMessage(GETNEXTFREEOBJECTIDMESSAGE, 20) {
-		}
+		GetNextFreeObjectIDMessage();
+		GetNextFreeObjectIDMessage(Packet* message);
 
-		GetNextFreeObjectIDMessage(Packet* message) : DOBMessage(message) {
-		}
+		void execute();
 
-		void execute() {
-			DistributedObjectBroker* broker = DistributedObjectBroker::instance();
+		void handleReply(Packet* response);
 
-			uint64 objectID = broker->getNextFreeObjectID();
-
-			insertLong(objectID);
-			client->sendReply(this);
-		}
-
-		void handleReply(Packet* response) {
-			objectID = response->parseLong();
-		}
-
-		uint64 getObjectID() {
+		uint64 getObjectID() const {
 			return objectID;
 		}
 	};

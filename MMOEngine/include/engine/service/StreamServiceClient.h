@@ -16,7 +16,7 @@ namespace engine {
 	class StreamServiceClient : public ServiceClient, public Thread {
 	protected:
 		bool doRun;
-		
+
 	public:
 		StreamServiceClient(Socket* sock);
 		StreamServiceClient(Socket* sock, SocketAddress& addr);
@@ -33,7 +33,7 @@ namespace engine {
 		void stop();
 
 		// message methods
-		void receiveMessages();
+		virtual void receiveMessages();
 
 		// socket methods
 		int send(Packet* pack);
@@ -41,6 +41,8 @@ namespace engine {
 		bool read(Packet* pack);
 
 		bool recieve(Packet* pack);
+
+		bool receiveAppend(Stream* stream);
 
 		void disconnect();
 
