@@ -72,7 +72,7 @@ namespace engine {
 
 		virtual ~TaskWorkerThread();
 
-		void start(TaskManager* manager);
+		void start();
 
 		//void pushToRetryQueue(Task* task);
 
