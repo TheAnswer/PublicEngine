@@ -16,7 +16,7 @@ namespace engine {
   namespace util {
   	namespace u3d {
 
-	class Vector3 : public Variable {
+	class Vector3 {
 	protected:
 		float values[3];
 
@@ -33,7 +33,7 @@ namespace engine {
 			memset(values, 0, sizeof(values));
 		}
 
-		Vector3(const Vector3& vec) : Variable() {
+		Vector3(const Vector3& vec) {
 			memcpy(values, vec.values, sizeof(values));
 		}
 
@@ -399,6 +399,29 @@ namespace engine {
 		}
 
 		friend class Quaternion;
+	};
+
+	class SerializableVector3 : public Vector3, public Variable {
+	public:
+		SerializableVector3() = default;
+		SerializableVector3(const SerializableVector3&) = default;
+
+		SerializableVector3(const Vector3& vec) : Vector3(vec) {
+		}
+
+		SerializableVector3& operator=(const Vector3& v) {
+			Vector3::operator=(v);
+
+			return *this;
+		}
+
+		bool toBinaryStream(ObjectOutputStream* stream) {
+			return Vector3::toBinaryStream(stream);
+		}
+
+		bool parseFromBinaryStream(ObjectInputStream* stream) {
+			return Vector3::parseFromBinaryStream(stream);
+		}
 	};
 
   	} // u3d

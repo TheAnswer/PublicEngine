@@ -108,6 +108,8 @@ public:
 
 	int compareTo(QuadTreeEntry* obj);
 
+	int registerToCloseObjectsReceivers();
+
 	bool isInQuadTree() const;
 
 	TransactionalReference<QuadTreeNode*> getNode() const;
@@ -238,6 +240,8 @@ public:
 
 	virtual int compareTo(QuadTreeEntry* obj);
 
+	virtual int registerToCloseObjectsReceivers();
+
 	bool isInQuadTree() const;
 
 	TransactionalReference<QuadTreeNode*> getNode() const;
@@ -352,6 +356,8 @@ public:
 	void initializePosition(float x, float z, float y);
 
 	int compareTo(QuadTreeEntry* obj);
+
+	int registerToCloseObjectsReceivers();
 
 	bool isInQuadTree() const;
 
