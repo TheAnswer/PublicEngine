@@ -24,8 +24,8 @@ namespace engine {
     namespace proto {
 
 	class BasePacketChekupEvent : public Task {
-		BaseClient* client;
-		BasePacket* packet;
+		WeakReference<BaseClient*> client;
+		Reference<BasePacket*> packet;
 
 		sys::uint32 checkupTime;
 

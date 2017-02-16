@@ -6,6 +6,8 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #ifndef WEAKREFERENCE_H_
 #define WEAKREFERENCE_H_
 
+#include <functional>
+
 #include "system/lang/Variable.h"
 
 #include "system/thread/ReadWriteLock.h"
@@ -27,12 +29,16 @@ namespace sys {
 			weakReference = NULL;
 		}
 
-		WeakReference(const WeakReference<O>& ref) : Variable() {
+		WeakReference(const WeakReference& ref) : Variable() {
 			StrongAndWeakReferenceCount* p = ref.safeRead();
 
 			initializeObject(p);
 
 			release(p);
+		}
+
+		WeakReference(StrongAndWeakReferenceCount* p) : Variable() {
+			initializeObject(p);
 		}
 
 		WeakReference(O obj) : Variable() {
@@ -82,12 +88,12 @@ namespace sys {
 				release(valOld);
 			}
 
-			if (object < valObject) {
+			if (std::less<Object*>()(object, valObject)) {
 				return 1;
-			} else if (object > valObject) {
-				return -1;
-			} else {
+			} else if (object == valObject) {
 				return 0;
+			} else {
+				return -1;
 			}
 		}
 
@@ -109,6 +115,17 @@ namespace sys {
 			Reference<B> stored = get().template castTo<B>();
 
 			return stored;
+		}
+
+		template<class B>
+		WeakReference<B> staticCastToWeak() {
+			StrongAndWeakReferenceCount* p = safeRead();
+
+			WeakReference<B> ref(p);
+
+			release(p);
+
+			return ref;
 		}
 
 		O operator=(O obj) {
@@ -176,17 +193,17 @@ namespace sys {
 			return false;
 		}
 
-	private:
+	protected:
 		inline StrongAndWeakReferenceCount* safeRead() const {
 			for (;;) {
-				StrongAndWeakReferenceCount* old = weakReference;
+				StrongAndWeakReferenceCount* old = weakReference.get();
 
 				if (old == NULL)
 					return NULL;
 
 				old->increaseWeakCount();
 
-				if (old == weakReference)
+				if (old == weakReference.get())
 					return old;
 				else
 					release(old);

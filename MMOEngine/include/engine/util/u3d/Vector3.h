@@ -68,9 +68,6 @@ namespace engine {
 			values[2] = scalar;
 		}
 
-		virtual ~Vector3() {
-		}
-
 	public:
 
 		bool toBinaryStream(ObjectOutputStream* stream) {
@@ -165,16 +162,18 @@ namespace engine {
 		}
 
 		inline float operator [] (uint32 index) const {
+#ifdef VECTORS_OUT_OF_BOUNDS_CHECK
 			if (index > 2)
 				throw ArrayIndexOutOfBoundsException(index);
-
+#endif
 			return values[index];
 		}
 
 		inline float& operator [] (uint32 index) {
+#ifdef VECTORS_OUT_OF_BOUNDS_CHECK
 			if (index > 2)
 				throw ArrayIndexOutOfBoundsException(index);
-
+#endif
 			return values[index];
 		}
 
