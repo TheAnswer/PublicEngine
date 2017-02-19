@@ -360,8 +360,13 @@ namespace sys {
    }
 
    template<class E> void ArrayList<E>::init(int initsize, int incr) {
-       elementCapacity = MAX(1, initsize);
-       elementData = (E*) malloc(elementCapacity * sizeof(E));
+	   if (!initsize) {
+		   elementCapacity = 0;
+		   elementData = NULL;
+	   } else {
+		   elementCapacity = MAX(1, initsize);
+		   elementData = (E*) malloc(elementCapacity * sizeof(E));
+	   }
 
        elementCount = 0;
        capacityIncrement = incr;
@@ -472,11 +477,27 @@ namespace sys {
    }
 
    template<class E> E ArrayList<E>::remove(int index) {
+#ifdef CXX11_COMPILER
+	   if (std::is_move_constructible<E>::value) {
+		   E oldValue(std::move(get(index)));
+
+		   removeElementAt(index);
+
+		   return oldValue;
+	   } else {
+		   E oldValue = get(index);
+
+		   removeElementAt(index);
+
+		   return oldValue;
+	   }
+#else
        E oldValue = get(index);
 
        removeElementAt(index);
 
        return oldValue;
+#endif
    }
 
    template<class E> bool ArrayList<E>::removeElement(const E& element) {
@@ -549,7 +570,7 @@ namespace sys {
    }
 
    template<class E> void ArrayList<E>::clone(ArrayList<E>& array) const {
-       array.removeAll(elementCapacity, capacityIncrement);
+       array.removeAll(elementCount, capacityIncrement);
 
        array.elementCount = elementCount;
 
