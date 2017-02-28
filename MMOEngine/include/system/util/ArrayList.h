@@ -68,6 +68,9 @@ namespace sys {
 #ifdef CXX11_COMPILER
        bool add(E&& element);
 	   bool add(int index, E&& element);
+
+	   template<class ...A>
+	   bool emplace(A&& ...element);
 #endif
 
        void addAll(const ArrayList<E>& array);
@@ -79,12 +82,12 @@ namespace sys {
 	   void insertElementAt(E&& element, int index);
 #endif
 
-       virtual E& get(int index) const;
-       virtual E& getUnsafe(int index) const;
+       E& get(int index) const;
+       E& getUnsafe(int index) const;
 
-       E& elementAt(int index) const;
+       E& elementAt(uint32 index) const;
 
-       E& elementAtUnsafe(int index) const;
+       E& elementAtUnsafe(uint32 index) const;
 
        virtual E remove(int index);
 
@@ -165,6 +168,9 @@ namespace sys {
 
 #ifdef CXX11_COMPILER
        inline void createElementAt(E&& o, int index);
+
+	   template<class ...A>
+	   inline void emplaceElement(int idx, A&& ...o);
 #endif
 
        inline void destroyElementAt(int index);
@@ -387,6 +393,14 @@ namespace sys {
 	   return true;
    }
 
+	template<class E>
+	template<class ...A> bool ArrayList<E>::emplace(A&& ...element) {
+		ensureCapacity(elementCount + 1);
+
+		emplaceElement(elementCount++, std::forward<A>(element)...);
+		return true;
+	}
+
 	template<class E> bool ArrayList<E>::add(int index, E&& element) {
 		insertElementAt(std::move(element), index);
 		return true;
@@ -401,7 +415,7 @@ namespace sys {
    template<class E> void ArrayList<E>::addAll(const ArrayList<E>& array) {
 	   if (TypeInfo<E>::needConstructor) {
 		   for (int i = 0; i < array.size(); ++i) {
-			   const E& element = array.get(i);
+			   const E& element = array.getUnsafe(i);
 
 			   add(element);
 		   }
@@ -416,7 +430,7 @@ namespace sys {
 
    template<class E> bool ArrayList<E>::contains(const E& element) {
 	   for (int i = 0; i < size(); ++i) {
-		   if (element == get(i)) {
+		   if (element == getUnsafe(i)) {
 			   return true;
 		   }
 	   }
@@ -461,8 +475,8 @@ namespace sys {
        return elementAt(index);
    }
 
-   template<class E> E& ArrayList<E>::elementAt(int index) const {
-       if (index >= elementCount || index < 0)
+   template<class E> E& ArrayList<E>::elementAt(uint32 index) const {
+       if (index >= (uint32) elementCount)
            throw ArrayIndexOutOfBoundsException(index);
 
        return elementData[index];
@@ -472,7 +486,7 @@ namespace sys {
 	   return elementAtUnsafe(index);
    }
 
-   template<class E> E& ArrayList<E>::elementAtUnsafe(int index) const {
+   template<class E> E& ArrayList<E>::elementAtUnsafe(uint32 index) const {
 	   return elementData[index];
    }
 
@@ -649,6 +663,11 @@ namespace sys {
 	   else
 		   elementData[index] = std::move(o);
    }
+
+	template<class E>
+	template<class ...A> void ArrayList<E>::emplaceElement(int index, A&& ...o) {
+		new (&(elementData[index])) E(std::forward<A>(o)...);
+	}
 #endif
 
    template<class E> void ArrayList<E>::destroyElementAt(int index) {
