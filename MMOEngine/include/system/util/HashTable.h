@@ -111,6 +111,9 @@ namespace sys {
 
 	    HashTable(const HashTable<K, V>& table);
 
+		typedef K key_type;
+		typedef V value_type;
+
 #ifdef CXX11_COMPILER
 	    HashTable(HashTable<K, V>&& table);
 #endif
@@ -124,6 +127,7 @@ namespace sys {
 #endif
 
 	    V& get(const K& key);
+		const V& get(const K& key) const;
 
 	    Entry<K, V>* getEntry(const K& key) const;
 
@@ -427,6 +431,22 @@ namespace sys {
 	    	if ((e->hash == hashCode) && e->key == key) {
 				return e->value;
 	    	}
+		}
+
+		return nullValue;
+	}
+
+	template<class K, class V> const V& HashTable<K,V>::get(const K& key) const {
+		if (!count)
+			return nullValue;
+
+		int hashCode = hash(key);
+		int index = (hashCode & 0x7FFFFFFF) % tableLength;
+
+		for (const Entry<K,V>* e = table[index]; e != NULL; e = e->next) {
+			if ((e->hash == hashCode) && e->key == key) {
+				return e->value;
+			}
 		}
 
 		return nullValue;

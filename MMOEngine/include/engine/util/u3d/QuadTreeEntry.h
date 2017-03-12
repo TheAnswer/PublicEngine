@@ -62,7 +62,7 @@ public:
 
 	float getDistanceTo(QuadTreeEntry* obj);
 
-	SortedVector<ManagedReference<QuadTreeEntry* > >* getCloseObjects();
+	CloseObjectsVector* getCloseObjects();
 
 	ManagedWeakReference<QuadTreeEntry* > getParent();
 
@@ -118,7 +118,7 @@ public:
 
 	unsigned long long getDirtyObjectID();
 
-	unsigned long long getObjectID();
+	virtual unsigned long long getObjectID();
 
 	float getRadius() const;
 
@@ -144,9 +144,11 @@ protected:
 
 	virtual ~QuadTreeEntry();
 
-	int _compareTo(QuadTreeEntry* obj);
+	int __compareTo(QuadTreeEntry* obj);
 
-	unsigned long long _getDirtyObjectID();
+	unsigned long long __getDirtyObjectID();
+
+	unsigned long long __getObjectID();
 
 	friend class QuadTreeEntryHelper;
 };
@@ -194,7 +196,7 @@ public:
 
 	float getDistanceTo(QuadTreeEntry* obj);
 
-	SortedVector<ManagedReference<QuadTreeEntry* > >* getCloseObjects();
+	CloseObjectsVector* getCloseObjects();
 
 	ManagedWeakReference<QuadTreeEntry* > getParent();
 
