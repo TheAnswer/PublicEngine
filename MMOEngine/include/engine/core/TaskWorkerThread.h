@@ -65,6 +65,8 @@ namespace engine {
 #ifdef COLLECT_TASKSTATISTICS
 		HashTable<const char*, RunStatistics> tasksStatistics;
 		VectorMap<String, RunStatistics> luaTasksStatistics;
+		VectorMap<String, RunStatistics> bdbReadStatistics;
+		VectorMap<String, RunStatistics> mysqlStatistics;
 
 		ReadWriteLock tasksStatsGuard;
 #endif
@@ -85,8 +87,12 @@ namespace engine {
 #ifdef COLLECT_TASKSTATISTICS
 		HashTable<const char*, RunStatistics> getTasksStatistics();
 		VectorMap<String, RunStatistics> getLuaTasksStatistics();
+		VectorMap<String, RunStatistics> getBDBReadStatistics();
+		VectorMap<String, RunStatistics> getMysqlStatistics();
 
 		void addLuaTaskStats(const String& name, uint64 runTime);
+		void addBDBReadStats(const String& dbName, uint64 runTime);
+		void addMysqlStats(const String& query, uint64 runTime);
 
 		void clearTaskStatistics();
 
