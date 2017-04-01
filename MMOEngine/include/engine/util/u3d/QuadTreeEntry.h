@@ -72,7 +72,7 @@ public:
 
 	bool containsPoint(float x, float y);
 
-	ManagedWeakReference<QuadTreeEntry* > getRootParent();
+	QuadTreeEntry* getRootParent();
 
 	bool isInSWArea(QuadTreeNode* node) const;
 
@@ -206,7 +206,7 @@ public:
 
 	virtual bool containsPoint(float x, float y);
 
-	ManagedWeakReference<QuadTreeEntry* > getRootParent();
+	QuadTreeEntry* getRootParent();
 
 	bool isInSWArea(QuadTreeNode* node) const;
 
@@ -333,7 +333,7 @@ public:
 
 	bool containsPoint(float x, float y);
 
-	ManagedWeakReference<QuadTreeEntry* > getRootParent();
+	QuadTreeEntry* getRootParent();
 
 	void notifyInsert(QuadTreeEntry* obj);
 
