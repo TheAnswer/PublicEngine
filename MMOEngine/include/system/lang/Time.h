@@ -58,11 +58,11 @@ namespace sys {
 	#endif
 
 	public:
-		Time(ClockType type = REAL_TIME) {
+		explicit Time(ClockType type = REAL_TIME) {
 			updateToCurrentTime(type);
 		}
 
-		Time(uint32 seconds) {
+		explicit Time(uint32 seconds) {
 			ts.tv_sec = seconds;
 			ts.tv_nsec = 0;
 		}
@@ -159,6 +159,13 @@ namespace sys {
 
 			//ts = t.ts;
 			memcpy(&ts, &t.ts, sizeof(timespec));
+
+			return *this;
+		}
+
+		Time& operator=(uint32 seconds) {
+			ts.tv_sec = seconds;
+			ts.tv_nsec = 0;
 
 			return *this;
 		}
