@@ -62,6 +62,8 @@ namespace engine {
 
 		bool blockDuringSave;
 
+		volatile bool pauseWorker;
+
 #ifdef COLLECT_TASKSTATISTICS
 		HashTable<const char*, RunStatistics> tasksStatistics;
 		VectorMap<String, RunStatistics> luaTasksStatistics;
@@ -100,6 +102,7 @@ namespace engine {
 		void addLuaTaskStats(String&& name, uint64 runTime);
 #endif
 #endif
+		void setPause(bool val);
 
 		TaskWorkerThread* asTaskWorkerThread() {
 			return this;
@@ -112,6 +115,7 @@ namespace engine {
 		inline bool doBlockWorkerDuringSave() const {
 			return blockDuringSave;
 		}
+
 	};
 
   } // namespace service
