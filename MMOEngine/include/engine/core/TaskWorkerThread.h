@@ -64,6 +64,8 @@ namespace engine {
 
 		volatile bool pauseWorker;
 
+		Task* currentTask;
+
 #ifdef COLLECT_TASKSTATISTICS
 		HashTable<const char*, RunStatistics> tasksStatistics;
 		VectorMap<String, RunStatistics> luaTasksStatistics;
@@ -71,6 +73,10 @@ namespace engine {
 		VectorMap<String, RunStatistics> mysqlStatistics;
 
 		ReadWriteLock tasksStatsGuard;
+
+		uint64 totalTaskRunCount;
+
+		int samplingRate;
 #endif
 
 	public:
@@ -97,6 +103,7 @@ namespace engine {
 		void addMysqlStats(const String& query, uint64 runTime);
 
 		void clearTaskStatistics();
+		void setStatsDSamplingRate(int val);
 
 #ifdef CXX11_COMPILER
 		void addLuaTaskStats(String&& name, uint64 runTime);
@@ -114,6 +121,10 @@ namespace engine {
 
 		inline bool doBlockWorkerDuringSave() const {
 			return blockDuringSave;
+		}
+
+		inline Task* getCurrentTask() const {
+			return currentTask;
 		}
 
 	};
