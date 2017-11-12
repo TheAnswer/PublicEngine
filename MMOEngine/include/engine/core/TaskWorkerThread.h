@@ -75,8 +75,10 @@ namespace engine {
 		ReadWriteLock tasksStatsGuard;
 
 		uint64 totalTaskRunCount;
+		uint64 totalBdbReadCount;
 
 		int samplingRate;
+		int bdbSamplingRate;
 #endif
 
 	public:
@@ -104,6 +106,7 @@ namespace engine {
 
 		void clearTaskStatistics();
 		void setStatsDSamplingRate(int val);
+		void setStatsDBdbSamplingRate(int val);
 
 #ifdef CXX11_COMPILER
 		void addLuaTaskStats(String&& name, uint64 runTime);
