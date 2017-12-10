@@ -11,7 +11,18 @@ namespace sys {
 	class IOException : public Exception {
 	public:
 		IOException(const String& msg) {
-			message = msg + " (" + String::valueOf(errno) + ": " + strerror(errno)  +  ")";
+			char str[256];
+#ifdef PLATFORM_MAC
+			int val = strerror_r(errno, str, 256);
+
+			message = msg + " (" + String::valueOf(errno) + ": " + str  +  ")";
+#else
+			char* val = strerror_r(errno, str, 256);
+
+			message = msg + " (" + String::valueOf(errno) + ": " + val  +  ")";
+#endif
+
+
 		}
 
 	};
