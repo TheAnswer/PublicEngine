@@ -13,4 +13,6 @@ endif
 all:
 	mkdir -p lib/unix
 	cp -rf lib/$(DIR)/* lib/unix/
+	echo java -cp `pwd`/bin/idlc.jar org.sr.idlc.compiler.Compiler '$$@' > bin/idlc
+	chmod +x bin/idlc
 	
