@@ -19,15 +19,15 @@ namespace sys {
 
 	public:
 		ReadWriteLock() : Lockable() {
-			pthread_rwlock_init(&rwlock, NULL);
+			pthread_rwlock_init(&rwlock, nullptr);
 		}
 
 		ReadWriteLock(const String& s) : Lockable(s) {
-			pthread_rwlock_init(&rwlock, NULL);
+			pthread_rwlock_init(&rwlock, nullptr);
 		}
 
 		ReadWriteLock(const ReadWriteLock& s) : Lockable() {
-			pthread_rwlock_init(&rwlock, NULL);
+			pthread_rwlock_init(&rwlock, nullptr);
 		}
 
 		virtual ~ReadWriteLock() {
@@ -49,7 +49,13 @@ namespace sys {
 		void lock(Lockable* lockable) ACQUIRE();
 
 		inline bool tryWLock() TRY_ACQUIRE(true) {
-			return pthread_rwlock_trywrlock(&rwlock) == 0;
+			if (pthread_rwlock_trywrlock(&rwlock) == 0) {
+				lockAcquired("w");
+
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 		void unlock(bool doLock = true) RELEASE();
