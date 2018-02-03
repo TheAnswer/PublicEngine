@@ -53,6 +53,7 @@ namespace engine {
 		static AtomicReference<FileWriter*> globalLogFile;
 		static volatile int globalLogLevel;
 		static bool syncGlobalLog;
+		static bool jsonGlobalLog;
 
 		FileWriter* logFile;
 
@@ -62,6 +63,8 @@ namespace engine {
 
 		bool doGlobalLog;
 		bool doSyncLog;
+		bool logTimeToFile;
+		bool logLevelToFile;
 
 		//Mutex writeLock;
 
@@ -76,6 +79,7 @@ namespace engine {
 		static void setGlobalFileLogger(const String& file);
 		static void setGlobalFileLogLevel(LogLevel level);
 		static void setGlobalFileLoggerSync(bool val);
+		static void setGlobalFileJson(bool val);
 
 		static void closeGlobalFileLogger();
 
@@ -120,10 +124,16 @@ namespace engine {
 
 		static void getTime(String& time, bool getFull = true);
 		static void getTime(StringBuffer& time, bool getFull = true);
+
 		static void printTime(bool getFull = true);
+
 		void getLogType(StringBuffer& buffer, LogLevel type) const;
+		static const char* getLogType(LogLevel type);
 
 		static uint64 getElapsedTime();
+
+		static String escapeJSON(const String& input);
+		static String unescapeJSON(const String& input);
 
 		// setters
 		inline void setLogging(bool doLog) {
@@ -151,6 +161,14 @@ namespace engine {
 
 		inline void setSyncFileLogging(bool val) {
 			doSyncLog = val;
+		}
+
+		inline void setLogTimeToFile(bool val) {
+			logTimeToFile = val;
+		}
+
+		inline void setLogLevelToFile(bool val) {
+			logLevelToFile = val;
 		}
 
 		inline void setLoggingName(const char* s) {
