@@ -20,6 +20,7 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 namespace sys {
   namespace lang {
+	template<class T> class Reference;
 
 	template<class O> class WeakReference {
 	protected:
@@ -196,16 +197,14 @@ namespace sys {
 	protected:
 		inline StrongAndWeakReferenceCount* safeRead() const {
 			for (;;) {
-				StrongAndWeakReferenceCount* old = weakReference.get();
+				StrongAndWeakReferenceCount* old = weakReference.get(std::memory_order_seq_cst);
 
 				if (old == nullptr)
 					return nullptr;
 
 				old->increaseWeakCount();
 
-				COMPILER_BARRIER();
-
-				if (old == weakReference.get())
+				if (old == weakReference.get(std::memory_order_seq_cst))
 					return old;
 				else
 					release(old);
@@ -233,7 +232,7 @@ namespace sys {
 			for (;;) {
 				StrongAndWeakReferenceCount* p = safeRead();
 
-				if (weakReference.compareAndSet(p, newRef)) {
+				if (weakReference.compareAndSetWeak(p, newRef)) {
 					bool deleted = release(p);
 
 					if (!deleted)

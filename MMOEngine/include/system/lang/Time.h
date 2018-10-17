@@ -72,7 +72,7 @@ namespace sys {
 			memcpy(&ts, &time.ts, sizeof(timespec));
 		}
 
-		bool toString(String& str) {
+		bool toString(String& str) const {
 			StringBuffer msg;
 			msg << ts.tv_sec << "," << ts.tv_nsec;
 
@@ -170,7 +170,7 @@ namespace sys {
 			return *this;
 		}
 
-		int compareTo(Time& t) {
+		int compareTo(const Time& t) const {
 			if (ts.tv_sec < t.ts.tv_sec)
 				return 1;
 			else if (ts.tv_sec > t.ts.tv_sec)
@@ -186,7 +186,7 @@ namespace sys {
 
 		}
 
-		String getFormattedTime() {
+		String getFormattedTime() const {
 			char str[100];
 
 			char* ret = ctime_r(&ts.tv_sec, str);
@@ -197,7 +197,7 @@ namespace sys {
 				return String("");
 		}
 
-		String getFormattedTimeFull() {
+		String getFormattedTimeFull() const {
 			int ret;
 			struct tm t;
 			String value;
@@ -230,7 +230,7 @@ namespace sys {
 			return value;
 		}
 
-		int compareMiliTo(Time& t) {
+		int compareMiliTo(const Time& t) const {
 			uint64 t1 = getMiliTime();
 			uint64 t2 = t.getMiliTime();
 
@@ -274,17 +274,17 @@ namespace sys {
 			#endif
 		}
 
-		inline bool isPast() {
+		inline bool isPast() const {
 			Time t;
 			return compareTo(t) > 0;
 		}
 
-		inline bool isPresent() {
+		inline bool isPresent() const {
 			Time t;
 			return compareTo(t) == 0;
 		}
 
-		inline bool isFuture() {
+		inline bool isFuture() const {
 			Time t;
 			return compareTo(t) < 0;
 		}
@@ -292,9 +292,9 @@ namespace sys {
 	protected:
 		inline void checkForOverflow() {
 			if (ts.tv_nsec >= 1000000000) {
-	    		ts.tv_sec++;
-	    		ts.tv_nsec -= 1000000000;
-	  		}
+				ts.tv_sec++;
+				ts.tv_nsec -= 1000000000;
+			}
 		}
 
 	public:
@@ -330,7 +330,7 @@ namespace sys {
 		    return time;
 		}
 
-		inline int64 miliDifference(Time& t) const {
+		inline int64 miliDifference(const Time& t) const {
 			return t.getMiliTime() - getMiliTime();
 		}
 
@@ -341,6 +341,12 @@ namespace sys {
 		inline struct timespec* getTimeSpec() {
 			return &ts;
 		}
+
+		inline const struct timespec* getTimeSpec() const {
+			return &ts;
+		}
+
+		friend class AtomicTime;
 
 	};
 

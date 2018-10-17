@@ -12,14 +12,14 @@ Distribution of this file for usage outside of Core3 is prohibited.
 
 #include "system/lang/System.h"
 
-#include "system/thread/atomic/AtomicInteger.h"
+#include <atomic>
 
 namespace sys {
   namespace lang {
 
 	class ReferenceCounter {
 	protected:
-		volatile uint32 _references;
+		std::atomic<uint32> _references{0};
 
 	public:
 		ReferenceCounter() {
@@ -28,61 +28,61 @@ namespace sys {
 		ReferenceCounter(uint32 count) : _references(count) {
 		}
 
-		ReferenceCounter(const ReferenceCounter& counter) {
-			_references = counter._references;
+		ReferenceCounter(const ReferenceCounter& counter) : _references(counter._references.load(std::memory_order_relaxed)) {
+		}
+
+		ReferenceCounter& operator=(const ReferenceCounter& counter) {
+			_references.store(counter._references.load(std::memory_order_relaxed));
+
+			return *this;
 		}
 
 	public:
 		inline uint32 increaseCount() volatile {
-			return AtomicInteger::add(&_references, 2);
+			return _references.fetch_add(2, std::memory_order_acq_rel) + 2;
 		}
 
 		void setLowestBit() volatile {
 			uint32 oldVal, newVal;
 
 			do {
-				oldVal = _references;
-
-				COMPILER_BARRIER();
+				oldVal = _references.load(std::memory_order_acquire);
 
 				newVal = oldVal | 1;
-			} while (!AtomicInteger::compareAndSet(&_references, oldVal, newVal));
+			} while (!_references.compare_exchange_weak(oldVal, newVal,
+						std::memory_order_release, std::memory_order_relaxed));
 		}
 
 		void clearLowestBit() volatile {
 			uint32 oldVal, newVal;
 
 			do {
-				oldVal = _references;
-
-				COMPILER_BARRIER();
+				oldVal = _references.load(std::memory_order_acquire);
 
 				newVal = oldVal - 1;
-			} while (!AtomicInteger::compareAndSet(&_references, oldVal, newVal));
+			} while (!_references.compare_exchange_weak(oldVal, newVal,
+						std::memory_order_release, std::memory_order_relaxed));
 		}
 
 		inline bool tryFinalDecrement() volatile {
 			uint32 oldVal, newVal;
 
-			oldVal = _references;
-
-			COMPILER_BARRIER();
+			oldVal = _references.load(std::memory_order_acquire);
 
 			if (oldVal != 2)
 				return false;
 
 			newVal = 1;
 
-			return AtomicInteger::compareAndSet(&_references, oldVal, newVal);
+			return _references.compare_exchange_weak(oldVal, newVal,
+					std::memory_order_release, std::memory_order_relaxed);
 		}
 
 		inline uint32 decrementAndTestAndSet() volatile {
 			uint32 oldVal, newVal;
 
 			do {
-				oldVal = _references;
-
-				COMPILER_BARRIER();
+				oldVal = _references.load(std::memory_order_acquire);
 
 				newVal = oldVal - 2;
 
@@ -90,15 +90,18 @@ namespace sys {
 
 				if (newVal == 0)
 					newVal = 1;
-			} while (!AtomicInteger::compareAndSet(&_references, oldVal, newVal));
+			} while (!_references.compare_exchange_weak(oldVal, newVal,
+						std::memory_order_release, std::memory_order_relaxed));
 
 			return ((oldVal - newVal) & 1);
 		}
 
-		inline uint32 getReferenceCount() volatile {
-			//WMB();
+		inline uint32 getReferenceCount(std::memory_order o = std::memory_order_acquire) volatile const {
+			return _references.load(o);
+		}
 
-			return _references;
+		inline void reset() volatile {
+			_references.store(0);
 		}
 
 	};
