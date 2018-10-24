@@ -3,7 +3,7 @@ project(engine3)
 cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
 
 add_custom_target(engine3 ALL
-	COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_SOURCE_DIR}/lib/unix)
+	COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_SOURCE_DIR}/lib/unix)
 
 set(E3_LIBS
 	libengine3.a
@@ -15,7 +15,7 @@ set(E3_LIBS
 include(CheckTypeSize)
 check_type_size(long LONG_SIZE) #4 if 32bit, 8 if 64bit...
 
-set(E3_LIB_DIR ${CMAKE_SOURCE_DIR}/lib/linux)
+set(E3_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/linux)
 
 if (LONG_SIZE EQUAL 8)
 	set(E3_LIB_DIR ${E3_LIB_DIR}64)
@@ -26,16 +26,16 @@ foreach( file_i ${E3_LIBS})
 		TARGET engine3
 		POST_BUILD
 		COMMAND ${CMAKE_COMMAND}
-		ARGS -E copy ${E3_LIB_DIR}/${file_i} ${CMAKE_SOURCE_DIR}/lib/unix/
+		ARGS -E copy ${E3_LIB_DIR}/${file_i} ${CMAKE_CURRENT_SOURCE_DIR}/lib/unix/
 		)
 endforeach( file_i )
 
-set(ENGINE3_UBSAN_LIBRARY ${CMAKE_SOURCE_DIR}/lib/unix/libengine3-ubsan.a)
-set(ENGINE3_TSAN_LIBRARY ${CMAKE_SOURCE_DIR}/lib/unix/libengine3-tsan.a)
-set(ENGINE3_ASAN_LIBRARY ${CMAKE_SOURCE_DIR}/lib/unix/libengine3-asan.a)
-set(ENGINE3_LIBRARY ${CMAKE_SOURCE_DIR}/lib/unix/libengine3.a)
-set(ENGINE3_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
-set(IDLC_BIN_DIR ${CMAKE_SOURCE_DIR}/bin)
+set(ENGINE3_UBSAN_LIBRARY ${CMAKE_CURRENT_SOURCE_DIR}/lib/unix/libengine3-ubsan.a)
+set(ENGINE3_TSAN_LIBRARY ${CMAKE_CURRENT_SOURCE_DIR}/lib/unix/libengine3-tsan.a)
+set(ENGINE3_ASAN_LIBRARY ${CMAKE_CURRENT_SOURCE_DIR}/lib/unix/libengine3-asan.a)
+set(ENGINE3_LIBRARY ${CMAKE_CURRENT_SOURCE_DIR}/lib/unix/libengine3.a)
+set(ENGINE3_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(IDLC_BIN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
 IF (ENABLE_ASAN)
 	SET(ENGINE3_LIBRARIES ${ENGINE3_ASAN_LIBRARY})
