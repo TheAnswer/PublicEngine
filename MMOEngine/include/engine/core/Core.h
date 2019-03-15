@@ -38,6 +38,7 @@ namespace engine {
 		static bool taskManagerShutDown;
 	public:
 		static SynchronizedHashTable<String, String> properties;
+		static bool MANAGED_REFERENCE_LOAD;
 
 	public:
 		Core(int logLevel = Logger::INFO);
@@ -69,6 +70,14 @@ namespace engine {
 			} else {
 				return defaultValue;
 			}
+		}
+
+		static String getProperty(const String& key, const String& defaultValue = "") {
+			if (!properties.containsKey(key)) {
+				return defaultValue;
+			}
+
+			return properties.get(key);
 		}
 
 		static void initializeProperties(const String& className);
