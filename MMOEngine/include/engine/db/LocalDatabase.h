@@ -86,6 +86,7 @@ namespace engine {
  };
 
  class LocalDatabaseIterator : public Logger {
+ protected:
 	 engine::db::berkley::Cursor* cursor;
 	 engine::db::berkley::BerkeleyDatabase* databaseHandle;
 
@@ -101,7 +102,7 @@ namespace engine {
 
 	 void resetIterator();
 
-	 bool getNextKeyAndValue(ObjectInputStream* keyStream, ObjectInputStream* data, uint32 lockMode = berkley::LockMode::READ_COMMITED);
+	 bool getNextKeyAndValue(ObjectInputStream* keyStream, ObjectInputStream* data, uint32 lockMode = berkley::LockMode::READ_COMMITED, bool compressed = false);
 	 bool getNextValue(ObjectInputStream* data, uint32 lockMode = berkley::LockMode::READ_UNCOMMITED);
 	 bool getNextKey(ObjectInputStream* key, uint32 lockMode = berkley::LockMode::READ_UNCOMMITED);
 
