@@ -41,9 +41,11 @@ namespace engine {
 		AtomicLong period;
 
 	#ifdef COLLECT_TASKSTATISTICS
-		uint64 lastElapsedTime;
 		int statsSampleRate;
 	#endif
+
+		uint64 lastElapsedTime = 0;
+		String taskName;
 
 		int priority;
 		bool runInScheduler = false;
@@ -82,7 +84,11 @@ namespace engine {
 		void executeInThread();
 
 		virtual const char* getTaskName() {
-			return typeid(*this).name();
+			if (!taskName.isEmpty()) {
+				return taskName.toCharArray();
+			} else {
+				return typeid(*this).name();
+			}
 		}
 
 		int compareTo(PriorityQueueEntry* node) {
@@ -182,19 +188,23 @@ namespace engine {
 			return customTaskQueue;
 		}
 
+		inline void setTaskName(const char* name) {
+			taskName = name;
+		}
+
 	#ifdef COLLECT_TASKSTATISTICS
 		void setStatsSample(bool val) {
 			statsSampleRate = val;
 		}
 
-	  	inline uint64 getLastElapsedTime() const {
-	  		return lastElapsedTime;
-	  	}
-
 		inline int getStatsSampleRate() const {
 			return statsSampleRate;
 		}
 	#endif
+
+		inline uint64 getLastElapsedTime() const {
+	  		return lastElapsedTime;
+	  	}
 
 	#ifdef TRACE_TASKS
 		void setScheduleTrace() {
