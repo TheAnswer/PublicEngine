@@ -21,7 +21,7 @@ namespace engine {
 
  class LocalDatabase : public Logger {
  protected:
-	 engine::db::berkley::BerkeleyDatabase* objectsDatabase;
+	 ThreadLocal<engine::db::berkley::BerkeleyDatabase*> objectsDatabase;
 	 engine::db::berkley::Environment* environment;
 
 	 String databaseFileName;
@@ -63,23 +63,25 @@ namespace engine {
 	 static void uncompress(void* data, uint64 size, ObjectInputStream* decompressedData);
 	 static Stream* compress(Stream* data);
 
-	 virtual bool isObjectDatabase() {
+	 virtual bool isObjectDatabase() const {
 		 return false;
 	 }
 
-	 inline engine::db::berkley::BerkeleyDatabase* getDatabaseHandle() {
-		 return objectsDatabase;
+	 engine::db::berkley::BerkeleyDatabase* getDatabaseHandle();
+
+	 inline void getDatabaseName(String& name) const {
+	 	name = getDatabaseName();
 	 }
 
-	 inline void getDatabaseName(String& name) {
-		 name = databaseFileName.replaceFirst(".db", "");
+	 inline String getDatabaseName() const {
+		 return databaseFileName.replaceFirst(".db", "");
 	 }
 
 	 inline const String& getDatabaseFileName() const {
 		 return databaseFileName;
 	 }
 
-	 inline bool hasCompressionEnabled() {
+	 inline bool hasCompressionEnabled() const {
 		 return compression;
 	 }
 
