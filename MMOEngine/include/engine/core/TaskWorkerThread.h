@@ -29,6 +29,11 @@ namespace engine {
 
 		Task* currentTask;
 
+		uint64 mutexWaitTime;
+		uint64 mutexesAcquired;
+		uint64 totalBdbTime;
+		uint64 totalBdbQueries;
+
 #ifdef COLLECT_TASKSTATISTICS
 		HashTable<String, RunStatistics> tasksStatistics;
 		VectorMap<String, RunStatistics> luaTasksStatistics;
@@ -66,7 +71,6 @@ namespace engine {
 		VectorMap<String, RunStatistics> getMysqlStatistics();
 
 		void addLuaTaskStats(const String& name, uint64 runTime);
-		void addBDBReadStats(const String& dbName, uint64 runTime);
 		void addMysqlStats(const String& query, uint64 runTime);
 
 		void clearTaskStatistics();
@@ -77,7 +81,26 @@ namespace engine {
 		void addLuaTaskStats(String&& name, uint64 runTime);
 #endif
 #endif
+		void addBDBReadStats(const String& dbName, uint64 runTime);
+
 		void setPause(bool val);
+
+		inline void addMutexWaitTime(uint64 time) {
+			mutexesAcquired++;
+			mutexWaitTime += time;
+		}
+
+		void clearMutexWaitTime() {
+			mutexWaitTime = 0;
+		}
+
+		uint64 getTotalBdbTime() const {
+			return totalBdbTime;
+		}
+
+		uint64 getMutexWaitTime() const {
+			return mutexWaitTime;
+		}
 
 		TaskQueue* getTaskQueue() const {
 			return queue;
