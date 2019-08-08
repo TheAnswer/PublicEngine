@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2007 <SWGEmu>. All rights reserved.
-Distribution of this file for usage outside of Core3 is prohibited.
+** Copyright (C) 2007-2019 SWGEmu
+** See file COPYING for copying conditions.
 */
 
 #ifndef LOGGER_H_
@@ -66,6 +66,7 @@ namespace engine {
 		bool logTimeToFile;
 		bool logLevelToFile;
 		bool logJSON;
+		bool logToConsole;
 
 		//Mutex writeLock;
 
@@ -178,6 +179,10 @@ namespace engine {
 
 		inline void setGlobalLogging(bool doLog) {
 			doGlobalLog = doLog;
+		}
+
+		inline void setLogToConsole(bool doLog) {
+			logToConsole = doLog;
 		}
 
 		inline void setSyncFileLogging(bool val) {

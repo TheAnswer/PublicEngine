@@ -1,4 +1,8 @@
 /*
+** Copyright (C) 2007-2019 SWGEmu
+** See file COPYING for copying conditions.
+*/
+/*
  * threadlocal.h
  *
  *  Created on: 14/10/2012
@@ -25,7 +29,7 @@ void testThreadLocalSpeed() {
 	for (int i = 0; i < THREAD_LOCAL_ITERATIONS; ++i) {
 		Object* obj = tl.get();
 
-		if (obj == NULL)
+		if (obj == nullptr)
 			break;
 	}
 

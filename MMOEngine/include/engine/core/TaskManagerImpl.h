@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2007 <SWGEmu>. All rights reserved.
-Distribution of this file for usage outside of Core3 is prohibited.
+** Copyright (C) 2007-2019 SWGEmu
+** See file COPYING for copying conditions.
 */
 
 #ifndef TASKMANAGERIMPL_H_
@@ -20,7 +20,7 @@ namespace engine {
 	class TaskScheduler;
 	class Task;
 
-	class TaskManagerImpl : public TaskManager, public Mutex, public Logger {
+	class TaskManagerImpl : public TaskManager, public ReadWriteLock, public Logger {
 		Vector<TaskQueue*> taskQueues;
 
 		Vector<Reference<TaskWorkerThread*> > workers;

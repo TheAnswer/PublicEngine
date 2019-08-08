@@ -1,4 +1,8 @@
 /*
+** Copyright (C) 2007-2019 SWGEmu
+** See file COPYING for copying conditions.
+*/
+/*
  * Cursor.h
  *
  *  Created on: 15/02/2010
@@ -37,7 +41,7 @@ namespace engine {
 		/**
 		 * Delete the key/data pair to which the cursor refers
 		 */
-		int	del(uint32 flags = 0);
+		int del(uint32 flags = 0);
 
 		/**
 		 * Return a new cursor with the same transaction and locker ID as the original cursor.
@@ -72,6 +76,14 @@ namespace engine {
 			return get(key, data, DB_NEXT | lockMode);
 		}
 
+		inline int pGetSet(DatabaseEntry* key, DatabaseEntry* primaryKey, DatabaseEntry* data, uint32 lockMode = LockMode::DEFAULT) {
+			return pget(key, primaryKey, data, DB_SET | lockMode);
+		}
+
+		inline int pGetNext(DatabaseEntry* key, DatabaseEntry* primaryKey, DatabaseEntry* data, uint32 lockMode = LockMode::DEFAULT) {
+			return pget(key, primaryKey, data, DB_NEXT | lockMode);
+		}
+
 		/**
 		 * Move the cursor to the next key/data pair and return that pair.
 		 */
@@ -84,6 +96,10 @@ namespace engine {
 		 */
 		inline int getNextDup(DatabaseEntry* key, DatabaseEntry* data, uint32 lockMode = LockMode::DEFAULT) {
 			return get(key, data, DB_NEXT_DUP | lockMode);
+		}
+
+		inline int pGetNextDup(DatabaseEntry* key, DatabaseEntry* primaryKey, DatabaseEntry* data, uint32 lockMode = LockMode::DEFAULT) {
+			return pget(key, primaryKey, data, DB_NEXT_DUP | lockMode);
 		}
 
 		/**
@@ -223,6 +239,7 @@ namespace engine {
 		}
 
 		int get(DatabaseEntry* key, DatabaseEntry* data, uint32 flags);
+		int pget(DatabaseEntry* key, DatabaseEntry* primaryKey, DatabaseEntry* data, uint32 flags);
 
 		friend class BerkeleyDatabase;
 

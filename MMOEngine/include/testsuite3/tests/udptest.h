@@ -1,3 +1,7 @@
+/*
+** Copyright (C) 2007-2019 SWGEmu
+** See file COPYING for copying conditions.
+*/
 #ifndef UDPTEST_H_
 #define UDPTEST_H_
 
@@ -12,7 +16,7 @@
 		}
 
 		ServiceClient* createConnection(Socket* sock, SocketAddress& addr) {
-			return NULL;
+			return nullptr;
 		}
 
 		bool deleteConnection(ServiceClient* session) {

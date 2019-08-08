@@ -1,4 +1,8 @@
 /*
+** Copyright (C) 2007-2019 SWGEmu
+** See file COPYING for copying conditions.
+*/
+/*
  * referencetest.h
  *
  *  Created on: 14/12/2011
@@ -35,7 +39,7 @@ void orbTestLookup() {
 
 		Reference<TestIDLClass*> object = Core::lookupObject<TestIDLClass>("testCLass1");
 
-		if (object == NULL) {
+		if (object == nullptr) {
 			System::out << "object \'testClass1\' not deployed" << PrintStream::endl;
 
 			return;

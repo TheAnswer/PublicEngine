@@ -1,4 +1,8 @@
 /*
+** Copyright (C) 2007-2019 SWGEmu
+** See file COPYING for copying conditions.
+*/
+/*
  * weakreftest.h
  *
  *  Created on: 03/06/2012
@@ -24,8 +28,8 @@ public:
 	void run() {
 		Reference<Object*> strong = object.get();
 
-		if (strong != NULL) {
-			assert(!strong->_isGettingDestroyed());
+		if (strong != nullptr) {
+			//assert(!strong->_isGettingDestroyed());
 			assert(strong->getReferenceCount() > 0);
 
 			schedule(1);
@@ -49,7 +53,7 @@ public:
 	void run() {
 		//schedule(25);
 
-		object = NULL;
+		object = nullptr;
 
 		//printf("creating new strong obj\n");
 
@@ -95,7 +99,7 @@ void weakreftest() {
 		task->schedule(25);
 	}
 
-	int secondsToRun = MAX(10, SECONDS_TO_RUN);
+	int secondsToRun = Math::max(10, SECONDS_TO_RUN);
 
 	printf("done queuing tasks\n");
 	printf("seconds to run %d\n", secondsToRun);

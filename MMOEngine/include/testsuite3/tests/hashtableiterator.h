@@ -1,4 +1,8 @@
 /*
+** Copyright (C) 2007-2019 SWGEmu
+** See file COPYING for copying conditions.
+*/
+/*
  * hashtableiterator.h
  *
  *  Created on: 05/10/2012
@@ -44,7 +48,7 @@ void testHashTableIterator() {
 
 		ManagedObject* dist = dynamic_cast<ManagedObject*>(obj);
 
-		assert(dist != NULL);
+		assert(dist != nullptr);
 
 		objects.add(dist);
 	}

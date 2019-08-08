@@ -1,3 +1,7 @@
+/*
+** Copyright (C) 2007-2019 SWGEmu
+** See file COPYING for copying conditions.
+*/
 #ifndef FILEWRITER_H_
 #define FILEWRITER_H_
 
@@ -28,7 +32,7 @@ namespace sys {
   		void close() {
   			validateWriteable();
 
-  			file->flush();
+  			//file->flush(); close already does flush internally
 
   			file->close();
   		}
