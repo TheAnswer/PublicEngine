@@ -16,6 +16,7 @@ namespace engine {
 	class TaskManager;
 	class TaskQueue;
 	class Task;
+	class ManagedObject;
 
 	class TaskWorkerThread : public ServiceThread {
 		Mutex blockMutex;
@@ -84,6 +85,8 @@ namespace engine {
 		void addBDBReadStats(const String& dbName, uint64 runTime);
 
 		void setPause(bool val);
+
+		void logTask(const char* taskName, uint64 elapsedTime);
 
 		inline void addMutexWaitTime(uint64 time) {
 			mutexesAcquired++;
