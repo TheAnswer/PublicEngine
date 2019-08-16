@@ -27,10 +27,20 @@ namespace engine {
 		int hash(const uint64& keyValue) const;
 	};
 
+	class ObjectHashTableHelper : public HashTable<uint64, DistributedObject*> {
+	public:
+		ObjectHashTableHelper();
+
+		ObjectHashTableHelper(int initialCapacity);
+
+		int hash(const uint64& keyValue) const;
+	};
+
 	class DistributedObjectDirectory {
 		ObjectHashTable objectMap;
 
-		DistributedObjectMap<SynchronizedHashTable<uint64, DistributedObject*>> helperObjectMap;
+		DistributedObjectMap<SynchronizedHashTable<uint64, DistributedObject*,
+			ObjectHashTableHelper>> helperObjectMap;
 
 	public:
 		DistributedObjectDirectory();
@@ -48,15 +58,15 @@ namespace engine {
 
 		DistributedObjectAdapter* getAdapter(uint64 objid);
 
-		inline int getSize() {
+		inline int getSize() const {
 			return objectMap.size();
 		}
 
-		const ObjectHashTable& getObjectHashTable() {
+		const ObjectHashTable& getObjectHashTable() const {
 			return objectMap;
 		}
 
-		HashTable<uint64, DistributedObject* >* getDistributedObjectMap() {
+		ObjectHashTableHelper* getDistributedObjectMap() {
 			return helperObjectMap.getMap()->getHashTable();
 		}
 	};

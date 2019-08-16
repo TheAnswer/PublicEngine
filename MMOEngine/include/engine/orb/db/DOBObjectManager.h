@@ -6,6 +6,8 @@
 #ifndef DOBOBJECTMANAGER_H_
 #define DOBOBJECTMANAGER_H_
 
+#include "engine/util/flat_hash_map.hpp"
+
 #include "system/platform.h"
 
 #include "engine/core/Task.h"
@@ -49,10 +51,21 @@ namespace engine {
 
 		AtomicInteger totalUpdatedObjects;
 		AtomicInteger totalActuallyChangedObjects;
-		SynchronizedSortedVector<void*> commitedObjects;
-		SortedVector<void*> uniqueModifiedObjectValues;
+
+		class SynchronizedCommitedObjects {
+		public:
+			Mutex mutex;
+			ska::flat_hash_set<void*> objects;
+
+			void put(void* obj);
+		};
+
+		SynchronizedCommitedObjects commitedObjects;
+
+		ska::flat_hash_set<void*> uniqueModifiedObjectValues;
 
 		static int UPDATETODATABASETIME;
+		static bool dumpLastModifiedTraces;
 
 	public:
 		DOBObjectManager();
@@ -67,6 +80,14 @@ namespace engine {
 
 		static void setUpdateToDatabaseTime(int value) {
 			UPDATETODATABASETIME = value;
+		}
+
+		static void setDumpLastModifiedTraces(bool val) {
+			dumpLastModifiedTraces = val;
+		}
+
+		static bool getDumpLastModifiedTraces() {
+			return dumpLastModifiedTraces;
 		}
 
 		void scheduleUpdateToDatabase();
@@ -108,6 +129,7 @@ namespace engine {
 
 	protected:
 		void finishObjectUpdate();
+		void checkCommitedObjects();
 
 		UpdateModifiedObjectsThread* createUpdateModifiedObjectsThread();
 
