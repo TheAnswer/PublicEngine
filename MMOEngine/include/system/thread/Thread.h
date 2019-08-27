@@ -31,6 +31,10 @@ namespace engine {
 }
 
 namespace sys {
+  namespace lang {
+  	class Object;
+  }
+
   namespace util {
 	 template<class T> class SortedVector;
   }
@@ -84,22 +88,22 @@ namespace sys {
 	 */
 	class Thread : public Runnable {
 		pthread_t thread;
-
 		pthread_attr_t attributes;
 
 		String name;
 
 		static std::atomic<int> threadCounter;
-
 		static pthread_once_t initThread;
+
 		static ThreadLocal<Thread*> currentThread;
 		static UniqueReference<ThreadInitializer*> threadInitializer;
 
 	protected:
+		using ModifiedObjectsList = ArrayList<Object*>;//ska::bytell_hash_set<void*>;
 		//only used in testing
 		ArrayList<Lockable*> acquiredLockables;
 		ArrayList<LockableTrace> lockableTrace;
-		ska::bytell_hash_set<void*>* modifiedObjects = nullptr;
+		ModifiedObjectsList* modifiedObjects = nullptr;
 
 	public:
 		//! allocates a new Thread
@@ -162,7 +166,7 @@ namespace sys {
 			return &lockableTrace;
 		}
 
-		void addModifiedObject(void* object);
+		void addModifiedObject(Object* object);
 
 		void addAcquiredLockable(Lockable* lockable, Lockable* cross = nullptr, bool monitorLike = false, bool addToTrace = true) {
 			acquiredLockables.add(lockable);
@@ -181,14 +185,9 @@ namespace sys {
 			return nullptr;
 		}
 
-		ska::bytell_hash_set<void*>* takeModifiedObjects() {
-			auto copy = modifiedObjects;
-			modifiedObjects = nullptr;
+		ModifiedObjectsList* takeModifiedObjects();
 
-			return copy;
-		}
-
-		int getModifiedObjects() const;
+		int getModifiedObjectsCount() const;
 
 	protected:
 		static void* executeThread(void* th);
