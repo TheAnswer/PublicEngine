@@ -16,7 +16,7 @@
 #include "ObjectDatabase.h"
 #include "IndexDatabase.h"
 
-#include "berkley/Environment.h"
+#include "berkeley/Environment.h"
 
 //#define LASTOBJECTIDKEY 0xFFFFFFFFFFFFFFFF;
 
@@ -122,7 +122,7 @@ namespace engine {
 			return &updateObjects;
 		}
 
-		inline uint64 getCurrentSize() {
+		inline uint64 getCurrentSize() const {
 			return currentSize;
 		}
 

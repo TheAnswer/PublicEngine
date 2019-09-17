@@ -27,7 +27,7 @@ namespace engine {
 	public:
 		ServiceClient();
 		ServiceClient(Socket* sock);
-		ServiceClient(Socket* sock, SocketAddress& addr);
+		ServiceClient(Socket* sock, const SocketAddress& addr);
 		ServiceClient(const String& host, int port);
 
 		virtual ~ServiceClient();
@@ -38,11 +38,11 @@ namespace engine {
 
 		bool isAvailable();
 
-		inline bool isDisconnected() {
+		inline bool isDisconnected() const {
 			return disconnected;
 		}
 
-		inline bool hasError() {
+		inline bool hasError() const {
 			return errored;
 		}
 
@@ -70,11 +70,15 @@ namespace engine {
 		}
 
 		// getters
-		inline uint64 getNetworkID() {
+		inline uint64 getNetworkID() const {
 			return addr.getNetworkID();
 		}
 
 		inline SocketAddress& getAddress() {
+			return addr;
+		}
+
+		inline const SocketAddress& getAddress() const {
 			return addr;
 		}
 

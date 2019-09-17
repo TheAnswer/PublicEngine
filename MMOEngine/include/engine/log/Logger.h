@@ -23,6 +23,8 @@
 #endif
 
 #include "system/lang.h"
+
+#include <type_traits>
 #include <functional>
 
 namespace engine {
@@ -30,15 +32,30 @@ namespace engine {
 
 	class Logger;
 
+	template <typename T>
+	class HasToStringDataMethodSFINAE {
+		typedef char success;
+		struct failure { char x[2]; };
+
+		template <class C> static success test(decltype(&C::toStringData)) ;
+		template <class C> static failure test(...);
+
+	public:
+		enum { value = sizeof(test<T>(0)) == sizeof(char) };
+	};
+
 	class LoggerHelper {
 	protected:
 		const Logger& logger;
 		const int logLevel;
 		const bool boolParam;
+		bool willLog;
 
 		StringBuffer buffer;
 
 	public:
+		LoggerHelper() = delete;
+
 		LoggerHelper(const Logger& logger, const int logLevel, const bool boolParam);
 		LoggerHelper(LoggerHelper&& loggerHelper);
 
@@ -46,8 +63,27 @@ namespace engine {
 
 		void flush(bool clearBuffer = true);
 
-		template<typename T>
-		LoggerHelper& operator<<(const T& a);
+		template<typename T, std::enable_if_t<HasToStringDataMethodSFINAE<T>::value, int> = 0>
+		LoggerHelper& operator<<(const T& a) {
+			if (!willLog) {
+				return *this;
+			}
+
+			buffer << a.toStringData();
+
+			return *this;
+		}
+
+		template<typename T, std::enable_if_t<!HasToStringDataMethodSFINAE<T>::value, int> = 0>
+		LoggerHelper& operator<<(const T& a) {
+			if (!willLog) {
+				return *this;
+			}
+
+			buffer << a;
+
+			return *this;
+		}
 
 		StringBuffer& getBuffer() {
 			return buffer;
@@ -55,6 +91,22 @@ namespace engine {
 
 		const StringBuffer& getBuffer() const {
 			return buffer;
+		}
+
+		const Logger& getLogger() const {
+			return logger;
+		}
+
+		bool getWillLog() const {
+			return willLog;
+		}
+
+		int getLogLevel() const {
+			return logLevel;
+		}
+
+		bool getBoolParam() const {
+			return boolParam;
 		}
 	};
 
@@ -90,7 +142,7 @@ namespace engine {
 		bool logJSON = false;
 		bool logToConsole = true;
 
-		LoggerCallback callback;
+		UniqueReference<LoggerCallback*> callback;
 
 		static AtomicReference<FileWriter*> globalLogFile;
 		static volatile int globalLogLevel;
@@ -100,10 +152,15 @@ namespace engine {
 
 	public:
 		Logger();
-		Logger(const char *s);
 		Logger(const String& s);
+		Logger(const Logger& logger);
+
+		Logger(Logger&& logger);
 
 		~Logger();
+
+		Logger& operator=(const Logger& logger);
+		Logger& operator=(Logger&& logger);
 
 		static void setGlobalFileLogger(const char* file);
 		static void setGlobalFileLogger(const String& file);
@@ -269,11 +326,11 @@ namespace engine {
 		}
 
 		inline void setLoggerCallback(LoggerCallback&& funct) {
-			callback = std::move(funct);
+			callback = new LoggerCallback(std::move(funct));
 		}
 
 		inline void setLoggerCallback(const LoggerCallback& funct) {
-			callback = funct;
+			callback = new LoggerCallback(funct);
 		}
 
 		// getters
@@ -297,31 +354,15 @@ namespace engine {
 			return logJSON;
 		}
 
-		inline LoggerCallback& getLoggerCallback() {
+		inline LoggerCallback* getLoggerCallback() {
 			return callback;
 		}
 
-		inline const LoggerCallback& getLoggerCallback() const {
+		inline const LoggerCallback* getLoggerCallback() const {
 			return callback;
 		}
 
 	};
-
-	template<typename T>
-	LoggerHelper& LoggerHelper::operator<<(const T& a) {
-		if (logLevel == Logger::LogLevel::FATAL) {
-		       	if (boolParam) { //do nothing if assertion in FATAL is true
-				return *this;
-			}
-		} else if (!logger.hasToLog(static_cast<Logger::LogLevel>(logLevel)) && !boolParam) {
-			return *this;
-		}
-
-		//otherwise push message to buffer
-		buffer << a;
-
-		return *this;
-	}
 
   } // namespace log
 } // namespace engine

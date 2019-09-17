@@ -35,23 +35,24 @@ namespace sys {
 
 		void clear();
 
-		int compareTo(SocketAddress* addr);
+		int compareTo(SocketAddress* addr) const;
 
 		struct sockaddr* getAddress();
+		const struct sockaddr* getAddress() const;
 
-	    String getIPAddress();
+		String getIPAddress() const;
 
-	    uint16 getPort();
+		uint16 getPort() const;
 
-	    String getFullIPAddress();
+		String getFullIPAddress() const;
 
-	    String getFullPrintableIPAddress();
+		String getFullPrintableIPAddress() const;
 
-		uint64 getNetworkID();
+		uint64 getNetworkID() const;
 
-		uint32 getIPID();
+		uint32 getIPID() const;
 
-		inline int getAddressSize() {
+		constexpr static std::size_t getAddressSize() {
 			return sizeof(addr);
 		}
 

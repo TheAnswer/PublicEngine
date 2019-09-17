@@ -8,7 +8,7 @@
 
 #include "system/lang.h"
 
-#include "lua.hpp"
+#include <lua.hpp>
 
 #include "LuaObject.h"
 #include "LuaFunction.h"
@@ -21,9 +21,6 @@
 namespace engine {
   namespace lua {
 
-  	class LuaFunction;
-  	class LuaObject;
-
 	class Lua : public Logger, public Object {
 	protected:
 		lua_State* L;
@@ -32,6 +29,7 @@ namespace engine {
 	public:
 		Lua();
 		Lua(lua_State* L);
+		Lua(Lua&& lua);
 
 		virtual ~Lua();
 
@@ -46,6 +44,8 @@ namespace engine {
 		static bool runFile(const String& filename, lua_State* lState);
 
 		static int atPanic(lua_State* L);
+
+		virtual void registerFunction(const char* name, int(*functionPointer)(lua_State*));
 
 		// getters
 

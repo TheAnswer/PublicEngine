@@ -268,10 +268,14 @@ namespace sys {
 			uint32 len = readShort();
 			shiftOffset(len);
 
-			StringBuffer str;
-			str.append(offset - len, len);
+			ascii = String(offset - len, len);
+		}
 
-			str.toString(ascii);
+		inline String parseAscii() {
+			uint32 len = readShort();
+			shiftOffset(len);
+
+			return String(offset - len, len);
 		}
 
 		inline void parseAscii(int offs, String& ascii) {
@@ -293,6 +297,13 @@ namespace sys {
 
 			str.clear();
 			str.append((unsigned short*) (offset - len * 2), len);
+		}
+
+		inline UnicodeString parseUnicode() {
+			UnicodeString str;
+			parseUnicode(str);
+
+			return str;
 		}
 
 		inline void parseUnicode(int offs, UnicodeString& str) {
