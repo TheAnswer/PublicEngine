@@ -23,9 +23,7 @@
 #endif
 
 #include "system/lang.h"
-
-#include <type_traits>
-#include <functional>
+#include "system/lang/Function.h"
 
 namespace engine {
   namespace log {
@@ -126,7 +124,7 @@ namespace engine {
 			DEBUG = 5
 		};
 
-		using LoggerCallback = std::function<int(LogLevel, const char*)>;
+		using LoggerCallback = Function<int(LogLevel, const char*)>;
 
 	private:
 		FileWriter* logFile = nullptr;
@@ -162,7 +160,6 @@ namespace engine {
 		Logger& operator=(const Logger& logger);
 		Logger& operator=(Logger&& logger);
 
-		static void setGlobalFileLogger(const char* file);
 		static void setGlobalFileLogger(const String& file);
 		static void setGlobalFileLogLevel(LogLevel level);
 		static void setGlobalFileLoggerSync(bool val);
@@ -208,9 +205,9 @@ namespace engine {
 			return LoggerHelper(*this, LogLevel::ERROR, false);
 		}
 
-		void fatal(const char* msg) const;
-		void fatal(const String& msg) const;
-		void fatal(const StringBuffer& msg) const;
+		[[ noreturn ]] void fatal(const char* msg) const;
+		[[ noreturn ]] void fatal(const String& msg) const;
+		[[ noreturn ]] void fatal(const StringBuffer& msg) const;
 
 		LoggerHelper fatal(bool assertion) const {
 			return LoggerHelper(*this, LogLevel::FATAL, assertion);

@@ -3,8 +3,7 @@
 ** See file COPYING for copying conditions.
 */
 
-#ifndef PLATFORM_H_
-#define PLATFORM_H_
+#pragma once
 
 #ifndef VERSION_PUBLIC
 //#define LOCKFREE_BCLIENT_BUFFERS
@@ -265,6 +264,16 @@ static_assert(false, "big endian systems are not supported");
 #endif
 
 namespace sys {
+	[[ noreturn ]] inline void e3_assert(const char* file, int line, const char* func, const char *expression) {
+		fprintf(stderr, "assertion \"%s\" failed: file \"%s\", line %d%s%s\n", expression, file, line, func ? ", function: " : "", func ? func : "");
+
+		fflush(nullptr);
+
+		abort();
+	}
+
+	#define E3_ASSERT(_expr) (static_cast <bool> (_expr) ? void (0) : e3_assert(__FILE__, __LINE__, __PRETTY_FUNCTION__, #_expr));
+
 	typedef unsigned long long uint64;
 	static_assert(sizeof(uint64) == 8, "unsigned long long is not 64bit");
 
@@ -348,4 +357,3 @@ namespace sys {
 
 using namespace sys;
 
-#endif /*PLATFORM_H_*/
