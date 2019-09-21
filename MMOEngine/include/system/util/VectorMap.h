@@ -19,47 +19,32 @@ namespace sys {
 
 	template<class K, class V> class VectorMap;
 
-	template <typename T>
-	class HasToBinaryStreamMethodSFINAE {
-		typedef char success;
-		struct failure { char x[2]; };
-
-		template <class C> static success test(decltype(&C::toBinaryStream)) ;
-		template <class C> static failure test(...);
-
-	public:
-		enum { value = sizeof(test<T>(0)) == sizeof(char) };
-	};
-
-	template<class K, class V> class VectorMapEntryBase {
+	template<class K, class V>
+	class VectorMapEntry {
 	public:
 		K key;
 		V value;
 
 	public:
-		VectorMapEntryBase() {
+		VectorMapEntry() {
 		}
 
-		VectorMapEntryBase(const K& key) : key(key) {
+		VectorMapEntry(const K& key) : key(key) {
 		}
 
-		VectorMapEntryBase(const K& key, const V& value) : key(key), value(value) {
+		VectorMapEntry(const K& key, const V& value) : key(key), value(value) {
 		}
 
-#ifdef CXX11_COMPILER
-		VectorMapEntryBase(K&& key, V&& value) : key(std::move(key)), value(std::move(value)) {
-		}
-#endif
-
-		VectorMapEntryBase(const VectorMapEntryBase& entry) : key(entry.key), value(entry.value) {
+		VectorMapEntry(K&& key, V&& value) : key(std::move(key)), value(std::move(value)) {
 		}
 
-#ifdef CXX11_COMPILER
-		VectorMapEntryBase(VectorMapEntryBase&& entry) : key(std::move(entry.key)), value(std::move(entry.value)) {
+		VectorMapEntry(const VectorMapEntry& entry) : key(entry.key), value(entry.value) {
 		}
-#endif
 
-		VectorMapEntryBase& operator=(const VectorMapEntryBase& entry) {
+		VectorMapEntry(VectorMapEntry&& entry) : key(std::move(entry.key)), value(std::move(entry.value)) {
+		}
+
+		VectorMapEntry& operator=(const VectorMapEntry& entry) {
 			if (this == &entry)
 				return *this;
 
@@ -69,8 +54,7 @@ namespace sys {
 			return *this;
 		}
 
-#ifdef CXX11_COMPILER
-		VectorMapEntryBase& operator=(VectorMapEntryBase&& entry) {
+		VectorMapEntry& operator=(VectorMapEntry&& entry) {
 			if (this == &entry)
 				return *this;
 
@@ -79,9 +63,8 @@ namespace sys {
 
 			return *this;
 		}
-#endif
 
-		int compareTo(const VectorMapEntryBase& e) const {
+		int compareTo(const VectorMapEntry& e) const {
 			return TypeInfo<K>::compare(key, e.key);
 		}
 
@@ -101,151 +84,24 @@ namespace sys {
 			return value;
 		}
 
-		/*bool toString(String& str) {
-			// structure key=value
-			String stringKey, stringValue;
-
-			TypeInfo<K>::toString(&key, stringKey);
-			TypeInfo<V>::toString(&value, stringValue);
-
-			StringBuffer buffer;
-			buffer << "{{" << stringKey << "},{" << stringValue << "}}";
-
-			buffer.toString(str);
+		bool toBinaryStream(ObjectOutputStream* stream) {
+			SerializationHelpers::toBinary<K>(&this->key, stream);
+			SerializationHelpers::toBinary<V>(&this->value, stream);
 
 			return true;
 		}
 
-		bool parseFromString(const String& str, int version = 0) {
-			String data;
+		bool parseFromBinaryStream(ObjectInputStream* stream) {
+			if (SerializationHelpers::fromBinary<K>(&this->key, stream) &&
+				SerializationHelpers::fromBinary<V>(&this->value, stream)) {
 
-			if (!Vector<int>::getObjectData(str, data))
 				return true;
-
-			String stringKey, stringValue;
-
-			int size = Vector<int>::getObjectData(data.subString(1), stringKey);
-			Vector<int>::getObjectData(data.subString(size + 1), stringValue);
-
-			if (!TypeInfo<K>::parseFromString(&key, stringKey.subString(1, stringKey.length() - 1))
-					|| !TypeInfo<V>::parseFromString(&value, stringValue.subString(1, stringValue.length() - 1)))
+			} else {
 				return false;
-
-			return true;
-		}*/
-
-		friend class VectorMap<K,V>;
-	};
-
-	template<class K, class V,
-		class Enable = void>
-	class VectorMapEntry : public VectorMapEntryBase<K, V> {
-	};
-
-	template<class K, class V>
-	class VectorMapEntry<K, V, typename std::enable_if<HasToBinaryStreamMethodSFINAE<V>::value || std::is_fundamental<V>::value>::type>
-		: public VectorMapEntryBase<K, V> {
-
-	public:
-		VectorMapEntry() {
-		}
-
-		VectorMapEntry(const K& key) : VectorMapEntryBase<K, V>(key) {
-		}
-
-		VectorMapEntry(const K& key, const V& value) : VectorMapEntryBase<K, V>(key, value) {
-		}
-
-		VectorMapEntry(K&& key, V&& value) : VectorMapEntryBase<K, V>(std::move(key), std::move(value)) {
-		}
-
-		VectorMapEntry(const VectorMapEntry& entry) : VectorMapEntryBase<K, V>(entry) {
-		}
-
-		VectorMapEntry(VectorMapEntry&& entry) : VectorMapEntryBase<K, V>(std::move(entry)) {
-		}
-
-		VectorMapEntry& operator=(const VectorMapEntry& entry) {
-			VectorMapEntryBase<K, V>::operator=(entry);
-
-			return *this;
-		}
-
-		VectorMapEntry& operator=(VectorMapEntry&& entry) {
-			VectorMapEntryBase<K, V>::operator=(std::move(entry));
-
-			return *this;
-		}
-
-		bool toBinaryStream(ObjectOutputStream* stream) {
-			TypeInfo<K>::toBinaryStream(&this->key, stream);
-			TypeInfo<V>::toBinaryStream(&this->value, stream);
-
-			return true;
-		}
-
-		bool parseFromBinaryStream(ObjectInputStream* stream) {
-			if (!TypeInfo<K>::parseFromBinaryStream(&this->key, stream)
-					|| !TypeInfo<V>::parseFromBinaryStream(&this->value, stream))
-				return false;
-
-			return true;
+			}
 		}
 
 		friend class VectorMap<K,V>;
-
-	};
-
-	template<class K, class V>
-	class VectorMapEntry<K, V, typename std::enable_if<!HasToBinaryStreamMethodSFINAE<V>::value && !std::is_fundamental<V>::value>::type>
-		: public VectorMapEntryBase<K, V> {
-
-	public:
-		VectorMapEntry() {
-		}
-
-		VectorMapEntry(const K& key) : VectorMapEntryBase<K, V>(key) {
-		}
-
-		VectorMapEntry(const K& key, const V& value) : VectorMapEntryBase<K, V>(key, value) {
-		}
-
-		VectorMapEntry(K&& key, V&& value) : VectorMapEntryBase<K, V>(std::move(key), std::move(value)) {
-		}
-
-		VectorMapEntry(const VectorMapEntry& entry) : VectorMapEntryBase<K, V>(entry) {
-		}
-
-		VectorMapEntry(VectorMapEntry&& entry) : VectorMapEntryBase<K, V>(std::move(entry)) {
-		}
-
-		VectorMapEntry& operator=(const VectorMapEntry& entry) {
-			VectorMapEntryBase<K, V>::operator=(entry);
-
-			return *this;
-		}
-
-		VectorMapEntry& operator=(VectorMapEntry&& entry) {
-			VectorMapEntryBase<K, V>::operator=(std::move(entry));
-
-			return *this;
-		}
-
-		bool toBinaryStream(ObjectOutputStream* stream) {
-			E3_ASSERT(false && "trying to serialize VectorMapEntry with Value type that is not serializable");
-
-			return true;
-		}
-
-		bool parseFromBinaryStream(ObjectInputStream* stream) {
-			E3_ASSERT(false && "trying to deserialize VectorMapEntry with Value type that is not serializable");
-
-			return false;
-		}
-
-		friend class VectorMap<K,V>;
-
-
 	};
 
 	template<class K, class V> class VectorMap : public SortedVector<VectorMapEntry<K, V> > {
@@ -383,7 +239,7 @@ namespace sys {
 	template<class K, class V> V& VectorMap<K, V>::get(const K& key) {
 	 	int pos = find(key);
 
-		if (pos == -1)
+		if (pos == this->npos)
 	 		return nullValue;
 
 	 	VectorMapEntry<K, V>* entry = &SortedVector<VectorMapEntry<K, V> >::getUnsafe(pos);
@@ -393,7 +249,7 @@ namespace sys {
 	template<class K, class V> const V& VectorMap<K, V>::get(const K& key) const {
 		int pos = find(key);
 
-		if (pos == -1)
+		if (pos == this->npos)
 			return nullValue;
 
 		VectorMapEntry<K, V>* entry = &SortedVector<VectorMapEntry<K, V> >::getUnsafe(pos);
@@ -402,7 +258,7 @@ namespace sys {
 
 	template<class K, class V> int VectorMap<K, V>::find(const K& key) const {
 		if (ArrayList<VectorMapEntry<K, V> >::elementCount == 0)
-			return -1;
+			return this->npos;
 
 		int l = 0, r = ArrayList<VectorMapEntry<K, V> >::elementCount - 1;
 		int m = 0, cmp = 0;
@@ -421,18 +277,18 @@ namespace sys {
 				r = m - 1;
 		}
 
-		return -1;
+		return this->npos;
 	}
 
 	template<class K, class V> bool VectorMap<K, V>::contains(const K& key) const {
 	 	int idx = find(key);
 
-	 	return idx != -1;
+	 	return idx != this->npos;
 	}
 
 	template<class K, class V> bool VectorMap<K, V>::drop(const K& key) {
 		int pos = find(key);
-		if (pos == -1)
+		if (pos == this->npos)
 			return false;
 
 		SortedVector<VectorMapEntry<K, V> >::remove(pos);

@@ -23,18 +23,16 @@ namespace sys {
   		SF_hex = 1L << 1,
   		SF_uppercase = 1L << 2,
   		SF_endl = 1L << 3,
-		SF_lowercase = 1L << 4,
-		SF_flush = 1L << 5,
-		SF_nouppercase = SF_lowercase
+		SF_nouppercase = 1L << 4,
+		SF_flush = 1L << 5
   	};
 
-  	const StreamFlags dec = SF_dec;
-  	const StreamFlags hex = SF_hex;
-  	const StreamFlags uppercase = SF_uppercase;
-  	const StreamFlags endl = SF_endl;
-	const StreamFlags lowercase = SF_lowercase;
-	const StreamFlags nouppercase = SF_nouppercase;
-	const StreamFlags flush = SF_flush;
+  	constexpr const StreamFlags dec = SF_dec;
+  	constexpr const StreamFlags hex = SF_hex;
+  	constexpr const StreamFlags uppercase = SF_uppercase;
+  	constexpr const StreamFlags endl = SF_endl;
+	constexpr const StreamFlags nouppercase = SF_nouppercase;
+	constexpr const StreamFlags flush = SF_flush;
 
 	class StringBuffer : private ArrayList<char> {
 		StreamFlags streamFlags;
@@ -62,6 +60,7 @@ namespace sys {
 		StringBuffer& append(const String& str);
 		StringBuffer& append(const UnicodeString& str);
 		StringBuffer& append(std::size_t val);
+		StringBuffer& append(const StringBuffer& buff);
 
 		void deleteRange(int start, int end);
 
@@ -121,6 +120,22 @@ namespace sys {
 			return ArrayList<char>::begin();
 		}
 
+		inline const char* begin() const {
+			return ArrayList<char>::begin();
+		}
+
+		inline char* begin() {
+			return  ArrayList<char>::begin();
+		}
+
+		inline const char* end() const {
+			return begin() + length();
+		}
+
+		inline char* end() {
+			return begin() + length();
+		}
+
 		StringBuffer& operator<< (char ch);
 		StringBuffer& operator<< (int val);
 		StringBuffer& operator<< (uint32 val);
@@ -135,6 +150,7 @@ namespace sys {
 		StringBuffer& operator<< (const char* str);
 		StringBuffer& operator<< (const String& str);
 		StringBuffer& operator<< (const UnicodeString& str);
+		StringBuffer& operator<< (const StringBuffer& str);
 		StringBuffer& operator<< (const StreamFlags flags);
 	};
 
