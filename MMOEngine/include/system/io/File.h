@@ -74,12 +74,16 @@ namespace sys {
   			mode = BINARY_MODE;
   		}
 
+		inline void setText() {
+			mode = TEXT_MODE;
+		}
+
 	protected:
 		bool open(int access);
 
 		static bool doMkdir(const char* path, int mode);
 
-		String getModeString(int mode, int access) const;
+		static String getModeString(int mode, int access);
 	};
 
   } // namespace io
