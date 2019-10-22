@@ -3,19 +3,14 @@
 ** See file COPYING for copying conditions.
 */
 
-#ifndef CORE_H_
-#define CORE_H_
+#pragma once
 
 #include "system/lang.h"
 
 #include "engine/log/Logger.h"
 
-#include "TaskManager.h"
-
 #include "engine/orb/ObjectBroker.h"
 #include "system/util/SynchronizedHashTable.h"
-
-#include <new>
 
 namespace engine {
   namespace ORB {
@@ -32,6 +27,8 @@ using namespace engine::ORB;
 
 namespace engine {
   namespace core {
+	class TaskManager;
+
 	class Core : public Thread {
 		static UniqueReference<TaskManager*> taskManager;
 
@@ -70,6 +67,8 @@ namespace engine {
 		static String getProperty(const String& key, const String& defaultValue = "");
 		static ArrayList<String> getPropertyVector(const String& key);
 		static void setIntProperty(const String& key, int propertyValue);
+
+		static String getPropertiesString();
 
 		static double getDoubleProperty(const String& key, double defaultValue = 0);
 
@@ -111,5 +110,3 @@ namespace engine {
 } // namespace engine
 
 using namespace engine::core;
-
-#endif /*CORE_H_*/
